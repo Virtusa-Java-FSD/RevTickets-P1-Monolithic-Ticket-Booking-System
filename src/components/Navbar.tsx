@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { MovieIcon, EventIcon, ConcertIcon, TravelIcon } from "../assets/icons";
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand navbar-light bg-light">
+    <nav className="navbar navbar-expand navbar-dark">
       <div className="container-fluid px-2">
         <Link className="navbar-brand" to="/">
           RevTickets
@@ -15,22 +16,26 @@ const Navbar: React.FC = () => {
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/movies">
+              <Link className="nav-link d-flex align-items-center gap-1" to="/movies">
+                <MovieIcon size={18} />
                 Movies
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/events">
+              <Link className="nav-link d-flex align-items-center gap-1" to="/events">
+                <EventIcon size={18} />
                 Events
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/concerts">
+              <Link className="nav-link d-flex align-items-center gap-1" to="/concerts">
+                <ConcertIcon size={18} />
                 Concerts
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/travels">
+              <Link className="nav-link d-flex align-items-center gap-1" to="/travels">
+                <TravelIcon size={18} />
                 Travels
               </Link>
             </li>
