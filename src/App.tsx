@@ -14,7 +14,7 @@ function App() {
             <AppRoutes />
           </main>
         </BrowserRouter>
-        <Footer />
+        
       </div>
     </AuthProvider>
   );
