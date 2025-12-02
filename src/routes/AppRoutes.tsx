@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -6,19 +6,33 @@ import Movies from "../pages/Movies";
 import Events from "../pages/Events";
 import Concerts from "../pages/Concerts";
 import Travels from "../pages/Travels";
+import Dashboard from "../pages/Dashboard";
+import { useAuth } from "../context/AuthContext";
+
+const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+};
 
 const AppRoutes = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/movies" element={<Movies />} />
-      <Route path="/events" element={<Events />} />
-      <Route path="/concerts" element={<Concerts />} />
-      <Route path="/travels" element={<Travels />} />
-    </Routes>
-  </BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+    <Route path="/movies" element={<Movies />} />
+    <Route path="/events" element={<Events />} />
+    <Route path="/concerts" element={<Concerts />} />
+    <Route path="/travels" element={<Travels />} />
+    <Route
+      path="/dashboard"
+      element={
+        <PrivateRoute>
+          <Dashboard />
+        </PrivateRoute>
+      }
+    />
+  </Routes>
 );
 
 export default AppRoutes;
