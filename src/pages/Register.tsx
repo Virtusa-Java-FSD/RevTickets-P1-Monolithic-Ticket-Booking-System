@@ -27,8 +27,22 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
+    <div className="auth-container" style={{ 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      minHeight: '80vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <div className="auth-card" style={{
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '16px',
+        padding: '2.5rem',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+        maxWidth: '420px',
+        width: '100%'
+      }}>
         <h2 className="text-center mb-4">Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
