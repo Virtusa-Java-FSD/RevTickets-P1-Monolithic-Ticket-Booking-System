@@ -13,8 +13,8 @@ function App() {
           <main className="app-main">
             <AppRoutes />
           </main>
+          <Footer />
         </BrowserRouter>
-        
       </div>
     </AuthProvider>
   );
