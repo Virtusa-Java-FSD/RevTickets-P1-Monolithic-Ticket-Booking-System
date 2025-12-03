@@ -47,10 +47,13 @@ const Login: React.FC = () => {
               />
             </div>
             {error && <div className="alert alert-danger">{error}</div>}
-            <button className="btn btn-primary" type="submit">
+            <button className="btn btn-primary w-100" type="submit">
               Login
             </button>
           </form>
+          <p className="text-center mt-3" style={{ fontSize: "0.9rem" }}>
+            Don't have an account? <a href="/register" style={{ fontWeight: "500" }}>Register here</a>
+          </p>
         </div>
       </div>
     </div>

@@ -40,10 +40,13 @@ const Register: React.FC = () => {
               <input className="form-control" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
             {error && <div className="alert alert-danger">{error}</div>}
-            <button className="btn btn-primary" type="submit">
+            <button className="btn btn-primary w-100" type="submit">
               Register
             </button>
           </form>
+          <p className="text-center mt-3" style={{ fontSize: "0.9rem" }}>
+            Already have an account? <a href="/login" style={{ fontWeight: "500" }}>Login here</a>
+          </p>
         </div>
       </div>
     </div>
