@@ -90,7 +90,7 @@ const Events = () => {
   useEffect(() => {
     let result = [...events];
 
-    // Search filter
+ 
     if (searchTerm.trim()) {
       result = result.filter(
         (event) =>
