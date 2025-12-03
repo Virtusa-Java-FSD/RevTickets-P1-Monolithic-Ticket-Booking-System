@@ -7,7 +7,10 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand navbar-dark">
+    <nav className="navbar navbar-expand navbar-dark" style={{
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)'
+    }}>
       <div className="container-fluid px-2">
         <Link className="navbar-brand" to="/">
           RevTickets
