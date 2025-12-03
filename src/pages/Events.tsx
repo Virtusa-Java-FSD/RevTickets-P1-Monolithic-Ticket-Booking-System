@@ -18,7 +18,7 @@ const Events = () => {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      // Mock events data
+     
       const mockEvents: Event[] = [
         {
           id: "1",
@@ -86,7 +86,7 @@ const Events = () => {
     }
   };
 
-  // Filter and sort events
+  
   useEffect(() => {
     let result = [...events];
 
@@ -99,12 +99,12 @@ const Events = () => {
       );
     }
 
-    // Category filter
+  
     if (selectedCategory !== "all") {
       result = result.filter((event) => event.category === selectedCategory);
     }
 
-    // Sorting
+   
     result.sort((a, b) => {
       switch (sortBy) {
         case "rating":
@@ -120,7 +120,7 @@ const Events = () => {
     setFilteredEvents(result);
   }, [searchTerm, selectedCategory, sortBy, events]);
 
-  // Get unique categories
+  
   const categories = Array.from(new Set(events.map((event) => event.category)));
 
   if (loading) {
