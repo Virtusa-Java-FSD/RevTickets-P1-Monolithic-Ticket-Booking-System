@@ -1,0 +1,125 @@
+/* Global Responsive Styles */
+
+/* Mobile First Approach */
+@media (max-width: 575.98px) {
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+  }
+  
+  .display-4 {
+    font-size: 2rem !important;
+  }
+  
+  .card-title {
+    font-size: 0.95rem;
+  }
+  
+  .card-text {
+    font-size: 0.8rem;
+  }
+  
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .display-4 {
+    font-size: 2.5rem !important;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .hero-title {
+    font-size: 3rem !important;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .hero-title {
+    font-size: 3.5rem !important;
+  }
+}
+
+/* Card responsive adjustments */
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Form responsive adjustments */
+@media (max-width: 575.98px) {
+  .form-control,
+  .form-select {
+    font-size: 0.9rem;
+  }
+  
+  .btn-group .btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* Navigation responsive adjustments */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    text-align: center;
+  }
+  
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Travel page responsive adjustments */
+@media (max-width: 767.98px) {
+  .travel-results .card-body {
+    padding: 0.75rem;
+  }
+  
+  .travel-results .row {
+    margin: 0;
+  }
+  
+  .travel-results .col-12 {
+    padding: 0.25rem;
+  }
+}
+
+/* Footer responsive */
+footer {
+  margin-top: auto;
+}
+
+/* Utility classes for responsive spacing */
+@media (max-width: 575.98px) {
+  .px-mobile-2 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  
+  .py-mobile-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
