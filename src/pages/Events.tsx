@@ -161,9 +161,9 @@ const Events = () => {
 
         {/* Filters */}
         <div className="container mt-4 mb-5">
-          <div className="row g-3">
+          <div className="row g-2 g-sm-3">
             {/* Search */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
                 className="form-control"
@@ -174,7 +174,7 @@ const Events = () => {
             </div>
 
             {/* Category Filter */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={selectedCategory}
@@ -190,7 +190,7 @@ const Events = () => {
             </div>
 
             {/* Sort */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={sortBy}
@@ -215,9 +215,9 @@ const Events = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredEvents.length}</strong> event{filteredEvents.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-4">
+              <div className="row g-2 g-sm-3 g-md-4">
                 {filteredEvents.map((event) => (
-                  <div key={event.id} className="col-sm-6 col-md-4 col-lg-3">
+                  <div key={event.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
                     <EventCard event={event} />
                   </div>
                 ))}

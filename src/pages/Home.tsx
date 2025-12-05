@@ -67,9 +67,9 @@ const Home = () => {
       {/* Category Cards */}
       <div className="container categories-section">
         <h2 className="section-title">What are you looking for?</h2>
-        <div className="row g-4">
+        <div className="row g-2 g-sm-3 g-md-4">
           {categories.map((category, index) => (
-            <div key={index} className="col-md-6 col-lg-3">
+            <div key={index} className="col-6 col-sm-6 col-md-6 col-lg-3">
               <Link to={category.path} className="text-decoration-none">
                 <div className="category-card" style={{'--card-gradient': category.gradient, '--card-shadow': category.shadow}}>
                   <div className="card-glow"></div>

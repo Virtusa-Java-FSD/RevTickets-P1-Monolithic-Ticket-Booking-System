@@ -11,10 +11,11 @@ const Travels = () => {
   }, []);
 
   return (
-    <div className="container mt-4 travel-container">
-      <h2 className="mb-4">Travel Booking</h2>
-      
-      <ul className="nav nav-tabs mb-4">
+    <div className="container-fluid px-3 mt-4 travel-container">
+      <div className="container">
+        <h2 className="mb-4 text-center text-md-start">Travel Booking</h2>
+        
+        <ul className="nav nav-tabs mb-4 justify-content-center justify-content-md-start">
         <li className="nav-item">
           <button 
             className={`nav-link ${activeTab === "flights" ? "active" : ""}`}
@@ -45,20 +46,20 @@ const Travels = () => {
         {activeTab === "flights" && (
           <div className="card p-4 travel-card">
             <h4>Flight Booking</h4>
-            <div className="row g-3">
-              <div className="col-md-6">
+            <div className="row g-2 g-sm-3">
+              <div className="col-12 col-sm-6">
                 <label className="form-label">From</label>
                 <input type="text" className="form-control" placeholder="Departure city" />
               </div>
-              <div className="col-md-6">
+              <div className="col-12 col-sm-6">
                 <label className="form-label">To</label>
                 <input type="text" className="form-control" placeholder="Destination city" />
               </div>
-              <div className="col-md-6">
+              <div className="col-6 col-sm-6">
                 <label className="form-label">Departure Date</label>
                 <input type="date" className="form-control" />
               </div>
-              <div className="col-md-6">
+              <div className="col-6 col-sm-6">
                 <label className="form-label">Passengers</label>
                 <select className="form-control">
                   <option>1 Passenger</option>
@@ -68,7 +69,7 @@ const Travels = () => {
                 </select>
               </div>
               <div className="col-12">
-                <button className="btn btn-primary" onClick={() => setShowResults(true)}>Search Flights</button>
+                <button className="btn btn-primary w-100 w-sm-auto" onClick={() => setShowResults(true)}>Search Flights</button>
               </div>
             </div>
             
@@ -90,20 +91,20 @@ const Travels = () => {
                     <div key={i} className="col-12 mb-3">
                       <div className="card">
                         <div className="card-body">
-                          <div className="row align-items-center">
-                            <div className="col-md-3">
+                          <div className="row align-items-center g-2">
+                            <div className="col-12 col-sm-6 col-md-3">
                               <h6 className="mb-1">IndiGo 6E-{123+i}</h6>
                               <small className="text-muted">Airbus A320</small>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-12 col-sm-6 col-md-4">
                               <div className="d-flex align-items-center">
                                 <div className="text-center">
                                   <div className="fw-bold">08:{30+i*2}0</div>
                                   <small>DEL</small>
                                 </div>
-                                <div className="mx-3 flex-grow-1">
+                                <div className="mx-2 mx-sm-3 flex-grow-1">
                                   <div className="border-top position-relative">
-                                    <small className="position-absolute top-50 start-50 translate-middle bg-white px-2 text-muted">{i+1}h {20+i*10}m</small>
+                                    <small className="position-absolute top-50 start-50 translate-middle bg-white px-1 px-sm-2 text-muted">{i+1}h {20+i*10}m</small>
                                   </div>
                                 </div>
                                 <div className="text-center">
@@ -112,13 +113,15 @@ const Travels = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="col-md-2 text-center">
+                            <div className="col-6 col-sm-6 col-md-2 text-center">
                               <div className="fw-bold text-success">₹{4500+i*500}</div>
                               <small className="text-muted">per person</small>
                             </div>
-                            <div className="col-md-3 text-end">
-                              <button className="btn btn-outline-primary btn-sm me-2">View Details</button>
-                              <button className="btn btn-primary btn-sm">Book Now</button>
+                            <div className="col-6 col-sm-6 col-md-3 text-end">
+                              <div className="d-flex flex-column flex-sm-row gap-1">
+                                <button className="btn btn-outline-primary btn-sm">View Details</button>
+                                <button className="btn btn-primary btn-sm">Book Now</button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -305,6 +308,7 @@ const Travels = () => {
             )}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

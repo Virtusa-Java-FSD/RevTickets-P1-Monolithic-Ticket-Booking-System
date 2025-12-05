@@ -1,5 +1,6 @@
 import type { Event } from "../types/Event";
 import { useNavigate } from "react-router-dom";
+import { useResponsiveImageHeight } from "../hooks/useResponsiveImageHeight";
 
 interface EventCardProps {
   event: Event;
@@ -7,6 +8,7 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const navigate = useNavigate();
+  const imageHeight = useResponsiveImageHeight();
 
   const handleBooking = () => {
     navigate(`/events/${event.id}`);
@@ -32,7 +34,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
   return (
     <div className="card h-100 shadow-sm">
-      <img src={event.imageUrl} className="card-img-top" alt={event.title} style={{ height: "250px", objectFit: "cover" }} />
+      <img src={event.imageUrl} className="card-img-top" alt={event.title} style={{ height: `${imageHeight}px`, objectFit: "cover" }} />
       <div className="card-body d-flex flex-column">
         <div className="d-flex justify-content-between align-items-start mb-2">
           <h5 className="card-title">{event.title}</h5>

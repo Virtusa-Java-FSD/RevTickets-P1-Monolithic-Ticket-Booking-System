@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand navbar-dark" style={{
+    <nav className="navbar navbar-expand-lg navbar-dark" style={{
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)'
     }}>
@@ -16,30 +16,34 @@ const Navbar: React.FC = () => {
           RevTickets
         </Link>
 
-        <div className="collapse navbar-collapse">
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1" to="/movies">
+              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/movies">
                 <MovieIcon size={18} />
-                Movies
+                <span>Movies</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1" to="/events">
+              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/events">
                 <EventIcon size={18} />
-                Events
+                <span>Events</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1" to="/concerts">
+              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/concerts">
                 <ConcertIcon size={18} />
-                Concerts
+                <span>Concerts</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1" to="/travels">
+              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/travels">
                 <TravelIcon size={18} />
-                Travels
+                <span>Travels</span>
               </Link>
             </li>
           </ul>

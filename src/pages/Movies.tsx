@@ -174,9 +174,9 @@ const Movies = () => {
 
         {/* Filters */}
         <div className="container mt-4 mb-5">
-          <div className="row g-3">
+          <div className="row g-2 g-sm-3">
             {/* Search */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
                 className="form-control"
@@ -187,7 +187,7 @@ const Movies = () => {
             </div>
 
             {/* Language Filter */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={selectedLanguage}
@@ -203,7 +203,7 @@ const Movies = () => {
             </div>
 
             {/* Sort */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={sortBy}
@@ -228,9 +228,9 @@ const Movies = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredMovies.length}</strong> movie{filteredMovies.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-4">
+              <div className="row g-2 g-sm-3 g-md-4">
                 {filteredMovies.map((movie) => (
-                  <div key={movie.id} className="col-sm-6 col-md-4 col-lg-3">
+                  <div key={movie.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
                     <MovieCard movie={movie} />
                   </div>
                 ))}
