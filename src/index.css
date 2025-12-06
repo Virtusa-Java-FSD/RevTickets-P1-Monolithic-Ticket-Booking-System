@@ -41,11 +41,8 @@ body {
 
 .app-main {
   flex: 1 0 auto;
-  padding: 1rem;
+  padding: 0;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 h1 {

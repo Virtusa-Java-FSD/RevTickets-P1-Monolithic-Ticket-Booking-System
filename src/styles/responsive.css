@@ -7,6 +7,11 @@
     padding-right: 0.75rem;
   }
   
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
   .hero-title {
     font-size: 2rem !important;
   }
@@ -215,5 +220,172 @@ footer {
   .py-mobile-3 {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
+  }
+}
+
+/* Home Page Responsive Styles */
+@media (max-width: 575.98px) {
+  .home-container {
+    overflow-x: hidden;
+  }
+  
+  .hero-section {
+    padding: 2rem 0 !important;
+    min-height: 40vh !important;
+  }
+  
+  .image-slider {
+    height: 250px !important;
+  }
+  
+  .slide-content {
+    bottom: 20px !important;
+    left: 15px !important;
+    right: 15px !important;
+  }
+  
+  .slide-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .slide-subtitle {
+    font-size: 0.85rem !important;
+  }
+  
+  .slider-btn {
+    width: 35px !important;
+    height: 35px !important;
+  }
+  
+  .prev-btn {
+    left: 10px !important;
+  }
+  
+  .next-btn {
+    right: 10px !important;
+  }
+  
+  .search-section {
+    padding: 1.5rem 0 !important;
+  }
+  
+  .search-input {
+    font-size: 0.85rem !important;
+    padding: 0.8rem 0.8rem 0.8rem 2.5rem !important;
+  }
+  
+  .trending-section,
+  .recommended-section,
+  .upcoming-section,
+  .toppicks-section,
+  .offers-section,
+  .categories-section {
+    padding: 2rem 0 !important;
+  }
+  
+  .section-title {
+    font-size: 1.3rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .trending-card {
+    min-width: 130px !important;
+  }
+  
+  .trending-image {
+    height: 150px !important;
+  }
+  
+  .upcoming-card {
+    min-width: 110px !important;
+  }
+  
+  .upcoming-poster {
+    height: 150px !important;
+  }
+  
+  .category-card {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .category-icon svg {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .category-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .category-description {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .hero-section {
+    padding: 2.5rem 0 !important;
+    min-height: 45vh !important;
+  }
+  
+  .image-slider {
+    height: 300px !important;
+  }
+  
+  .slide-title {
+    font-size: 2rem !important;
+  }
+  
+  .slide-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .section-title {
+    font-size: 1.6rem !important;
+  }
+  
+  .trending-card {
+    min-width: 150px !important;
+  }
+  
+  .upcoming-card {
+    min-width: 130px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .hero-section {
+    padding: 3rem 0 !important;
+    min-height: 50vh !important;
+  }
+  
+  .image-slider {
+    height: 400px !important;
+  }
+  
+  .slide-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .section-title {
+    font-size: 2rem !important;
+  }
+  
+  .trending-card {
+    min-width: 170px !important;
+  }
+  
+  .upcoming-card {
+    min-width: 150px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .hero-section {
+    min-height: 60vh !important;
+  }
+  
+  .image-slider {
+    height: 500px !important;
   }
 }

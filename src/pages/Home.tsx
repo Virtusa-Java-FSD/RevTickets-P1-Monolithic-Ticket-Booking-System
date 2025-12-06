@@ -83,6 +83,8 @@ const Home = () => {
     <div className="home-container">
 
       <div className="hero-section">
+        <div className="hero-background"></div>
+        <div className="hero-overlay"></div>
         <div className="floating-shapes">
           <div className="shape shape-1"></div>
           <div className="shape shape-2"></div>
@@ -101,6 +103,28 @@ const Home = () => {
               </div>
             </div>
             <p className="hero-subtitle">Your gateway to unforgettable experiences</p>
+            <div className="hero-stats">
+              <div className="stat-item">
+                <div className="stat-number">10K+</div>
+                <div className="stat-label">Events</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">50K+</div>
+                <div className="stat-label">Happy Users</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">100+</div>
+                <div className="stat-label">Cities</div>
+              </div>
+            </div>
+            <div className="hero-cta">
+              <Link to="/movies" className="cta-btn cta-primary">
+                <span>🎬</span> Book Movies
+              </Link>
+              <Link to="/events" className="cta-btn cta-secondary">
+                <span>🎉</span> Explore Events
+              </Link>
+            </div>
           </div>
         </div>
       </div>
