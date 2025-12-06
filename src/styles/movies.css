@@ -60,12 +60,21 @@
   border-bottom: 3px solid #667eea;
 }
 
+/* Make movie images small, fully visible and responsive */
+.movie-img {
+  width: 100%;
+  height: 180px; /* smaller image height */
+  object-fit: contain; /* show whole image with no cropping */
+  background-color: #f7f7f7;
+  padding: 0.5rem; /* small inner padding to avoid edge clipping */
+}
+
 .card:hover .card-img-top {
   transform: scale(1.05);
 }
 
 .card-body {
-  padding: 1.5rem;
+  padding: 1rem; /* reduced padding to save space */
   position: relative;
 }
 
@@ -143,11 +152,11 @@
   }
 
   .card {
-    margin-bottom: 1rem;
+    margin-bottom: 0.65rem;
   }
 
   .row.g-4 {
-    --bs-gutter-x: 1rem;
+    --bs-gutter-x: 0.6rem; /* tighter gutters on small screens */
   }
 }
 
@@ -166,7 +175,7 @@
   }
 
   .row.g-3 {
-    --bs-gutter-x: 0.5rem;
+    --bs-gutter-x: 0.4rem;
   }
 }
 

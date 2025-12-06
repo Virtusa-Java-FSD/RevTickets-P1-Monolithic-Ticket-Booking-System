@@ -14,7 +14,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 
   return (
     <div className="card h-100 shadow-sm">
-      <img src={movie.imageUrl} className="card-img-top" alt={movie.title} style={{ height: "300px", objectFit: "cover" }} />
+      <img src={movie.imageUrl} className="card-img-top movie-img" alt={movie.title} />
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{movie.title}</h5>
         <p className="card-text text-muted small">{movie.description}</p>
