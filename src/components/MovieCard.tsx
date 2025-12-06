@@ -1,5 +1,6 @@
 import type { Event } from "../types/Event";
 import { useNavigate } from "react-router-dom";
+import { useResponsiveImageHeight } from "../hooks/useResponsiveImageHeight";
 
 interface MovieCardProps {
   movie: Event;
@@ -7,14 +8,20 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const navigate = useNavigate();
+  const imageHeight = useResponsiveImageHeight();
 
   const handleBooking = () => {
-    navigate(`/movies/${movie.id}`);
+    navigate(`/booking/movie/${movie.id}`);
   };
 
   return (
     <div className="card h-100 shadow-sm">
-      <img src={movie.imageUrl} className="card-img-top movie-img" alt={movie.title} />
+      <img
+        src={movie.imageUrl}
+        className="card-img-top movie-img"
+        alt={movie.title}
+        style={{ height: `${imageHeight}px`, objectFit: "contain" }}
+      />
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{movie.title}</h5>
         <p className="card-text text-muted small">{movie.description}</p>
@@ -32,7 +39,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           )}
         </div>
         <button className="btn btn-primary w-100 mt-3" onClick={handleBooking}>
-          Book Now
+          Book Tickets
         </button>
       </div>
     </div>

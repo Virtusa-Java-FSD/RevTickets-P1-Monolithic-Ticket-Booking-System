@@ -1,14 +1,33 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 
 const Concerts = () => {
+  const navigate = useNavigate();
   const [concerts, setConcerts] = useState<Event[]>([]);
   const [filteredConcerts, setFilteredConcerts] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [imageHeight, setImageHeight] = useState(200);
 
   useEffect(() => {
     loadConcerts();
+  }, []);
+
+  useEffect(() => {
+    const updateImageHeight = () => {
+      if (window.innerWidth < 576) {
+        setImageHeight(150);
+      } else if (window.innerWidth < 768) {
+        setImageHeight(180);
+      } else {
+        setImageHeight(200);
+      }
+    };
+
+    updateImageHeight();
+    window.addEventListener('resize', updateImageHeight);
+    return () => window.removeEventListener('resize', updateImageHeight);
   }, []);
 
   const loadConcerts = async () => {
@@ -110,7 +129,7 @@ const Concerts = () => {
 
         <div className="container mt-4 mb-5">
           <div className="row g-3">
-            <div className="col-md-6">
+            <div className="col-12 col-sm-8 col-md-6 col-lg-4">
               <input
                 type="text"
                 className="form-control"
@@ -132,15 +151,15 @@ const Concerts = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredConcerts.length}</strong> concert{filteredConcerts.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-4">
+              <div className="row g-2 g-sm-3 g-md-4">
                 {filteredConcerts.map((concert) => (
-                  <div key={concert.id} className="col-sm-6 col-md-4 col-lg-3">
+                  <div key={concert.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
                     <div className="card h-100 shadow-sm">
                       <img
                         src={concert.imageUrl}
                         className="card-img-top"
                         alt={concert.title}
-                        style={{ height: "300px", objectFit: "cover" }}
+                        style={{ height: `${imageHeight}px`, objectFit: "cover" }}
                         onError={(e) => {
                           e.currentTarget.src = `https://picsum.photos/300/400?random=${concert.id}`;
                         }}
@@ -157,7 +176,10 @@ const Concerts = () => {
                             </span>
                           </div>
                         )}
-                        <button className="btn btn-primary">
+                        <button 
+                          className="btn btn-primary"
+                          onClick={() => navigate(`/booking/concert/${concert.id}`)}
+                        >
                           Book Now
                         </button>
                       </div>
