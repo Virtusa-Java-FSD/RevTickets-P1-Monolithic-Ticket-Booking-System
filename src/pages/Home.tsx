@@ -94,8 +94,10 @@ const Home = () => {
           <div className="hero-content">
             <div className="hero-logo-section">
               <div className="logo-container">
-                <div className="logo-circle">RT</div>
-                <div className="logo-glow"></div>
+                <Link to="/" className="text-decoration-none">
+                  <div className="logo-circle">RT</div>
+                  <div className="logo-glow"></div>
+                </Link>
               </div>
               <div className="brand-text">
                 <h1 className="hero-title">RevTickets</h1>
