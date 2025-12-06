@@ -1,13 +1,36 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { MovieIcon, EventIcon, ConcertIcon, TravelIcon } from "../assets/icons";
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const location = useLocation();
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const isHomePage = location.pathname === '/';
+
+  useEffect(() => {
+    if (!isHomePage) return;
+    
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > 800) {
+        setIsVisible(currentScrollY < lastScrollY);
+      } else {
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY, isHomePage]);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark" style={{
+    <nav className={`navbar navbar-expand-lg navbar-dark ${isHomePage ? `navbar-home ${isVisible ? 'navbar-visible' : 'navbar-hidden'}` : ''}`} style={{
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)'
     }}>

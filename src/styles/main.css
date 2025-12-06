@@ -7,6 +7,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
   color: #212529;
+  overflow-x: hidden;
 }
 
 body.auth-page {
@@ -110,6 +111,14 @@ body.auth-page {
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-visible {
+  transform: translateY(0);
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
 }
 
 .navbar-brand {
@@ -217,6 +226,21 @@ body.auth-page {
   background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
   margin: 0;
   padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.navbar-home {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-home + .home-container {
+  padding-top: 76px;
 }
 
 
@@ -375,11 +399,17 @@ body.auth-page {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 3rem 0;
   margin: 0;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .search-container {
   display: flex;
   justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .search-box {
@@ -441,6 +471,8 @@ body.auth-page {
   padding: 1rem 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  width: 100%;
+  max-width: 100vw;
 }
 
 .trending-scroll::-webkit-scrollbar {
@@ -536,6 +568,8 @@ body.auth-page {
   padding: 1rem 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  width: 100%;
+  max-width: 100vw;
 }
 
 .upcoming-scroll::-webkit-scrollbar {
@@ -794,12 +828,17 @@ body.auth-page {
   .offer-card {
     padding: 1.5rem;
   }
-
+  .categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
   .section-title {
     font-size: 1.8rem;
+    margin-bottom: 2rem;
   }
   .category-card {
     padding: 2rem 1.5rem;
+    min-height: 240px;
   }
 }
 
@@ -846,12 +885,16 @@ body.auth-page {
   .search-icon {
     left: 1rem;
   }
-  .trending-section, .recommended-section, .upcoming-section, .toppicks-section, .offers-section {
+  .trending-section, .recommended-section, .upcoming-section, .toppicks-section, .offers-section, .categories-section {
     padding: 2.5rem 0;
+  }
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   .section-title {
     font-size: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .trending-card {
     min-width: 140px;
@@ -887,9 +930,9 @@ body.auth-page {
   .offer-icon {
     font-size: 2.5rem;
   }
-
   .category-card {
     padding: 1.5rem 1rem;
+    min-height: 200px;
   }
   .category-title {
     font-size: 1.4rem;
@@ -1206,10 +1249,18 @@ body.auth-page {
 }
 
 .categories-section {
-  padding: 4rem 0;
+  padding: 3rem 0;
   position: relative;
   background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
   margin: 0;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .section-title {
@@ -1235,6 +1286,11 @@ body.auth-page {
   overflow: hidden;
   cursor: pointer;
   height: 100%;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .category-card::before {

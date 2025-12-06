@@ -118,12 +118,12 @@ const Home = () => {
               </div>
             </div>
             <div className="hero-cta">
-              <Link to="/movies" className="cta-btn cta-primary">
-                <span>🎬</span> Book Movies
-              </Link>
-              <Link to="/events" className="cta-btn cta-secondary">
-                <span>🎉</span> Explore Events
-              </Link>
+              <button 
+                onClick={() => document.querySelector('.categories-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="cta-btn cta-primary"
+              >
+                <span>🚀</span> Explore More
+              </button>
             </div>
           </div>
         </div>
@@ -309,12 +309,12 @@ const Home = () => {
 
 
 
-      <div className="container categories-section">
-        <h2 className="section-title">What are you looking for?</h2>
-        <div className="row g-2 g-sm-3 g-md-4">
-          {categories.map((category, index) => (
-            <div key={index} className="col-6 col-sm-6 col-md-6 col-lg-3">
-              <Link to={category.path} className="text-decoration-none">
+      <div className="categories-section">
+        <div className="container">
+          <h2 className="section-title">What are you looking for?</h2>
+          <div className="categories-grid">
+            {categories.map((category, index) => (
+              <Link key={index} to={category.path} className="text-decoration-none">
                 <div className="category-card" style={{'--card-gradient': category.gradient, '--card-shadow': category.shadow}}>
                   <div className="card-glow"></div>
                   <div className="category-icon">
@@ -325,8 +325,8 @@ const Home = () => {
                   <div className="card-shine"></div>
                 </div>
               </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
