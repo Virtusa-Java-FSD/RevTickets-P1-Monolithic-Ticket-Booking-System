@@ -11,7 +11,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const imageHeight = useResponsiveImageHeight();
 
   const handleBooking = () => {
-    navigate(`/events/${event.id}`);
+    navigate(`/booking/event/${event.id}`);
   };
 
   const getCategoryIcon = (category: string) => {
@@ -54,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           )}
         </div>
         <button className="btn btn-primary w-100 mt-3" onClick={handleBooking}>
-          Book Now
+          Book Tickets
         </button>
       </div>
     </div>

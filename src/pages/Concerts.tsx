@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 
 const Concerts = () => {
+  const navigate = useNavigate();
   const [concerts, setConcerts] = useState<Event[]>([]);
   const [filteredConcerts, setFilteredConcerts] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -174,7 +176,10 @@ const Concerts = () => {
                             </span>
                           </div>
                         )}
-                        <button className="btn btn-primary">
+                        <button 
+                          className="btn btn-primary"
+                          onClick={() => navigate(`/booking/concert/${concert.id}`)}
+                        >
                           Book Now
                         </button>
                       </div>

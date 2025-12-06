@@ -11,7 +11,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const imageHeight = useResponsiveImageHeight();
 
   const handleBooking = () => {
-    navigate(`/movies/${movie.id}`);
+    navigate(`/booking/movie/${movie.id}`);
   };
 
   return (
@@ -34,7 +34,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           )}
         </div>
         <button className="btn btn-primary w-100 mt-3" onClick={handleBooking}>
-          Book Now
+          Book Tickets
         </button>
       </div>
     </div>
