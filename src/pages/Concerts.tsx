@@ -8,6 +8,8 @@ const Concerts = () => {
   const [filteredConcerts, setFilteredConcerts] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("title");
   const [imageHeight, setImageHeight] = useState(200);
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=400&fit=crop",
           rating: 9.2,
+          genres: ["Pop"],
         },
         {
           id: "c2",
@@ -49,6 +52,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=300&h=400&fit=crop",
           rating: 9.5,
+          genres: ["Rock"],
         },
         {
           id: "c3",
@@ -57,6 +61,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=400&fit=crop",
           rating: 9.0,
+          genres: ["Classical"],
         },
         {
           id: "c4",
@@ -65,6 +70,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=400&fit=crop",
           rating: 8.8,
+          genres: ["Bollywood"],
         },
         {
           id: "c5",
@@ -73,6 +79,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=400&fit=crop",
           rating: 8.9,
+          genres: ["Rock"],
         },
         {
           id: "c6",
@@ -81,6 +88,7 @@ const Concerts = () => {
           category: "concert",
           imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&h=400&fit=crop",
           rating: 8.7,
+          genres: ["Pop"],
         },
       ];
       setConcerts(mockConcerts);
@@ -94,6 +102,7 @@ const Concerts = () => {
 
   useEffect(() => {
     let result = [...concerts];
+    
     if (searchTerm.trim()) {
       result = result.filter(
         (concert) =>
@@ -101,8 +110,25 @@ const Concerts = () => {
           concert.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
+
+    if (selectedGenre !== "all") {
+      result = result.filter((concert) => concert.genres?.includes(selectedGenre));
+    }
+
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "rating":
+          return (b.rating || 0) - (a.rating || 0);
+        case "title":
+        default:
+          return a.title.localeCompare(b.title);
+      }
+    });
+
     setFilteredConcerts(result);
-  }, [searchTerm, concerts]);
+  }, [searchTerm, selectedGenre, sortBy, concerts]);
+
+  const genres = Array.from(new Set(concerts.flatMap((concert) => concert.genres || [])));
 
   if (loading) {
     return (
@@ -122,14 +148,17 @@ const Concerts = () => {
       <div className="container-fluid">
         <div className="concerts-header py-5 bg-dark text-white">
           <div className="container">
+            <button className="btn btn-light btn-sm mb-4" onClick={() => navigate('/')}>
+              ← Back
+            </button>
             <h1 className="display-4 mb-2">🎵 Concerts</h1>
             <p className="lead">Book tickets for amazing live concerts!</p>
           </div>
         </div>
 
         <div className="container mt-4 mb-5">
-          <div className="row g-3">
-            <div className="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div className="row g-2 g-sm-3">
+            <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
                 className="form-control"
@@ -137,6 +166,30 @@ const Concerts = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+            </div>
+            <div className="col-6 col-sm-3 col-md-4">
+              <select
+                className="form-select"
+                value={selectedGenre}
+                onChange={(e) => setSelectedGenre(e.target.value)}
+              >
+                <option value="all">All Genres</option>
+                {genres.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-6 col-sm-3 col-md-4">
+              <select
+                className="form-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="title">Sort by Title</option>
+                <option value="rating">Sort by Rating (High to Low)</option>
+              </select>
             </div>
           </div>
         </div>
@@ -153,13 +206,13 @@ const Concerts = () => {
               </p>
               <div className="row g-2 g-sm-3 g-md-4">
                 {filteredConcerts.map((concert) => (
-                  <div key={concert.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
+                  <div key={concert.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
                     <div className="card h-100 shadow-sm">
                       <img
                         src={concert.imageUrl}
                         className="card-img-top"
                         alt={concert.title}
-                        style={{ height: `${imageHeight}px`, objectFit: "cover" }}
+                        style={{ height: `${imageHeight}px` }}
                         onError={(e) => {
                           e.currentTarget.src = `https://picsum.photos/300/400?random=${concert.id}`;
                         }}

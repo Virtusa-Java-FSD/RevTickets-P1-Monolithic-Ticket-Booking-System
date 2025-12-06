@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 import EventCard from "../components/EventCard";
 import "../styles/events.css";
 
 const Events = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -186,12 +188,12 @@ const Events = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+      <div className="container my-5">
         <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
+          <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p className="mt-2 text-muted small">Loading events...</p>
+          <p className="mt-3">Loading events...</p>
         </div>
       </div>
     );
@@ -199,110 +201,82 @@ const Events = () => {
 
   return (
     <div className="events-page">
-      {/* Compact Header */}
-      <div className="bg-gradient" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-        <div className="container-fluid px-3 py-3 py-md-4">
-          <div className="row align-items-center">
-            <div className="col-12 col-sm-8">
-              <h2 className="text-white mb-1 fw-bold fs-4 fs-md-3">🎪 Events</h2>
-              <p className="text-white-50 mb-0 small d-none d-sm-block">Discover amazing events and book your tickets!</p>
-            </div>
-            <div className="col-12 col-sm-4 text-end mt-2 mt-sm-0">
-              <span className="badge bg-white text-primary px-2 px-md-3 py-1 py-md-2 small">
-                {filteredEvents.length} Events
-              </span>
-            </div>
+      <div className="container-fluid">
+        <div className="events-header py-5 bg-dark text-white">
+          <div className="container">
+            <button className="btn btn-light btn-sm mb-4" onClick={() => navigate('/')}>
+              ← Back
+            </button>
+            <h1 className="display-4 mb-2">🎪 Events</h1>
+            <p className="lead">Discover amazing events and book your tickets!</p>
           </div>
         </div>
-      </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="container-fluid px-3 pt-2">
-          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+        {error && (
+          <div className="alert alert-danger alert-dismissible fade show m-4" role="alert">
             {error}
             <button type="button" className="btn-close" onClick={() => setError(null)}></button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Compact Filters */}
-      <div className="container-fluid px-3 py-2 py-md-3">
-        <div className="row g-2">
-          <div className="col-12 col-md-4 mb-2 mb-md-0">
-            <div className="input-group input-group-sm">
-              <span className="input-group-text">🔍</span>
+        <div className="container mt-4 mb-5">
+          <div className="row g-2 g-sm-3">
+            <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search events..."
+                placeholder="🔍 Search events..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-          </div>
-          <div className="col-6 col-md-4">
-            <select
-              className="form-select form-select-sm"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="all">All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-6 col-md-4">
-            <select
-              className="form-select form-select-sm"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              <option value="title">Sort by Title</option>
-              <option value="rating">Sort by Rating</option>
-              <option value="date">Sort by Date</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Events Grid */}
-      <div className="container-fluid px-3 pb-3">
-        {filteredEvents.length === 0 ? (
-          <div className="text-center py-4">
-            <div className="alert alert-info d-inline-block">
-              No events found. Try adjusting your filters.
+            <div className="col-6 col-sm-3 col-md-4">
+              <select
+                className="form-select"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="all">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-6 col-sm-3 col-md-4">
+              <select
+                className="form-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="title">Sort by Title</option>
+                <option value="rating">Sort by Rating (High to Low)</option>
+                <option value="date">Sort by Date</option>
+              </select>
             </div>
           </div>
-        ) : (
-          <div className="row g-2 g-md-3">
+        </div>
+
+        <div className="container mb-5">
+          {filteredEvents.length === 0 ? (
+            <div className="alert alert-info text-center py-5">
+              <p className="mb-0">No events found. Try adjusting your filters.</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-muted mb-4">
+                Showing <strong>{filteredEvents.length}</strong> event{filteredEvents.length !== 1 ? "s" : ""}
+              </p>
+              <div className="row g-2 g-sm-3 g-md-4">
             {filteredEvents.map((event) => (
-              <div key={event.id} className="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+              <div key={event.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
                 <EventCard event={event} />
               </div>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* Contact Us Section */}
-      <div className="bg-light py-4">
-        <div className="container-fluid px-3">
-          <div className="row justify-content-center">
-            <div className="col-md-6 text-center">
-              <h5 className="mb-3">📞 Need Help?</h5>
-              <p className="text-muted mb-2">Contact our support team for any questions about events or bookings</p>
-              <div className="d-flex justify-content-center align-items-center gap-3">
-                <span className="fw-bold text-primary">📱 +1 (555) 123-4567</span>
-                <span className="text-muted">|</span>
-                <span className="fw-bold text-primary">📧 support@revtickets.com</span>
-              </div>
-              <small className="text-muted d-block mt-2">Available 24/7 for customer support</small>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

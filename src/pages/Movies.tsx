@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 import MovieCard from "../components/MovieCard";
 import "../styles/movies.css";
 
 const Movies = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState<Event[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +28,7 @@ const Movies = () => {
           title: "Inception",
           description: "A thief who steals corporate secrets through dream-sharing technology.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Inception",
+          imageUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&h=400&fit=crop",
           rating: 8.8,
           duration: 148,
           releaseDate: "2010-07-16",
@@ -37,7 +39,7 @@ const Movies = () => {
           title: "The Dark Knight",
           description: "When the menace known as the Joker wreaks havoc on Gotham.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Dark+Knight",
+          imageUrl: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300&h=400&fit=crop",
           rating: 9.0,
           duration: 152,
           releaseDate: "2008-07-18",
@@ -48,7 +50,7 @@ const Movies = () => {
           title: "Interstellar",
           description: "A team of explorers travel through a wormhole in space.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Interstellar",
+          imageUrl: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=400&fit=crop",
           rating: 8.6,
           duration: 169,
           releaseDate: "2014-11-07",
@@ -59,7 +61,7 @@ const Movies = () => {
           title: "Pushpa",
           description: "A man rises to power by dealing in red sanders.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Pushpa",
+          imageUrl: "https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300&h=400&fit=crop",
           rating: 7.5,
           duration: 179,
           releaseDate: "2021-12-17",
@@ -70,7 +72,7 @@ const Movies = () => {
           title: "3 Idiots",
           description: "Two friends are searching for their long lost companion.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=3+Idiots",
+          imageUrl: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300&h=400&fit=crop",
           rating: 8.4,
           duration: 170,
           releaseDate: "2009-12-25",
@@ -81,7 +83,7 @@ const Movies = () => {
           title: "Avatar",
           description: "A paraplegic Marine dispatched to the moon Pandora.",
           category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Avatar",
+          imageUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=400&fit=crop",
           rating: 7.8,
           duration: 162,
           releaseDate: "2009-12-18",
@@ -152,30 +154,25 @@ const Movies = () => {
   return (
     <div className="movies-page">
       <div className="container-fluid">
-        {/* Header */}
         <div className="movies-header py-5 bg-dark text-white">
           <div className="container">
+            <button className="btn btn-light btn-sm mb-4" onClick={() => navigate('/')}>
+              ← Back
+            </button>
             <h1 className="display-4 mb-2">🎬 Movies</h1>
             <p className="lead">Book your favorite movies now!</p>
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="alert alert-danger alert-dismissible fade show m-4" role="alert">
             {error}
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setError(null)}
-            ></button>
+            <button type="button" className="btn-close" onClick={() => setError(null)}></button>
           </div>
         )}
 
-        {/* Filters */}
         <div className="container mt-4 mb-5">
           <div className="row g-2 g-sm-3">
-            {/* Search */}
             <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
@@ -185,8 +182,6 @@ const Movies = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            {/* Language Filter */}
             <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
@@ -201,8 +196,6 @@ const Movies = () => {
                 ))}
               </select>
             </div>
-
-            {/* Sort */}
             <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
@@ -217,7 +210,6 @@ const Movies = () => {
           </div>
         </div>
 
-        {/* Movies Grid */}
         <div className="container mb-5">
           {filteredMovies.length === 0 ? (
             <div className="alert alert-info text-center py-5">
@@ -228,9 +220,9 @@ const Movies = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredMovies.length}</strong> movie{filteredMovies.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-2 g-sm-3 g-md-4">
+              <div className="row g-2 g-sm-3 g-md-4" style={{ width: '100%', margin: '0 auto' }}>
                 {filteredMovies.map((movie) => (
-                  <div key={movie.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                  <div key={movie.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2" style={{ minWidth: '0' }}>
                     <MovieCard movie={movie} />
                   </div>
                 ))}

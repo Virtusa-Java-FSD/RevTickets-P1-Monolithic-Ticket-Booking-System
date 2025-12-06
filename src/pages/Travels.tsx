@@ -13,6 +13,9 @@ const Travels = () => {
   return (
     <div className="container-fluid px-3 mt-4 travel-container">
       <div className="container">
+        <button className="btn btn-primary btn-sm mb-3" onClick={() => window.location.href = '/'}>
+          ← Back
+        </button>
         <h2 className="mb-4 text-center text-md-start">Travel Booking</h2>
         
         <ul className="nav nav-tabs mb-4 justify-content-center justify-content-md-start">
