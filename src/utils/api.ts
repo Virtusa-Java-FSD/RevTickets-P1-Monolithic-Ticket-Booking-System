@@ -2,7 +2,6 @@ import axios from "axios";
 import { mockLogin, mockRegister } from './mockAuth';
 
 const baseURL = "http://localhost:8081/api";
-const USE_MOCK_AUTH = false; // Set to false when backend is available
 
 const client = axios.create({
 	baseURL,
@@ -39,12 +38,6 @@ client.interceptors.response.use(
 
 // OTP endpoints
 export const sendOTP = async (payload: { email: string }) => {
-	if (USE_MOCK_AUTH) {
-		console.log('Using mock OTP send');
-		await new Promise(resolve => setTimeout(resolve, 1000));
-		return { success: true, message: 'OTP sent successfully' };
-	}
-	
 	try {
 		console.log('Sending OTP request to:', `${baseURL}/otp/send`);
 		console.log('Request payload:', payload);
@@ -61,12 +54,6 @@ export const sendOTP = async (payload: { email: string }) => {
 };
 
 export const verifyOTP = async (payload: { email: string; otp: string }) => {
-	if (USE_MOCK_AUTH) {
-		console.log('Using mock OTP verify');
-		await new Promise(resolve => setTimeout(resolve, 1000));
-		return { success: true, message: 'OTP verified successfully' };
-	}
-	
 	try {
 		console.log('Verifying OTP request to:', `${baseURL}/otp/verify`);
 		console.log('Request payload:', payload);
@@ -84,11 +71,6 @@ export const verifyOTP = async (payload: { email: string; otp: string }) => {
 
 // Auth endpoints
 export const loginRequest = async (payload: { email: string; password: string }) => {
-	if (USE_MOCK_AUTH) {
-		console.log('Using mock authentication');
-		return await mockLogin(payload.email, payload.password);
-	}
-	
 	try {
 		console.log('Login request to:', `${baseURL}/auth/login`);
 		console.log('Login payload:', payload);
@@ -106,11 +88,6 @@ export const loginRequest = async (payload: { email: string; password: string })
 };
 
 export const registerRequest = async (payload: { name: string; email: string; phone: string; password: string }) => {
-	if (USE_MOCK_AUTH) {
-		console.log('Using mock registration');
-		return await mockRegister(payload.name, payload.email, payload.phone, payload.password);
-	}
-	
 	try {
 		console.log('Registration request to:', `${baseURL}/auth/register`);
 		console.log('Registration payload:', payload);
