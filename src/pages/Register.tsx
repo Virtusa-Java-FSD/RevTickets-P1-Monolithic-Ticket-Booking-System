@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { sendOTP, verifyOTP } from "../utils/api";
 import "../styles/auth.css";
 
 const Register: React.FC = () => {
@@ -33,28 +34,44 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setMessage(null);
     
     if (!showOtp) {
+      // Step 1: Send OTP
       if (password !== confirmPassword) {
         setError("Passwords do not match");
         return;
       }
       
-      // Send OTP for verification
-      setShowOtp(true);
-      setMessage("OTP sent to your email. Please verify to complete registration.");
+      try {
+        await sendOTP({ email });
+        setShowOtp(true);
+        setMessage("OTP sent to your email. Please check and enter the 6-digit code.");
+      } catch (err: any) {
+        setError(err.message || "Failed to send OTP");
+      }
     } else {
-      // Verify OTP and register
+      // Step 2: Verify OTP and Register
       if (otp.length !== 6) {
         setError("Please enter valid 6-digit OTP");
         return;
       }
       
       try {
-        await register(name, email, password);
-        navigate("/dashboard");
+        // First verify OTP
+        const otpResponse = await verifyOTP({ email, otp });
+        
+        // Check if OTP verification was successful
+        if (otpResponse.verified === true) {
+          // If OTP is verified, proceed with registration
+          await register(name, email, phone, password);
+          setMessage("Registration successful! Redirecting...");
+          setTimeout(() => navigate("/"), 1500);
+        } else {
+          setError("OTP verification failed. Please try again.");
+        }
       } catch (err: any) {
-        setError(err?.response?.data?.message || "Registration failed");
+        setError(err.message || "Registration failed");
       }
     }
   };
