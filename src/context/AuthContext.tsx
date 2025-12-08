@@ -12,7 +12,7 @@ type AuthState = {
 	user: User | null;
 	token: string | null;
 	login: (email: string, password: string) => Promise<void>;
-	register: (name: string, email: string, password: string) => Promise<void>;
+	register: (name: string, email: string, phone: string, password: string) => Promise<void>;
 	logout: () => void;
 };
 
@@ -41,23 +41,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		setToken(tok);
 		setUser(usr);
 		localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: tok, user: usr }));
+		// Store token separately for API interceptor
+		if (tok) {
+			localStorage.setItem('token', tok);
+		} else {
+			localStorage.removeItem('token');
+		}
 	};
 
 	const login = async (email: string, password: string) => {
 		const data = await loginRequest({ email, password });
-		// expecting { token, user }
-		persist(data.token, data.user || null);
+		// Backend returns { token, user } on successful login
+		if (data.token && data.user) {
+			persist(data.token, data.user);
+		} else {
+			throw new Error('Invalid login response');
+		}
 	};
 
-	const register = async (name: string, email: string, password: string) => {
-		const data = await registerRequest({ name, email, password });
-		// some APIs return token on register
-		if (data.token) persist(data.token, data.user || null);
+	const register = async (name: string, email: string, phone: string, password: string) => {
+		const data = await registerRequest({ name, email, phone, password });
+		// Backend returns { token, user } on successful registration
+		if (data.token && data.user) {
+			persist(data.token, data.user);
+		} else {
+			throw new Error('Invalid registration response');
+		}
 	};
 
 	const logout = () => {
 		persist(null, null);
 		localStorage.removeItem(STORAGE_KEY);
+		localStorage.removeItem('token');
 	};
 
 	return (
