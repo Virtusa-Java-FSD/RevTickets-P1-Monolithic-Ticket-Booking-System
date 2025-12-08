@@ -971,7 +971,7 @@ body.auth-page {
 }
 
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
   padding: 0;
   position: relative;
   overflow: hidden;

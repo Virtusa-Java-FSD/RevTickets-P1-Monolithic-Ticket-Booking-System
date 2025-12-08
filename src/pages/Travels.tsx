@@ -49,20 +49,20 @@ const Travels = () => {
         {activeTab === "flights" && (
           <div className="card p-4 travel-card">
             <h4>Flight Booking</h4>
-            <div className="row g-2 g-sm-3">
-              <div className="col-12 col-sm-6">
+            <div className="row g-3">
+              <div className="col-md-6">
                 <label className="form-label">From</label>
                 <input type="text" className="form-control" placeholder="Departure city" />
               </div>
-              <div className="col-12 col-sm-6">
+              <div className="col-md-6">
                 <label className="form-label">To</label>
                 <input type="text" className="form-control" placeholder="Destination city" />
               </div>
-              <div className="col-6 col-sm-6">
+              <div className="col-md-6">
                 <label className="form-label">Departure Date</label>
                 <input type="date" className="form-control" />
               </div>
-              <div className="col-6 col-sm-6">
+              <div className="col-md-6">
                 <label className="form-label">Passengers</label>
                 <select className="form-control">
                   <option>1 Passenger</option>
@@ -72,7 +72,7 @@ const Travels = () => {
                 </select>
               </div>
               <div className="col-12">
-                <button className="btn btn-primary w-100 w-sm-auto" onClick={() => setShowResults(true)}>Search Flights</button>
+                <button className="btn btn-primary" onClick={() => setShowResults(true)}>Search Flights</button>
               </div>
             </div>
             
