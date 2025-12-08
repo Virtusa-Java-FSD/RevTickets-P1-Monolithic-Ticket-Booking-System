@@ -9,6 +9,8 @@ const Navbar: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hideTimeout, setHideTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [isFixed, setIsFixed] = useState(false);
   const isHomePage = location.pathname === '/';
 
   const closeNavbar = () => {
@@ -21,23 +23,66 @@ const Navbar: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!isHomePage) return;
-    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      if (currentScrollY > 800) {
-        setIsVisible(currentScrollY < lastScrollY);
+      if (isHomePage) {
+        // Home page: Make navbar fixed when scrolling starts
+        if (currentScrollY > 50 && !isFixed) {
+          setIsFixed(true);
+        } else if (currentScrollY <= 50 && isFixed) {
+          setIsFixed(false);
+          setIsVisible(true);
+        }
+        
+        // Only apply scroll behavior when navbar is fixed
+        if (isFixed) {
+          if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            // Scrolling down - show navbar for 2 seconds then hide
+            setIsVisible(true);
+            
+            // Clear existing timeout
+            if (hideTimeout) {
+              clearTimeout(hideTimeout);
+            }
+            
+            // Set new timeout to hide navbar after 2 seconds
+            const timeout = setTimeout(() => {
+              setIsVisible(false);
+            }, 2000);
+            
+            setHideTimeout(timeout);
+          } else if (currentScrollY < lastScrollY) {
+            // Scrolling up - show navbar and keep it visible
+            setIsVisible(true);
+            
+            // Clear hide timeout so navbar stays visible
+            if (hideTimeout) {
+              clearTimeout(hideTimeout);
+              setHideTimeout(null);
+            }
+          }
+        }
       } else {
-        setIsVisible(true);
+        // Other pages: Simple hide/show behavior
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+          setIsVisible(true);
+        }
       }
       
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, isHomePage]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+      }
+    };
+  }, [lastScrollY, hideTimeout, isFixed, isHomePage]);
 
   useEffect(() => {
     const handleGlobalClick = (e: Event) => {
@@ -59,10 +104,12 @@ const Navbar: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark" style={{
+    <nav className={`navbar navbar-expand-lg navbar-dark ${isHomePage && isFixed ? 'fixed-top' : ''}`} style={{
       background: '#ffffff',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      borderBottom: '1px solid #e0e0e0'
+      borderBottom: '1px solid #e0e0e0',
+      transform: (isHomePage && isFixed && !isVisible) || (!isHomePage && !isVisible) ? 'translateY(-100%)' : 'translateY(0)',
+      transition: 'transform 0.3s ease-in-out'
     }}>
       <div className="container-fluid px-2">
         <Link className="navbar-brand" to="/" style={{ color: '#222' }}>
