@@ -8,4 +8,12 @@ export interface Event {
   duration?: number; // in minutes for movies
   releaseDate?: string;
   language?: string;
+  genre?: string;
+  format?: string;
+  price?: number;
+  location?: string;
+  eventDate?: string;
+  seats?: number;
+  speakers?: number;
+  isNewRelease?: boolean;
 }

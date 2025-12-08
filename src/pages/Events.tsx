@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 import EventCard from "../components/EventCard";
+import { getEvents } from "../utils/api";
+import "../styles/events.css";
 
 const Events = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,68 +22,12 @@ const Events = () => {
   const loadEvents = async () => {
     try {
       setLoading(true);
-     
-      const mockEvents: Event[] = [
-        {
-          id: "1",
-          title: "Rock Concert 2024",
-          description: "Experience the ultimate rock music festival with top bands.",
-          category: "concert",
-          imageUrl: "https://via.placeholder.com/300x250?text=Rock+Concert",
-          rating: 9.2,
-          releaseDate: "2024-06-15",
-        },
-        {
-          id: "2",
-          title: "Jazz Night",
-          description: "An intimate evening of smooth jazz and soulful melodies.",
-          category: "concert",
-          imageUrl: "https://via.placeholder.com/300x250?text=Jazz+Night",
-          rating: 8.7,
-          releaseDate: "2024-05-20",
-        },
-        {
-          id: "3",
-          title: "Paris Adventure",
-          description: "Explore the city of lights with our exclusive travel package.",
-          category: "travel",
-          imageUrl: "https://via.placeholder.com/300x250?text=Paris+Travel",
-          rating: 9.5,
-          releaseDate: "2024-07-01",
-        },
-        {
-          id: "4",
-          title: "Tokyo Experience",
-          description: "Discover the blend of tradition and modernity in Japan.",
-          category: "travel",
-          imageUrl: "https://via.placeholder.com/300x250?text=Tokyo+Travel",
-          rating: 9.1,
-          releaseDate: "2024-08-10",
-        },
-        {
-          id: "5",
-          title: "Comedy Show",
-          description: "Laugh out loud with the best comedians in town.",
-          category: "other",
-          imageUrl: "https://via.placeholder.com/300x250?text=Comedy+Show",
-          rating: 8.3,
-          releaseDate: "2024-04-25",
-        },
-        {
-          id: "6",
-          title: "Art Exhibition",
-          description: "Contemporary art showcase featuring local and international artists.",
-          category: "other",
-          imageUrl: "https://via.placeholder.com/300x250?text=Art+Exhibition",
-          rating: 8.9,
-          releaseDate: "2024-05-05",
-        },
-      ];
-      setEvents(mockEvents);
-      setFilteredEvents(mockEvents);
+      const data = await getEvents();
+      setEvents(data);
+      setFilteredEvents(data);
       setError(null);
-    } catch (err) {
-      setError("Failed to load events. Please try again later.");
+    } catch (err: any) {
+      setError(err.message || "Failed to load events. Please try again later.");
       console.error("Error loading events:", err);
     } finally {
       setLoading(false);
@@ -99,7 +47,9 @@ const Events = () => {
       );
     }
 
-  
+    // Category filter - show only "other" events (not concerts or travel)
+    result = result.filter((event) => event.category === "other");
+    
     if (selectedCategory !== "all") {
       result = result.filter((event) => event.category === selectedCategory);
     }
@@ -139,31 +89,26 @@ const Events = () => {
   return (
     <div className="events-page">
       <div className="container-fluid">
-        {/* Header */}
         <div className="events-header py-5 bg-dark text-white">
           <div className="container">
+            <button className="btn btn-light btn-sm mb-4" onClick={() => navigate('/')}>
+              ← Back
+            </button>
             <h1 className="display-4 mb-2">🎪 Events</h1>
             <p className="lead">Discover amazing events and book your tickets!</p>
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="alert alert-danger alert-dismissible fade show m-4" role="alert">
             {error}
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setError(null)}
-            ></button>
+            <button type="button" className="btn-close" onClick={() => setError(null)}></button>
           </div>
         )}
 
-        {/* Filters */}
         <div className="container mt-4 mb-5">
-          <div className="row g-3">
-            {/* Search */}
-            <div className="col-md-6 col-lg-4">
+          <div className="row g-2 g-sm-3">
+            <div className="col-12 col-sm-6 col-md-4">
               <input
                 type="text"
                 className="form-control"
@@ -172,9 +117,7 @@ const Events = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            {/* Category Filter */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={selectedCategory}
@@ -188,9 +131,7 @@ const Events = () => {
                 ))}
               </select>
             </div>
-
-            {/* Sort */}
-            <div className="col-md-6 col-lg-4">
+            <div className="col-6 col-sm-3 col-md-4">
               <select
                 className="form-select"
                 value={sortBy}
@@ -204,7 +145,6 @@ const Events = () => {
           </div>
         </div>
 
-        {/* Events Grid */}
         <div className="container mb-5">
           {filteredEvents.length === 0 ? (
             <div className="alert alert-info text-center py-5">
@@ -215,13 +155,13 @@ const Events = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredEvents.length}</strong> event{filteredEvents.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-4">
-                {filteredEvents.map((event) => (
-                  <div key={event.id} className="col-sm-6 col-md-4 col-lg-3">
-                    <EventCard event={event} />
-                  </div>
-                ))}
+              <div className="row g-2 g-sm-3 g-md-4">
+            {filteredEvents.map((event) => (
+              <div key={event.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                <EventCard event={event} />
               </div>
+            ))}
+          </div>
             </>
           )}
         </div>
