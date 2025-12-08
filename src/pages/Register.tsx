@@ -16,18 +16,18 @@ const Register: React.FC = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [displayText, setDisplayText] = useState("");
+  const [typingText, setTypingText] = useState("");
 
   useEffect(() => {
-    const text = "Welcome to RevTickets";
+    const text = "Gateway to Entertainment";
     let index = 0;
     const timer = setInterval(() => {
-      setDisplayText(text.slice(0, index + 1));
+      setTypingText(text.slice(0, index + 1));
       index++;
       if (index >= text.length) {
         clearInterval(timer);
       }
-    }, 100);
+    }, 80);
     return () => clearInterval(timer);
   }, []);
 
@@ -79,13 +79,13 @@ const Register: React.FC = () => {
   return (
     <div className="auth-layout">
       <div className="auth-content">
-        <div className="typewriter-text-large mb-2">{displayText}</div>
-        <p>Your Gateway to Entertainment</p>
+        <div className="typewriter-text-large mb-2">Welcome to RevTickets</div>
+        <p>{typingText}</p>
         <div className="features">
-          <div>🎬 Movies</div>
-          <div>🎵 Concerts</div>
-          <div>🎪 Events</div>
-          <div>✈️ Travel</div>
+          <div>Movies</div>
+          <div>Concerts</div>
+          <div>Events</div>
+          <div>Travel</div>
         </div>
       </div>
       <div className="auth-form">
