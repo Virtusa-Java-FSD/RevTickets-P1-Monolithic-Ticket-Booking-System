@@ -1,4 +1,5 @@
 import axios from "axios";
+import { mockLogin, mockRegister } from './mockAuth';
 
 const baseURL = "http://localhost:8081/api";
 
