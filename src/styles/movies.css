@@ -15,7 +15,7 @@
 
 .banner-carousel {
   position: relative;
-  height: 200px;
+  height: 180px;
   overflow: hidden;
 }
 
@@ -147,10 +147,10 @@
 
 .movie-poster-wrapper {
   position: relative;
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   aspect-ratio: 2/3;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   background: #e0e0e0;
 }
@@ -175,7 +175,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0.75rem;
+  padding: 0.4rem;
 }
 
 .movie-card:hover .movie-overlay {
@@ -188,13 +188,13 @@
 
 .book-btn {
   width: 100%;
-  padding: 0.35rem;
+  padding: 0.2rem;
   background: #ef4444;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 3px;
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -206,86 +206,91 @@
 
 .rating-badge {
   position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
+  top: 0.2rem;
+  left: 0.2rem;
   background: rgba(0,0,0,0.75);
   backdrop-filter: blur(10px);
-  padding: 0.25rem 0.4rem;
-  border-radius: 3px;
+  padding: 0.1rem 0.2rem;
+  border-radius: 2px;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.1rem;
   font-weight: 700;
   color: white;
-  font-size: 0.65rem;
+  font-size: 0.45rem;
   z-index: 2;
+}
+
+.rating-badge svg {
+  width: 8px;
+  height: 8px;
 }
 
 .format-badge {
   position: absolute;
-  bottom: 0.4rem;
-  right: 0.4rem;
+  bottom: 0.2rem;
+  right: 0.2rem;
   background: rgba(255,255,255,0.95);
-  padding: 0.2rem 0.4rem;
-  border-radius: 3px;
+  padding: 0.1rem 0.2rem;
+  border-radius: 2px;
   font-weight: 600;
   color: #333;
-  font-size: 0.6rem;
+  font-size: 0.4rem;
   z-index: 2;
 }
 
 .new-release-badge {
   position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
+  top: 0.2rem;
+  right: 0.2rem;
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  padding: 0.25rem 0.5rem;
-  border-radius: 3px;
+  padding: 0.1rem 0.25rem;
+  border-radius: 2px;
   font-weight: 700;
   color: white;
-  font-size: 0.6rem;
+  font-size: 0.4rem;
   z-index: 2;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .movie-info {
-  padding: 0.5rem 0.15rem 0;
+  padding: 0.2rem 0 0;
 }
 
 .movie-title {
-  font-size: 0.7rem;
+  font-size: 0.55rem;
   font-weight: 600;
   color: #1f1f1f;
-  margin: 0 0 0.3rem;
-  line-height: 1.2;
+  margin: 0 0 0.1rem;
+  line-height: 1.1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 1.7rem;
+  min-height: 1.2rem;
 }
 
 .movie-meta {
   display: flex;
-  gap: 0.3rem;
+  gap: 0.15rem;
   flex-wrap: wrap;
 }
 
 .genre,
 .language {
-  font-size: 0.6rem;
+  font-size: 0.45rem;
   color: #666;
-  padding: 0.1rem 0.3rem;
+  padding: 0.05rem 0.15rem;
   background: #f0f0f0;
-  border-radius: 3px;
+  border-radius: 2px;
   font-weight: 500;
 }
 
 .movie-duration,
 .movie-price {
-  font-size: 0.65rem;
+  font-size: 0.5rem;
   color: #555;
-  margin-top: 0.25rem;
+  margin-top: 0.1rem;
   font-weight: 500;
 }
 
@@ -296,7 +301,7 @@
 
 @media (max-width: 768px) {
   .banner-carousel {
-    height: 150px;
+    height: 120px;
   }
 
   .movie-title {
@@ -355,3 +360,5 @@
 .movie-card:nth-child(5) { animation-delay: 0.25s; }
 .movie-card:nth-child(6) { animation-delay: 0.3s; }
 .movie-card:nth-child(n+7) { animation-delay: 0.35s; }
+
+
