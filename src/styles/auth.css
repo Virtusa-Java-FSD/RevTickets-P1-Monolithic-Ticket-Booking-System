@@ -63,17 +63,7 @@
   font-size: 1.5rem;
 }
 
-.auth-title::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #007bff, #28a745);
-  border-radius: 2px;
-}
+
 
 .auth-input {
   border: 1px solid #e9ecef;

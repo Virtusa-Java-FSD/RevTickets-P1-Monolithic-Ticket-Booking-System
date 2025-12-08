@@ -54,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
           src={event.imageUrl} 
           className="card-img-top" 
           alt={event.title} 
-          style={{ height: "200px", objectFit: "cover", transition: 'transform 0.3s ease' }}
+          style={{ height: "200px", transition: 'transform 0.3s ease' }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         />
