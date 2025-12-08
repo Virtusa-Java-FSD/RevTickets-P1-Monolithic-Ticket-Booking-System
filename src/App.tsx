@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
@@ -9,20 +9,24 @@ import Register from "./pages/Register";
 
 function AppContent() {
   const { user } = useAuth();
+  
+  console.log('Auth state:', { user }); // Debug log
 
   if (!user) {
     return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      <div className="auth-only-layout">
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </div>
     );
   }
 
   return (
     <>
-      <Navbar />
+      <Sidebar />
       <main className="app-main">
         <AppRoutes />
       </main>

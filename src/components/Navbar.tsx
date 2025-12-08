@@ -104,85 +104,143 @@ const Navbar: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <nav className={`navbar navbar-expand-lg navbar-dark ${isHomePage && isFixed ? 'fixed-top' : ''}`} style={{
+    <nav className={`navbar navbar-expand-lg navbar-dark intensive-navbar ${isHomePage && isFixed ? 'fixed-top' : ''}`} style={{
       background: '#ffffff',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
       borderBottom: '1px solid #e0e0e0',
       transform: (isHomePage && isFixed && !isVisible) || (!isHomePage && !isVisible) ? 'translateY(-100%)' : 'translateY(0)',
-      transition: 'transform 0.3s ease-in-out'
+      transition: 'transform 0.3s ease-in-out',
+      height: '60px',
+      minHeight: '60px'
     }}>
-      <div className="container-fluid px-2">
-        <Link className="navbar-brand" to="/" style={{ color: '#222' }}>
-          RevTickets
-        </Link>
+      <div className="container-fluid" style={{ padding: '0 24px', height: '100%' }}>
+        <div className="d-flex align-items-center justify-content-between w-100" style={{ height: '100%' }}>
+          {/* Logo Section */}
+          <Link className="navbar-brand d-flex align-items-center" to="/" style={{ 
+            color: '#222', 
+            fontWeight: '700',
+            fontSize: '1.5rem',
+            margin: '0',
+            padding: '0'
+          }}>
+            RevTickets
+          </Link>
 
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+          {/* Mobile Toggle */}
+          <button 
+            className="navbar-toggler d-lg-none" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav"
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{ border: 'none', padding: '4px 8px' }}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
 
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/movies" onClick={closeNavbar}>
-                <MovieIcon size={18} />
+          {/* Desktop Navigation */}
+          <div className="d-none d-lg-flex align-items-center" style={{ height: '100%' }}>
+            {/* Main Navigation Links */}
+            <div className="d-flex align-items-center" style={{ marginLeft: '48px' }}>
+              <Link className="nav-link-intensive" to="/movies" onClick={closeNavbar}>
+                <MovieIcon size={16} />
                 <span>Movies</span>
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/events" onClick={closeNavbar}>
-                <EventIcon size={18} />
+              <Link className="nav-link-intensive" to="/events" onClick={closeNavbar}>
+                <EventIcon size={16} />
                 <span>Events</span>
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/concerts" onClick={closeNavbar}>
-                <ConcertIcon size={18} />
+              <Link className="nav-link-intensive" to="/concerts" onClick={closeNavbar}>
+                <ConcertIcon size={16} />
                 <span>Concerts</span>
               </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1 py-2" to="/travels" onClick={closeNavbar}>
-                <TravelIcon size={18} />
+              <Link className="nav-link-intensive" to="/travels" onClick={closeNavbar}>
+                <TravelIcon size={16} />
                 <span>Travels</span>
               </Link>
-            </li>
-          </ul>
+            </div>
 
-          <ul className="navbar-nav ms-auto">
-            {user ? (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard" onClick={closeNavbar}>
+            {/* Right Side Navigation */}
+            <div className="d-flex align-items-center" style={{ marginLeft: 'auto' }}>
+              {user ? (
+                <>
+                  <Link className="nav-link-intensive" to="/dashboard" onClick={closeNavbar}>
                     Dashboard
                   </Link>
-                </li>
-                <li className="nav-item">
-                  <button className="btn btn-link nav-link" onClick={() => { logout(); closeNavbar(); }}>
+                  <button className="nav-link-intensive btn-link-intensive" onClick={() => { logout(); closeNavbar(); }}>
                     Logout
                   </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login" onClick={closeNavbar}>
+                </>
+              ) : (
+                <>
+                  <Link className="nav-link-intensive" to="/login" onClick={closeNavbar}>
                     Login
                   </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register" onClick={closeNavbar}>
+                  <Link className="nav-link-intensive" to="/register" onClick={closeNavbar}>
                     Register
                   </Link>
-                </li>
-              </>
-            )}
-          </ul>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="collapse navbar-collapse d-lg-none" id="navbarNav">
+            <ul className="navbar-nav w-100">
+              <li className="nav-item">
+                <Link className="nav-link d-flex align-items-center gap-2 py-2" to="/movies" onClick={closeNavbar}>
+                  <MovieIcon size={18} />
+                  <span>Movies</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link d-flex align-items-center gap-2 py-2" to="/events" onClick={closeNavbar}>
+                  <EventIcon size={18} />
+                  <span>Events</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link d-flex align-items-center gap-2 py-2" to="/concerts" onClick={closeNavbar}>
+                  <ConcertIcon size={18} />
+                  <span>Concerts</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link d-flex align-items-center gap-2 py-2" to="/travels" onClick={closeNavbar}>
+                  <TravelIcon size={18} />
+                  <span>Travels</span>
+                </Link>
+              </li>
+              <hr className="my-2" />
+              {user ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link py-2" to="/dashboard" onClick={closeNavbar}>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <button className="btn btn-link nav-link py-2" onClick={() => { logout(); closeNavbar(); }}>
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link py-2" to="/login" onClick={closeNavbar}>
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link py-2" to="/register" onClick={closeNavbar}>
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </nav>

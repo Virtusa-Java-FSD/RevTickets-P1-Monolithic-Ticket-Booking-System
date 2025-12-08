@@ -23,6 +23,7 @@ const STORAGE_KEY = "rev_auth";
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [token, setToken] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		try {
@@ -34,6 +35,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 			}
 		} catch (e) {
 			// ignore
+		} finally {
+			setIsLoading(false);
 		}
 	}, []);
 
@@ -85,7 +88,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		persist(null, null);
 		localStorage.removeItem(STORAGE_KEY);
 		localStorage.removeItem('token');
+		// Force page reload to ensure clean state
+		window.location.href = '/login';
 	};
+
+	if (isLoading) {
+		return <div className="loading-screen">Loading...</div>;
+	}
 
 	return (
 		<AuthContext.Provider value={{ user, token, login, register, logout }}>
