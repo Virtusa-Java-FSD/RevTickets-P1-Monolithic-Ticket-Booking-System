@@ -9,6 +9,7 @@ import Events from "../pages/Events";
 import Concerts from "../pages/Concerts";
 import Travels from "../pages/Travels";
 import Dashboard from "../pages/Dashboard";
+import BusPassengerDetails from "../pages/BusPassengerDetails";
 import { useAuth } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
@@ -27,6 +28,7 @@ const AppRoutes = () => (
     <Route path="/events" element={<Events />} />
     <Route path="/concerts" element={<Concerts />} />
     <Route path="/travels" element={<Travels />} />
+    <Route path="/travel/bus/passenger-details" element={<BusPassengerDetails />} />
     <Route
       path="/dashboard"
       element={
