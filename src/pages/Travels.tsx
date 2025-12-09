@@ -1,318 +1,363 @@
 import { useState, useEffect } from "react";
+import SeatSelection from "../components/SeatSelection";
+import "../styles/travel.css";
+
+interface TravelOption {
+  id: string;
+  name: string;
+  type: 'flight' | 'bus' | 'train';
+  imageUrl: string;
+  rating?: number;
+  serviceType: string;
+  departure: string;
+  arrival: string;
+  duration: string;
+  price: number;
+  route: string;
+}
 
 const Travels = () => {
-  const [activeTab, setActiveTab] = useState("flights");
-  const [showResults, setShowResults] = useState(false);
-  const [searchData, setSearchData] = useState({ from: '', to: '', date: '', passengers: '1' });
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('Flights');
+  const [searchData, setSearchData] = useState({
+    from: '',
+    to: '',
+    date: '',
+    travelType: 'flights'
+  });
+  const [travelOptions, setTravelOptions] = useState<TravelOption[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<TravelOption[]>([]);
+  const [showSeatSelection, setShowSeatSelection] = useState(false);
+  const [selectedBus, setSelectedBus] = useState("");
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+
+  const bannerImages = [
+    {
+      url: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      title: 'Travel Booking',
+      subtitle: 'Flights • Buses • Trains'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      title: 'Book Your Journey',
+      subtitle: 'Best prices guaranteed'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+      title: 'Travel Anywhere',
+      subtitle: 'Comfortable & Safe'
+    }
+  ];
 
   useEffect(() => {
-    document.body.classList.add('travel-page');
-    return () => document.body.classList.remove('travel-page');
+    loadTravelOptions();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % bannerImages.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [bannerImages.length]);
+
+  const loadTravelOptions = () => {
+    const mockOptions: TravelOption[] = [
+      {
+        id: '1',
+        name: 'Air India',
+        type: 'flight',
+        imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
+        rating: 4.2,
+        serviceType: 'Economy',
+        departure: '08:00',
+        arrival: '10:30',
+        duration: '2h 30m',
+        price: 5500,
+        route: 'DEL → BOM'
+      },
+      {
+        id: '2',
+        name: 'RedBus Express',
+        type: 'bus',
+        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
+        rating: 4.0,
+        serviceType: 'AC Sleeper',
+        departure: '22:00',
+        arrival: '06:00',
+        duration: '8h 00m',
+        price: 1200,
+        route: 'Mumbai → Delhi'
+      },
+      {
+        id: '3',
+        name: 'Rajdhani Express',
+        type: 'train',
+        imageUrl: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
+        rating: 4.5,
+        serviceType: '2AC',
+        departure: '16:55',
+        arrival: '08:35',
+        duration: '15h 40m',
+        price: 2800,
+        route: 'NDLS → MMCT'
+      },
+      {
+        id: '4',
+        name: 'IndiGo',
+        type: 'flight',
+        imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
+        rating: 4.3,
+        serviceType: 'Economy',
+        departure: '14:15',
+        arrival: '16:45',
+        duration: '2h 30m',
+        price: 4200,
+        route: 'BLR → MAA'
+      },
+      {
+        id: '5',
+        name: 'Travels Plus',
+        type: 'bus',
+        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
+        rating: 3.8,
+        serviceType: 'AC Seater',
+        departure: '06:30',
+        arrival: '12:00',
+        duration: '5h 30m',
+        price: 800,
+        route: 'Pune → Mumbai'
+      },
+      {
+        id: '6',
+        name: 'Shatabdi Express',
+        type: 'train',
+        imageUrl: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
+        rating: 4.4,
+        serviceType: 'CC',
+        departure: '06:00',
+        arrival: '11:00',
+        duration: '5h 00m',
+        price: 1500,
+        route: 'NDLS → AGC'
+      }
+    ];
+    setTravelOptions(mockOptions);
+    setFilteredOptions(mockOptions);
+  };
+
+  const handleSearch = () => {
+    setLoading(true);
+    setTimeout(() => {
+      let filtered = travelOptions;
+      if (searchData.travelType) {
+        filtered = filtered.filter(option => option.type === searchData.travelType.slice(0, -1));
+      }
+      setFilteredOptions(filtered);
+      setLoading(false);
+    }, 1000);
+  };
+
+
+
+  const handleSeatSelection = (busName: string) => {
+    setSelectedBus(busName);
+    setShowSeatSelection(true);
+  };
+
+  const handleSeatConfirm = (selectedSeats: any[]) => {
+    console.log('Selected seats:', selectedSeats);
+    setShowSeatSelection(false);
+  };
+
+
+
   return (
-    <div className="container-fluid px-3 mt-4 travel-container">
-      <div className="container">
-        <button className="btn btn-primary btn-sm mb-3" onClick={() => window.location.href = '/'}>
-          ← Back
-        </button>
-        <h2 className="mb-4 text-center text-md-start">Travel Booking</h2>
-        
-        <ul className="nav nav-tabs mb-4 justify-content-center justify-content-md-start">
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === "flights" ? "active" : ""}`}
-            onClick={() => setActiveTab("flights")}
-          >
-            ✈️ Flights
-          </button>
-        </li>
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === "buses" ? "active" : ""}`}
-            onClick={() => setActiveTab("buses")}
-          >
-            🚌 Buses
-          </button>
-        </li>
-        <li className="nav-item">
-          <button 
-            className={`nav-link ${activeTab === "trains" ? "active" : ""}`}
-            onClick={() => setActiveTab("trains")}
-          >
-            🚆 Trains
-          </button>
-        </li>
-      </ul>
-
-      <div className="tab-content">
-        {activeTab === "flights" && (
-          <div className="card p-4 travel-card">
-            <h4>Flight Booking</h4>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label">From</label>
-                <input type="text" className="form-control" placeholder="Departure city" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">To</label>
-                <input type="text" className="form-control" placeholder="Destination city" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Departure Date</label>
-                <input type="date" className="form-control" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Passengers</label>
-                <select className="form-control">
-                  <option>1 Passenger</option>
-                  <option>2 Passengers</option>
-                  <option>3 Passengers</option>
-                  <option>4+ Passengers</option>
-                </select>
-              </div>
-              <div className="col-12">
-                <button className="btn btn-primary" onClick={() => setShowResults(true)}>Search Flights</button>
+    <div className="travels-page">
+      <div className="container-fluid">
+        {/* Banner Carousel */}
+        <div className="banner-carousel">
+          {bannerImages.map((banner, index) => (
+            <div
+              key={index}
+              className={`banner-slide ${index === currentBannerIndex ? 'active' : ''}`}
+              style={{ backgroundImage: `url(${banner.url})` }}
+            >
+              <div className="banner-overlay"></div>
+              <div className="banner-content">
+                <div className="container">
+                  <h2 className="text-white display-5 fw-bold">{banner.title}</h2>
+                  <p className="text-white-50">{banner.subtitle}</p>
+                </div>
               </div>
             </div>
-            
-            {showResults && (
-              <div className="mt-4 travel-results">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h5>Available Flights</h5>
-                  <div className="d-flex gap-2">
-                    <select className="form-select form-select-sm" style={{width: 'auto'}}>
-                      <option>Sort by Price</option>
-                      <option>Sort by Duration</option>
-                      <option>Sort by Departure</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="row">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="col-12 mb-3">
-                      <div className="card">
-                        <div className="card-body">
-                          <div className="row align-items-center g-2">
-                            <div className="col-12 col-sm-6 col-md-3">
-                              <h6 className="mb-1">IndiGo 6E-{123+i}</h6>
-                              <small className="text-muted">Airbus A320</small>
-                            </div>
-                            <div className="col-12 col-sm-6 col-md-4">
-                              <div className="d-flex align-items-center">
-                                <div className="text-center">
-                                  <div className="fw-bold">08:{30+i*2}0</div>
-                                  <small>DEL</small>
-                                </div>
-                                <div className="mx-2 mx-sm-3 flex-grow-1">
-                                  <div className="border-top position-relative">
-                                    <small className="position-absolute top-50 start-50 translate-middle bg-white px-1 px-sm-2 text-muted">{i+1}h {20+i*10}m</small>
-                                  </div>
-                                </div>
-                                <div className="text-center">
-                                  <div className="fw-bold">{10+i*2}:{50-i*5}0</div>
-                                  <small>BOM</small>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-6 col-sm-6 col-md-2 text-center">
-                              <div className="fw-bold text-success">₹{4500+i*500}</div>
-                              <small className="text-muted">per person</small>
-                            </div>
-                            <div className="col-6 col-sm-6 col-md-3 text-end">
-                              <div className="d-flex flex-column flex-sm-row gap-1">
-                                <button className="btn btn-outline-primary btn-sm">View Details</button>
-                                <button className="btn btn-primary btn-sm">Book Now</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+          ))}
+        </div>
 
-        {activeTab === "buses" && (
-          <div className="card p-4 travel-card">
-            <h4>Bus Booking</h4>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label">From</label>
-                <input type="text" className="form-control" placeholder="Departure city" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">To</label>
-                <input type="text" className="form-control" placeholder="Destination city" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Travel Date</label>
-                <input type="date" className="form-control" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Passengers</label>
-                <select className="form-control">
-                  <option>1 Passenger</option>
-                  <option>2 Passengers</option>
-                  <option>3 Passengers</option>
-                  <option>4+ Passengers</option>
-                </select>
-              </div>
-              <div className="col-12">
-                <button className="btn btn-primary" onClick={() => setShowResults(true)}>Search Buses</button>
-              </div>
-            </div>
+        {/* Header */}
+        <div className="travels-header py-4 bg-dark text-white">
+          <div className="container">
+            <h1 className="h3 mb-1">Travel Booking</h1>
+            <p className="mb-0 small">Book flights, buses, and trains at best prices!</p>
             
-            {showResults && (
-              <div className="mt-4 travel-results">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h5>Available Buses</h5>
-                  <div className="d-flex gap-2">
-                    <button className="btn btn-outline-secondary btn-sm">AC</button>
-                    <button className="btn btn-outline-secondary btn-sm">Non-AC</button>
-                    <button className="btn btn-outline-secondary btn-sm">Sleeper</button>
-                  </div>
-                </div>
-                
-                <div className="row">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="col-12 mb-3">
-                      <div className="card">
-                        <div className="card-body">
-                          <div className="row align-items-center">
-                            <div className="col-md-3">
-                              <h6 className="mb-1">{['VRL Travels', 'SRS Travels', 'Orange Travels'][i-1]}</h6>
-                              <small className="text-muted">{['AC Sleeper', 'AC Semi Sleeper', 'Non-AC Seater'][i-1]}</small>
-                            </div>
-                            <div className="col-md-4">
-                              <div className="d-flex align-items-center">
-                                <div className="text-center">
-                                  <div className="fw-bold">{20+i}:00</div>
-                                  <small>Departure</small>
-                                </div>
-                                <div className="mx-3 flex-grow-1">
-                                  <div className="border-top position-relative">
-                                    <small className="position-absolute top-50 start-50 translate-middle bg-white px-2 text-muted">{6+i}h {30-i*10}m</small>
-                                  </div>
-                                </div>
-                                <div className="text-center">
-                                  <div className="fw-bold">0{2+i}:{30+i*15}</div>
-                                  <small>Arrival</small>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-2 text-center">
-                              <div className="fw-bold text-success">₹{800+i*200}</div>
-                              <small className="text-muted">per seat</small>
-                            </div>
-                            <div className="col-md-3 text-end">
-                              <button className="btn btn-outline-primary btn-sm me-2">View Seats</button>
-                              <button className="btn btn-primary btn-sm">Book Now</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+            {/* Travel Tabs */}
+            <div className="travel-tabs">
+              <button 
+                className={`travel-tab ${activeTab === 'Flights' ? 'active-tab' : ''}`}
+                onClick={() => setActiveTab('Flights')}
+              >
+                Flights
+              </button>
+              <button 
+                className={`travel-tab ${activeTab === 'Buses' ? 'active-tab' : ''}`}
+                onClick={() => setActiveTab('Buses')}
+              >
+                Buses
+              </button>
+              <button 
+                className={`travel-tab ${activeTab === 'Trains' ? 'active-tab' : ''}`}
+                onClick={() => setActiveTab('Trains')}
+              >
+                Trains
+              </button>
+            </div>
 
-        {activeTab === "trains" && (
-          <div className="card p-4 travel-card">
-            <h4>Train Booking</h4>
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label className="form-label">From</label>
-                <input type="text" className="form-control" placeholder="Departure station" />
+            {/* New Compact Filter Bar */}
+            <div className="compact-filter-bar mt-4">
+              <input 
+                type="text" 
+                placeholder="From City" 
+                className="city-input"
+                value={searchData.from}
+                onChange={(e) => setSearchData({...searchData, from: e.target.value})}
+              />
+              <button className="swap-btn" onClick={() => setSearchData({...searchData, from: searchData.to, to: searchData.from})}>
+                ↔
+              </button>
+              <input 
+                type="text" 
+                placeholder="To City" 
+                className="city-input"
+                value={searchData.to}
+                onChange={(e) => setSearchData({...searchData, to: e.target.value})}
+              />
+              <div className="date-group">
+                <input 
+                  type="date" 
+                  className="date-input"
+                  value={searchData.date}
+                  onChange={(e) => setSearchData({...searchData, date: e.target.value})}
+                />
+                <button className="date-btn" onClick={() => setSearchData({...searchData, date: new Date().toISOString().split('T')[0]})}>
+                  Today
+                </button>
+                <button className="date-btn" onClick={() => {
+                  const tomorrow = new Date();
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  setSearchData({...searchData, date: tomorrow.toISOString().split('T')[0]});
+                }}>
+                  Tomorrow
+                </button>
               </div>
-              <div className="col-md-6">
-                <label className="form-label">To</label>
-                <input type="text" className="form-control" placeholder="Destination station" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Travel Date</label>
-                <input type="date" className="form-control" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Class</label>
-                <select className="form-control">
-                  <option>Sleeper</option>
-                  <option>AC 3 Tier</option>
-                  <option>AC 2 Tier</option>
-                  <option>AC 1 Tier</option>
-                </select>
-              </div>
-              <div className="col-12">
-                <button className="btn btn-primary" onClick={() => setShowResults(true)}>Search Trains</button>
-              </div>
+
+              <button className="search-btn" onClick={handleSearch}>
+                Search
+              </button>
             </div>
-            
-            {showResults && (
-              <div className="mt-4 travel-results">
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h5>Available Trains</h5>
-                  <div className="d-flex gap-2">
-                    <button className="btn btn-outline-secondary btn-sm">Availability</button>
-                    <button className="btn btn-outline-secondary btn-sm">Duration</button>
-                  </div>
-                </div>
-                
-                <div className="row">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="col-12 mb-3">
-                      <div className="card">
-                        <div className="card-body">
-                          <div className="row align-items-center">
-                            <div className="col-md-3">
-                              <h6 className="mb-1">{['Rajdhani Exp', 'Shatabdi Exp', 'Duronto Exp'][i-1]}</h6>
-                              <small className="text-muted">#{12001+i*10}</small>
-                            </div>
-                            <div className="col-md-4">
-                              <div className="d-flex align-items-center">
-                                <div className="text-center">
-                                  <div className="fw-bold">{15+i}:{45-i*5}</div>
-                                  <small>NDLS</small>
-                                </div>
-                                <div className="mx-3 flex-grow-1">
-                                  <div className="border-top position-relative">
-                                    <small className="position-absolute top-50 start-50 translate-middle bg-white px-2 text-muted">{14+i*2}h {25+i*5}m</small>
-                                  </div>
-                                </div>
-                                <div className="text-center">
-                                  <div className="fw-bold">0{6+i}:{10+i*15}</div>
-                                  <small>CSTM</small>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-2">
-                              <div className="small">
-                                <div>SL: ₹{450+i*50} <span className="text-success">Available</span></div>
-                                <div>3A: ₹{1200+i*100} <span className="text-warning">RAC</span></div>
-                              </div>
-                            </div>
-                            <div className="col-md-3 text-end">
-                              <button className="btn btn-outline-primary btn-sm me-2">Check Availability</button>
-                              <button className="btn btn-primary btn-sm">Book Now</button>
-                            </div>
+          </div>
+        </div>
+
+
+
+        {/* Results Grid */}
+        <div className="container mb-5">
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="mt-3">Searching travel options...</p>
+            </div>
+          ) : filteredOptions.length === 0 ? (
+            <div className="alert alert-info text-center py-5">
+              <p className="mb-0">No travel options found. Try adjusting your filters.</p>
+            </div>
+          ) : (
+            <>
+              <p className="text-muted mb-4">
+                Showing <strong>{filteredOptions.length}</strong> travel option{filteredOptions.length !== 1 ? "s" : ""}
+              </p>
+              <div className="row g-2">
+                {(() => {
+                  const filteredOptions = travelOptions.filter((item) => {
+                    if (activeTab === "Flights") return item.type === "flight";
+                    if (activeTab === "Buses") return item.type === "bus";
+                    if (activeTab === "Trains") return item.type === "train";
+                    return false;
+                  });
+                  return filteredOptions.map((option) => (
+                  <div key={option.id} style={{ flex: '0 0 20%', maxWidth: '20%', padding: '0 0.25rem' }}>
+                    <div className="travel-card">
+                      <div className="travel-image-wrapper">
+                        <img 
+                          src={option.imageUrl} 
+                          alt={option.name}
+                          className="travel-image"
+                        />
+                        <div className="travel-overlay">
+                          <div className="overlay-content">
+                            {option.type === 'bus' ? (
+                              <button 
+                                className="book-btn"
+                                onClick={() => handleSeatSelection(option.name)}
+                              >
+                                View Seats
+                              </button>
+                            ) : (
+                              <button className="book-btn">
+                                Book Now
+                              </button>
+                            )}
                           </div>
                         </div>
+                        {option.rating && (
+                          <div className="rating-badge">
+                            <svg width="8" height="8" viewBox="0 0 24 24" fill="#fbbf24">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>{option.rating}/5</span>
+                          </div>
+                        )}
+
+                      </div>
+                      <div className="travel-info">
+                        <h3 className="travel-title">{option.name}</h3>
+                        <div className="travel-meta">
+                          <span className="service-type">{option.serviceType}</span>
+                          <span className="route">{option.route}</span>
+                        </div>
+                        <div className="travel-timing">
+                          {option.departure} → {option.arrival} ({option.duration})
+                        </div>
+                        <div className="travel-price">₹{option.price} onwards</div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                  ));
+                })()}
               </div>
-            )}
-          </div>
-        )}
+            </>
+          )}
         </div>
       </div>
+      
+      {/* Seat Selection Modal */}
+      {showSeatSelection && (
+        <SeatSelection
+          busName={selectedBus}
+          onClose={() => setShowSeatSelection(false)}
+          onConfirm={handleSeatConfirm}
+        />
+      )}
     </div>
   );
 };
