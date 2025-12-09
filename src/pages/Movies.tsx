@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Event } from "../types/Event";
 import MovieCard from "../components/MovieCard";
+import Footer from "../components/Footer";
 import "../styles/movies.css";
 
 const Movies = () => {
@@ -317,10 +318,9 @@ const Movies = () => {
         </div>
 
         {/* Header */}
-        <div className="movies-header py-4 bg-dark text-white">
+        <div className="movies-header py-3" style={{ background: '#1f1f1f', color: 'white' }}>
           <div className="container">
-            <h1 className="h3 mb-1">🎬 Movies</h1>
-            <p className="mb-0 small">Book your favorite movies now!</p>
+            <h1 className="h4 mb-0 fw-bold">Movies</h1>
           </div>
         </div>
 
@@ -434,6 +434,7 @@ const Movies = () => {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

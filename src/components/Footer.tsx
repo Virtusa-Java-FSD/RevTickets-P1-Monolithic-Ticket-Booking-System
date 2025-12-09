@@ -2,27 +2,97 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer">
-      <div className="container">
-        <div className="row">
-          <div className="col-md-6">
-            <h5 className="mb-3">RevTickets</h5>
-            <p className="text-muted small mb-0">
-              Your one-stop destination for booking amazing events, concerts, and travel experiences.
+    <footer className="text-white mt-auto" style={{ padding: '1.5rem 0 1rem', background: '#1f1f1f' }}>
+      <div className="container" style={{ maxWidth: '1200px' }}>
+        <div className="d-flex flex-wrap justify-content-between align-items-start" style={{ gap: '2rem' }}>
+          <div style={{ flex: '1 1 200px' }}>
+            <h6 style={{ color: '#ef4444', fontWeight: '600', fontSize: '0.9rem', marginBottom: '0.75rem' }}>RevTickets</h6>
+            <p className="text-white-50" style={{ fontSize: '0.75rem', lineHeight: '1.5', marginBottom: '0.75rem' }}>
+              Your destination for movie tickets.
             </p>
-          </div>
-          <div className="col-md-6 text-md-end">
-            <div className="d-flex justify-content-md-end justify-content-start gap-3 mt-3 mt-md-0">
-              <a href="#" className="text-muted text-decoration-none small">Privacy Policy</a>
-              <a href="#" className="text-muted text-decoration-none small">Terms of Service</a>
-              <a href="#" className="text-muted text-decoration-none small">Contact Us</a>
+            <div className="d-flex gap-2">
+              <a href="#" className="text-white-50 hover-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" className="text-white-50 hover-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+              <a href="#" className="text-white-50 hover-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
             </div>
-            <p className="text-muted small mt-2 mb-0">
-              © 2024 RevTickets. All rights reserved.
+          </div>
+          
+          <div style={{ flex: '0 1 auto' }}>
+            <h6 style={{ fontWeight: '600', fontSize: '0.8rem', marginBottom: '0.75rem' }}>Quick Links</h6>
+            <ul className="list-unstyled" style={{ margin: 0 }}>
+              <li style={{ marginBottom: '0.4rem' }}>
+                <a href="/movies" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>Movies</a>
+              </li>
+              <li style={{ marginBottom: '0.4rem' }}>
+                <a href="/events" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>Events</a>
+              </li>
+              <li>
+                <a href="/concerts" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>Concerts</a>
+              </li>
+            </ul>
+          </div>
+          
+          <div style={{ flex: '0 1 auto' }}>
+            <h6 style={{ fontWeight: '600', fontSize: '0.8rem', marginBottom: '0.75rem' }}>Support</h6>
+            <ul className="list-unstyled" style={{ margin: 0 }}>
+              <li style={{ marginBottom: '0.4rem' }}>
+                <a href="#" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>Help Center</a>
+              </li>
+              <li style={{ marginBottom: '0.4rem' }}>
+                <a href="#" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>FAQs</a>
+              </li>
+              <li>
+                <a href="#" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.75rem' }}>Refund</a>
+              </li>
+            </ul>
+          </div>
+          
+          <div style={{ flex: '0 1 auto' }}>
+            <h6 style={{ fontWeight: '600', fontSize: '0.8rem', marginBottom: '0.75rem' }}>Contact</h6>
+            <p className="text-white-50" style={{ fontSize: '0.75rem', margin: '0 0 0.4rem 0' }}>
+              📧 support@revtickets.com
+            </p>
+            <p className="text-white-50" style={{ fontSize: '0.75rem', margin: 0 }}>
+              📞 +1 (555) 123-4567
             </p>
           </div>
         </div>
+        
+        <hr style={{ borderColor: '#333', margin: '1.25rem 0 0.75rem' }} />
+        
+        <div className="d-flex justify-content-between align-items-center flex-wrap" style={{ gap: '1rem' }}>
+          <p className="text-white-50 mb-0" style={{ fontSize: '0.7rem' }}>
+            © {currentYear} RevTickets. All rights reserved.
+          </p>
+          <div className="d-flex" style={{ gap: '1rem' }}>
+            <a href="#" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.7rem' }}>
+              Privacy
+            </a>
+            <a href="#" className="text-white-50 text-decoration-none hover-white" style={{ fontSize: '0.7rem' }}>
+              Terms
+            </a>
+          </div>
+        </div>
       </div>
+      
+      <style>{`
+        .hover-white:hover {
+          color: white !important;
+          transition: color 0.3s ease;
+        }
+      `}</style>
     </footer>
   );
 };

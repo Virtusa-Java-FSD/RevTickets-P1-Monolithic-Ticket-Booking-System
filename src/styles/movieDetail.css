@@ -33,7 +33,7 @@
   background-size: cover;
   background-position: center;
   position: relative;
-  padding: 2rem 0 3rem;
+  padding: 1.5rem 0 2rem;
   color: white;
 }
 
@@ -53,7 +53,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.5rem 1rem;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.2);
@@ -62,7 +62,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .back-btn:hover {
@@ -72,16 +72,16 @@
 
 .header-content {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: flex-start;
 }
 
 .movie-poster-large {
   flex-shrink: 0;
-  width: 250px;
-  border-radius: 12px;
+  width: 180px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 .movie-poster-large img {
@@ -95,30 +95,30 @@
 }
 
 .movie-title-large {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   line-height: 1.2;
 }
 
 .movie-badges {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .badge {
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.75rem;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .rating-badge-large {
@@ -129,16 +129,41 @@
 
 .movie-genre {
   color: rgba(255,255,255,0.8);
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
 }
 
 .movie-description-large {
-  font-size: 1.05rem;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: rgba(255,255,255,0.9);
-  max-width: 700px;
-  margin: 0;
+  max-width: 650px;
+  margin: 0 0 1rem;
+}
+
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.info-label {
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.85rem;
+  min-width: 110px;
+}
+
+.info-value {
+  color: rgba(255,255,255,0.95);
+  font-size: 0.85rem;
 }
 
 /* Showtimes Section */
@@ -147,10 +172,150 @@
 }
 
 .section-title {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #1f1f1f;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 2px;
+}
+
+/* Booking Controls */
+.booking-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Custom Booking Toggle */
+.custom-booking-toggle {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Format Filter */
+.format-filter {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.format-filter-btn {
+  padding: 0.5rem 1.25rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.format-filter-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.format-filter-btn.active {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.toggle-btn {
+  padding: 0.75rem 1.5rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+}
+
+.toggle-btn.active {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+/* Custom Booking Section */
+.custom-booking-section {
+  margin-bottom: 2rem;
+}
+
+.custom-booking-card {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.custom-booking-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin: 0 0 1.5rem;
+}
+
+.custom-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  flex: 1;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #ef4444;
+}
+
+.custom-book-btn {
+  padding: 0.75rem 2rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.custom-book-btn:hover {
+  background: #dc2626;
 }
 
 /* Date Selector */
@@ -178,20 +343,18 @@
 
 .date-btn {
   flex-shrink: 0;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 0.75rem;
   background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   text-align: center;
-  min-width: 90px;
+  min-width: 70px;
 }
 
 .date-btn:hover {
-  border-color: #333;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-color: #ef4444;
 }
 
 .date-btn.active {
@@ -200,25 +363,45 @@
   color: white;
 }
 
+.date-btn.active .date-day,
+.date-btn.active .date-number,
+.date-btn.active .date-month {
+  color: white;
+}
+
+.date-btn:disabled,
+.date-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: #fafafa;
+  border-color: #e5e5e5;
+}
+
+.date-btn:disabled:hover,
+.date-btn.disabled:hover {
+  border-color: #e5e5e5;
+}
+
 .date-day {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 400;
   text-transform: uppercase;
-  margin-bottom: 0.25rem;
-  opacity: 0.8;
+  margin-bottom: 0.15rem;
+  color: #999;
 }
 
 .date-number {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+  color: #333;
 }
 
 .date-month {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 400;
   text-transform: uppercase;
-  opacity: 0.8;
+  color: #999;
 }
 
 /* Theaters List */
@@ -231,18 +414,21 @@
 .theater-card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
   transition: all 0.3s ease;
+  margin-bottom: 1rem;
 }
 
 .theater-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transform: translateY(-2px);
+  border-color: #ef4444;
 }
 
 .theater-info {
@@ -250,10 +436,10 @@
 }
 
 .theater-name {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #1f1f1f;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
 }
 
 .theater-meta {
@@ -264,21 +450,22 @@
 }
 
 .format-tag {
-  padding: 0.35rem 0.75rem;
-  background: #f0f0f0;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 0.3rem 0.7rem;
+  background: #666;
+  border-radius: 4px;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #333;
+  color: white;
+  text-transform: uppercase;
 }
 
 .seats-info {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.9rem;
-  color: #22c55e;
-  font-weight: 500;
+  font-size: 0.85rem;
+  color: #10b981;
+  font-weight: 600;
 }
 
 .sold-out {
@@ -293,33 +480,39 @@
 }
 
 .showtime {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #1f1f1f;
+  background: #f9fafb;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
 }
 
 .price {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #666;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ef4444;
 }
 
 .select-btn {
-  padding: 0.75rem 2rem;
-  background: #22c55e;
+  padding: 0.7rem 2rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .select-btn:hover:not(:disabled) {
-  background: #16a34a;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 .select-btn:disabled {
@@ -361,6 +554,16 @@
     max-width: 100%;
   }
 
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .info-label {
+    min-width: auto;
+  }
+
   .theater-card {
     flex-direction: column;
     align-items: flex-start;
@@ -373,6 +576,35 @@
 }
 
 @media (max-width: 768px) {
+  .booking-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .custom-booking-toggle {
+    width: 100%;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .format-filter {
+    width: 100%;
+  }
+
+  .custom-booking-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .custom-inputs {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .movie-header {
     padding: 1.5rem 0 2rem;
   }

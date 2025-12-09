@@ -5,6 +5,8 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Movies from "../pages/Movies";
 import MovieDetail from "../pages/MovieDetail";
+import SeatSelection from "../pages/SeatSelection";
+import Payment from "../pages/Payment";
 import Events from "../pages/Events";
 import Concerts from "../pages/Concerts";
 import Travels from "../pages/Travels";
@@ -28,6 +30,8 @@ const AppRoutes = () => (
     <Route path="/register" element={<Register />} />
     <Route path="/movies" element={<Movies />} />
     <Route path="/movies/:movieId" element={<MovieDetail />} />
+    <Route path="/seat-selection/:showId" element={<SeatSelection />} />
+    <Route path="/payment" element={<Payment />} />
     <Route path="/events" element={<Events />} />
     <Route path="/concerts" element={<Concerts />} />
     <Route path="/travels" element={<Travels />} />
