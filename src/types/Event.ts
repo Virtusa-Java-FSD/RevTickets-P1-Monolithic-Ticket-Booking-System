@@ -9,6 +9,8 @@ export interface Event {
   releaseDate?: string;
   language?: string;
   genre?: string;
+  genres?: string[];
+  industry?: string;
   format?: string;
   price?: number;
   location?: string;

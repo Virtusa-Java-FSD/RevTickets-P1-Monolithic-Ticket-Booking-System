@@ -2,266 +2,446 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 
+const basePrice = 500;
+const showTimes = ["10:00 AM", "2:00 PM", "6:00 PM", "9:00 PM"];
+
 const Booking = () => {
-  const { eventId, eventType } = useParams();
+  const { eventId } = useParams();
   const navigate = useNavigate();
+
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
+
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [ticketQuantity, setTicketQuantity] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(0);
 
-  const basePrice = 500;
-  const showTimes = ["10:00 AM", "2:00 PM", "6:00 PM", "9:00 PM"];
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [bookedSeats, setBookedSeats] = useState<string[]>([]); // dynamically booked
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
+
+  /* -------------------- DATES -------------------- */
+  const eventDates = Array.from({ length: 7 }, (_, i) =>
+    new Date(Date.now() + (i + 1) * 86400000).toDateString()
+  );
 
   useEffect(() => {
-    loadEventDetails();
-  }, [eventId, eventType]);
+    setLoading(true);
 
-  useEffect(() => {
-    setTotalPrice(basePrice * ticketQuantity);
-  }, [ticketQuantity]);
+    const mockEvents: Event[] = [
+  {
+    id: "e1",
+    title: "Tech Conference 2024",
+    description: "Annual technology conference with industry leaders",
+    category: "other",
+    rating: 8.5,
+    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e2",
+    title: "Food Festival",
+    description: "Explore cuisines from around the world",
+    category: "other",
+    rating: 8.8,
+    imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e3",
+    title: "Art Exhibition",
+    description: "Contemporary art showcase featuring local artists",
+    category: "other",
+    rating: 8.2,
+    imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e4",
+    title: "Sports Championship",
+    description: "National sports championship finals",
+    category: "other",
+    rating: 9.0,
+    imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e5",
+    title: "Comedy Night",
+    description: "Stand-up comedy with top comedians",
+    category: "other",
+    rating: 8.6,
+    imageUrl: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e6",
+    title: "Book Fair 2024",
+    description: "Largest book fair with authors & publishers",
+    category: "other",
+    rating: 8.3,
+    imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e7",
+    title: "Fashion Week",
+    description: "International fashion week showcasing trends",
+    category: "other",
+    rating: 8.9,
+    imageUrl: "https://images.unsplash.com/photo-1558769132-cb1aea3c8565?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e8",
+    title: "Gaming Expo",
+    description: "Biggest gaming convention with new releases",
+    category: "other",
+    rating: 9.1,
+    imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e9",
+    title: "Wine Tasting Event",
+    description: "Premium wine tasting",
+    category: "other",
+    rating: 8.4,
+    imageUrl: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e10",
+    title: "Startup Summit",
+    description: "Connect with entrepreneurs & investors",
+    category: "other",
+    rating: 8.7,
+    imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e11",
+    title: "Yoga Retreat",
+    description: "Weekend wellness retreat",
+    category: "other",
+    rating: 8.5,
+    imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=400&fit=crop",
+  },
+  {
+    id: "e12",
+    title: "Car Show 2024",
+    description: "Luxury and vintage car show",
+    category: "other",
+    rating: 8.8,
+    imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=300&h=400&fit=crop",
+  },
+];
 
-  const loadEventDetails = async () => {
-    try {
-      setLoading(true);
-      // Mock data - in real app, fetch from API
-      const mockEvents: Event[] = [
-        // Concerts
-        {
-          id: "c1",
-          title: "Ed Sheeran World Tour",
-          description: "Experience the magic of Ed Sheeran live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=400&fit=crop",
-          rating: 9.2,
-        },
-        {
-          id: "c2",
-          title: "Coldplay Music of the Spheres",
-          description: "Coldplay's spectacular world tour with stunning visuals",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=300&h=400&fit=crop",
-          rating: 9.5,
-        },
-        {
-          id: "c3",
-          title: "AR Rahman Live",
-          description: "The Mozart of Madras performs his greatest hits",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=400&fit=crop",
-          rating: 9.0,
-        },
-        {
-          id: "c4",
-          title: "Arijit Singh Concert",
-          description: "Bollywood's favorite voice live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=400&fit=crop",
-          rating: 8.8,
-        },
-        {
-          id: "c5",
-          title: "Imagine Dragons Evolve Tour",
-          description: "Rock the night with Imagine Dragons",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=400&fit=crop",
-          rating: 8.9,
-        },
-        {
-          id: "c6",
-          title: "Dua Lipa Future Nostalgia",
-          description: "Pop sensation Dua Lipa's electrifying performance",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&h=400&fit=crop",
-          rating: 8.7,
-        },
-        // Movies
-        {
-          id: "1",
-          title: "Inception",
-          description: "A thief who steals corporate secrets through dream-sharing technology.",
-          category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Inception",
-          rating: 8.8,
-        },
-        {
-          id: "2",
-          title: "The Dark Knight",
-          description: "When the menace known as the Joker wreaks havoc on Gotham.",
-          category: "movie",
-          imageUrl: "https://via.placeholder.com/300x400?text=Dark+Knight",
-          rating: 9.0,
-        },
-        // Events
-        {
-          id: "1",
-          title: "Rock Concert 2024",
-          description: "Experience the ultimate rock music festival with top bands.",
-          category: "event",
-          imageUrl: "https://via.placeholder.com/300x250?text=Rock+Concert",
-          rating: 9.2,
-        }
-      ];
-      
-      const foundEvent = mockEvents.find(e => e.id === eventId);
-      setEvent(foundEvent || null);
-    } catch (err) {
-      console.error("Error loading event:", err);
-    } finally {
-      setLoading(false);
+
+    setEvent(mockEvents.find((e) => e.id === eventId) || null);
+    setLoading(false);
+  }, [eventId]);
+
+  /* -------------------- SEATS -------------------- */
+  const rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+  const cols = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
+  const seatId = (r: string, c: string) => `${r}${c}`;
+
+  const toggleSeat = (id: string) => {
+    if (bookedSeats.includes(id)) return;
+
+    if (selectedSeats.includes(id)) {
+      setSelectedSeats(selectedSeats.filter((s) => s !== id));
+    } else if (selectedSeats.length < ticketQuantity) {
+      setSelectedSeats([...selectedSeats, id]);
     }
   };
 
+  /* -------------------- BOOKING -------------------- */
   const handleBooking = () => {
-    if (!selectedDate || !selectedTime) {
-      alert("Please select date and time");
-      return;
-    }
-    
-    // Mock booking process
-    alert(`Booking confirmed!\nEvent: ${event?.title}\nDate: ${selectedDate}\nTime: ${selectedTime}\nTickets: ${ticketQuantity}\nTotal: ₹${totalPrice + 50}`);
-    navigate("/dashboard");
+    if (!selectedDate || !selectedTime)
+      return alert("Please select date & time.");
+
+    if (selectedSeats.length !== ticketQuantity)
+      return alert(`Select ${ticketQuantity} seat(s).`);
+
+    setShowPayment(true);
   };
 
-  if (loading) {
-    return (
-      <div className="container my-5">
-        <div className="text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handlePayment = () => {
+    if (!paymentMethod) return alert("Please select a payment method");
 
-  if (!event) {
-    return (
-      <div className="container my-5">
-        <div className="alert alert-danger">Event not found</div>
-      </div>
-    );
-  }
+    setBookedSeats((prev) => [...prev, ...selectedSeats]);
+    alert(`Payment successful via ${paymentMethod}!\nBooking confirmed for ${event?.title}`);
+    setShowPayment(false);
+    setSelectedSeats([]);
+    setPaymentMethod("");
+  };
+
+  /* -------------------- UI -------------------- */
+
+  if (loading) return <h3 className="text-center mt-5">Loading...</h3>;
+  if (!event) return <h3 className="text-center mt-5 text-danger">Event Not Found</h3>;
 
   return (
-    <div className="booking-page">
-      <div className="container-fluid">
-        <div className="booking-header py-4 bg-primary text-white">
-          <div className="container">
-            <button className="btn btn-light btn-sm mb-3" onClick={() => navigate(-1)}>
-              ← Back
-            </button>
-            <h1 className="h3 mb-2">Book Tickets</h1>
-            <p className="mb-0">{event.title}</p>
-          </div>
+    <>
+    <div style={{ minHeight: "100vh", padding: 20, background: "#f6f6fa" }}>
+      {/* HEADER */}
+      <div
+        style={{
+          background: "linear-gradient(135deg,#667eea,#764ba2)",
+          padding: 15,
+          color: "white",
+          borderRadius: 10,
+          marginBottom: 20,
+        }}
+      >
+        <button onClick={() => navigate(-1)} className="btn btn-light btn-sm mb-2">
+          ← Back
+        </button>
+        <h4 className="m-0">🎟️ {event.title}</h4>
+      </div>
+
+      {/* MAIN LAYOUT */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1.3fr",
+          gap: 20,
+        }}
+      >
+        {/* -------------------- LEFT CARD -------------------- */}
+        <div className="card shadow-sm" style={{ padding: 20, borderRadius: 12 }}>
+          <h5 className="fw-bold text-primary mb-3">Booking Details</h5>
+
+          <label className="fw-semibold">Select Date</label>
+          <select
+            className="form-select mb-3"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          >
+            <option value="">Choose Date</option>
+            {eventDates.map((d) => (
+              <option key={d}>{d}</option>
+            ))}
+          </select>
+
+          <label className="fw-semibold">Select Time</label>
+          <select
+            className="form-select mb-3"
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+          >
+            <option value="">Choose Time</option>
+            {showTimes.map((t) => (
+              <option key={t}>{t}</option>
+            ))}
+          </select>
+
+          <label className="fw-semibold">Number of Tickets</label>
+          <input
+            type="number"
+            className="form-control mb-3"
+            min="1"
+            max="10"
+            value={ticketQuantity}
+            onChange={(e) => {
+              const val = Math.min(10, Math.max(1, +e.target.value));
+              setTicketQuantity(val);
+              setSelectedSeats([]);
+            }}
+          />
+
+          <button
+            className="btn btn-success w-100 fw-bold"
+            disabled={!selectedDate || !selectedTime}
+            onClick={handleBooking}
+          >
+            Confirm Booking – ₹{basePrice * ticketQuantity + 50}
+          </button>
         </div>
 
-        <div className="container mt-4 mb-5">
-          <div className="row g-4">
-            {/* Event Details */}
-            <div className="col-12 col-lg-4">
-              <div className="card">
-                <img src={event.imageUrl} className="card-img-top" alt={event.title} style={{ height: "300px", objectFit: "cover" }} />
-                <div className="card-body">
-                  <h5 className="card-title">{event.title}</h5>
-                  <p className="card-text text-muted small">{event.description}</p>
-                  {event.rating && (
-                    <span className="badge bg-warning text-dark">⭐ {event.rating}</span>
-                  )}
-                </div>
-              </div>
+        {/* -------------------- RIGHT SEAT GRID -------------------- */}
+        <div className="card shadow-sm" style={{ padding: 20, borderRadius: 12 }}>
+          {/* STAGE BAR */}
+          <div className="text-center mb-3">
+            <div
+              style={{
+                background: "#e8e6e3",
+                padding: 12,
+                borderRadius: 8,
+                width: "60%",
+                margin: "0 auto",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              STAGE
+            </div>
+          </div>
+
+          <h6 className="text-center fw-bold mb-3">
+            Select Seats ({selectedSeats.length}/{ticketQuantity})
+          </h6>
+
+          {/* SEAT STRUCTURE */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 20px 1fr",
+              alignItems: "start",
+            }}
+          >
+            {/* LEFT SECTION */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 5 }}>
+              {rows.map((r) =>
+                cols.slice(0, 4).map((c) => {
+                  const id = seatId(r, c);
+                  const isBooked = bookedSeats.includes(id);
+                  const isSelected = selectedSeats.includes(id);
+
+                  return (
+                    <button
+                      key={id}
+                      disabled={isBooked}
+                      onClick={() => toggleSeat(id)}
+                      style={{
+                        padding: "5px 0",
+                        fontSize: "0.72rem",
+                        borderRadius: 4,
+                        background: isBooked
+                          ? "#d9534f"
+                          : isSelected
+                          ? "#10b981"
+                          : "white",
+                        color: isBooked || isSelected ? "white" : "black",
+                        border: "1px solid #ccc",
+                      }}
+                    >
+                      {id}
+                    </button>
+                  );
+                })
+              )}
             </div>
 
-            {/* Booking Form */}
-            <div className="col-12 col-lg-8">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title mb-4">Select Date & Time</h5>
-                  
-                  <div className="row g-3">
-                    {/* Date Selection */}
-                    <div className="col-12 col-sm-6">
-                      <label className="form-label">Select Date</label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
+            {/* AISLE */}
+            <div></div>
 
-                    {/* Time Selection */}
-                    <div className="col-12 col-sm-6">
-                      <label className="form-label">Select Time</label>
-                      <select
-                        className="form-select"
-                        value={selectedTime}
-                        onChange={(e) => setSelectedTime(e.target.value)}
-                      >
-                        <option value="">Choose time</option>
-                        {showTimes.map(time => (
-                          <option key={time} value={time}>{time}</option>
-                        ))}
-                      </select>
-                    </div>
+            {/* RIGHT SECTION */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 5 }}>
+              {rows.map((r) =>
+                cols.slice(4, 8).map((c) => {
+                  const id = seatId(r, c);
+                  const isBooked = bookedSeats.includes(id);
+                  const isSelected = selectedSeats.includes(id);
 
-                    {/* Ticket Quantity */}
-                    <div className="col-12 col-sm-6">
-                      <label className="form-label">Number of Tickets</label>
-                      <select
-                        className="form-select"
-                        value={ticketQuantity}
-                        onChange={(e) => setTicketQuantity(Number(e.target.value))}
-                      >
-                        {[1,2,3,4,5,6,7,8,9,10].map(num => (
-                          <option key={num} value={num}>{num} Ticket{num > 1 ? 's' : ''}</option>
-                        ))}
-                      </select>
-                    </div>
+                  return (
+                    <button
+                      key={id}
+                      disabled={isBooked}
+                      onClick={() => toggleSeat(id)}
+                      style={{
+                        padding: "5px 0",
+                        fontSize: "0.72rem",
+                        borderRadius: 4,
+                        background: isBooked
+                          ? "#d9534f"
+                          : isSelected
+                          ? "#10b981"
+                          : "white",
+                        color: isBooked || isSelected ? "white" : "black",
+                        border: "1px solid #ccc",
+                      }}
+                    >
+                      {id}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </div>
 
-                    {/* Price Summary */}
-                    <div className="col-12">
-                      <div className="card bg-light">
-                        <div className="card-body">
-                          <h6 className="card-title">Price Summary</h6>
-                          <div className="d-flex justify-content-between">
-                            <span>Ticket Price (₹{basePrice} x {ticketQuantity})</span>
-                            <span>₹{basePrice * ticketQuantity}</span>
-                          </div>
-                          <div className="d-flex justify-content-between">
-                            <span>Booking Fee</span>
-                            <span>₹50</span>
-                          </div>
-                          <hr />
-                          <div className="d-flex justify-content-between fw-bold">
-                            <span>Total Amount</span>
-                            <span>₹{totalPrice + 50}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+          {/* -------------- LEGEND (RED / GREEN / WHITE) ---------------- */}
+          <div
+            style={{
+              marginTop: 20,
+              display: "flex",
+              justifyContent: "center",
+              gap: 25,
+              fontSize: "0.9rem",
+              fontWeight: 500,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  width: 15,
+                  height: 15,
+                  background: "#d9534f",
+                  borderRadius: 3,
+                  border: "1px solid #aaa",
+                  display: "inline-block",
+                }}
+              ></span>
+              Booked
+            </div>
 
-                    {/* Book Button */}
-                    <div className="col-12">
-                      <button
-                        className="btn btn-primary btn-lg w-100"
-                        onClick={handleBooking}
-                        disabled={!selectedDate || !selectedTime}
-                      >
-                        Book Now - ₹{totalPrice + 50}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  width: 15,
+                  height: 15,
+                  background: "#10b981",
+                  borderRadius: 3,
+                  border: "1px solid #aaa",
+                  display: "inline-block",
+                }}
+              ></span>
+              Selected
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span
+                style={{
+                  width: 15,
+                  height: 15,
+                  background: "white",
+                  borderRadius: 3,
+                  border: "1px solid #aaa",
+                  display: "inline-block",
+                }}
+              ></span>
+              Available
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    {/* PAYMENT MODAL */}
+    {showPayment && (
+      <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999}}>
+        <div className="card" style={{width: '400px', padding: '30px', borderRadius: '12px'}}>
+          <h5 className="fw-bold mb-3">Select Payment Method</h5>
+          <div className="mb-3">
+            <label className="d-flex align-items-center p-3 border rounded mb-2" style={{cursor: 'pointer'}}>
+              <input type="radio" name="payment" value="UPI" onChange={(e) => setPaymentMethod(e.target.value)} className="me-2" />
+              <span>💳 UPI</span>
+            </label>
+            <label className="d-flex align-items-center p-3 border rounded mb-2" style={{cursor: 'pointer'}}>
+              <input type="radio" name="payment" value="Card" onChange={(e) => setPaymentMethod(e.target.value)} className="me-2" />
+              <span>💳 Credit/Debit Card</span>
+            </label>
+            <label className="d-flex align-items-center p-3 border rounded mb-2" style={{cursor: 'pointer'}}>
+              <input type="radio" name="payment" value="Net Banking" onChange={(e) => setPaymentMethod(e.target.value)} className="me-2" />
+              <span>🏦 Net Banking</span>
+            </label>
+            <label className="d-flex align-items-center p-3 border rounded" style={{cursor: 'pointer'}}>
+              <input type="radio" name="payment" value="Wallet" onChange={(e) => setPaymentMethod(e.target.value)} className="me-2" />
+              <span>👛 Wallet</span>
+            </label>
+          </div>
+          <div className="d-flex gap-2">
+            <button className="btn btn-secondary flex-1" onClick={() => setShowPayment(false)}>Cancel</button>
+            <button className="btn btn-success flex-1" onClick={handlePayment}>Pay ₹{basePrice * ticketQuantity + 50}</button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 
