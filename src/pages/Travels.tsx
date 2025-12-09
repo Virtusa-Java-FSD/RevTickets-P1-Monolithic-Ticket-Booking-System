@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import SeatSelection from "../components/SeatSelection";
+import { useNavigate } from "react-router-dom";
 import "../styles/travel.css";
 
 interface TravelOption {
@@ -22,14 +22,18 @@ const Travels = () => {
   const [searchData, setSearchData] = useState({
     from: '',
     to: '',
-    date: '',
-    travelType: 'flights'
+    date: ''
+  });
+  const [filters, setFilters] = useState({
+    stops: 'all',
+    priceRange: [0, 10000],
+    airlines: [] as string[],
+    sortBy: 'recommended'
   });
   const [travelOptions, setTravelOptions] = useState<TravelOption[]>([]);
   const [filteredOptions, setFilteredOptions] = useState<TravelOption[]>([]);
-  const [showSeatSelection, setShowSeatSelection] = useState(false);
-  const [selectedBus, setSelectedBus] = useState("");
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const navigate = useNavigate();
 
   const bannerImages = [
     {
@@ -148,10 +152,12 @@ const Travels = () => {
   const handleSearch = () => {
     setLoading(true);
     setTimeout(() => {
-      let filtered = travelOptions;
-      if (searchData.travelType) {
-        filtered = filtered.filter(option => option.type === searchData.travelType.slice(0, -1));
-      }
+      let filtered = travelOptions.filter(option => {
+        if (activeTab === 'Flights') return option.type === 'flight';
+        if (activeTab === 'Buses') return option.type === 'bus';
+        if (activeTab === 'Trains') return option.type === 'train';
+        return false;
+      });
       setFilteredOptions(filtered);
       setLoading(false);
     }, 1000);
@@ -159,15 +165,7 @@ const Travels = () => {
 
 
 
-  const handleSeatSelection = (busName: string) => {
-    setSelectedBus(busName);
-    setShowSeatSelection(true);
-  };
 
-  const handleSeatConfirm = (selectedSeats: any[]) => {
-    console.log('Selected seats:', selectedSeats);
-    setShowSeatSelection(false);
-  };
 
 
 
@@ -199,30 +197,34 @@ const Travels = () => {
             <h1 className="h3 mb-1">Travel Booking</h1>
             <p className="mb-0 small">Book flights, buses, and trains at best prices!</p>
             
-            {/* Travel Tabs */}
-            <div className="travel-tabs">
-              <button 
-                className={`travel-tab ${activeTab === 'Flights' ? 'active-tab' : ''}`}
-                onClick={() => setActiveTab('Flights')}
-              >
-                Flights
-              </button>
-              <button 
-                className={`travel-tab ${activeTab === 'Buses' ? 'active-tab' : ''}`}
-                onClick={() => setActiveTab('Buses')}
-              >
-                Buses
-              </button>
-              <button 
-                className={`travel-tab ${activeTab === 'Trains' ? 'active-tab' : ''}`}
-                onClick={() => setActiveTab('Trains')}
-              >
-                Trains
-              </button>
-            </div>
+          </div>
+        </div>
 
-            {/* New Compact Filter Bar */}
-            <div className="compact-filter-bar mt-4">
+        {/* Travel Tabs - Moved outside header */}
+        <div className="container">
+          <div className="travel-tabs-wrapper">
+            <button 
+              className={`travel-tab ${activeTab === 'Flights' ? 'active-tab' : ''}`}
+              onClick={() => setActiveTab('Flights')}
+            >
+              Flights
+            </button>
+            <button 
+              className={`travel-tab ${activeTab === 'Buses' ? 'active-tab' : ''}`}
+              onClick={() => setActiveTab('Buses')}
+            >
+              Buses
+            </button>
+            <button 
+              className={`travel-tab ${activeTab === 'Trains' ? 'active-tab' : ''}`}
+              onClick={() => setActiveTab('Trains')}
+            >
+              Trains
+            </button>
+          </div>
+
+          {/* Compact Filter Bar */}
+          <div className="compact-filter-bar">
               <input 
                 type="text" 
                 placeholder="From City" 
@@ -259,17 +261,44 @@ const Travels = () => {
                 </button>
               </div>
 
-              <button className="search-btn" onClick={handleSearch}>
-                Search
-              </button>
-            </div>
+            <button className="search-btn" onClick={handleSearch}>
+              Search
+            </button>
           </div>
+
+          {/* Flight Filters */}
+          {activeTab === 'Flights' && (
+            <div className="flight-filters">
+              <div className="filter-section">
+                <label>Stops</label>
+                <select value={filters.stops} onChange={(e) => setFilters({...filters, stops: e.target.value})}>
+                  <option value="all">All</option>
+                  <option value="direct">Direct</option>
+                  <option value="1stop">1 Stop</option>
+                  <option value="2plus">2+ Stops</option>
+                </select>
+              </div>
+              <div className="filter-section">
+                <label>Price Range</label>
+                <input type="range" min="0" max="10000" value={filters.priceRange[1]} onChange={(e) => setFilters({...filters, priceRange: [0, parseInt(e.target.value)]})} />
+                <span>₹0 - ₹{filters.priceRange[1]}</span>
+              </div>
+              <div className="filter-section">
+                <label>Sort By</label>
+                <select value={filters.sortBy} onChange={(e) => setFilters({...filters, sortBy: e.target.value})}>
+                  <option value="recommended">Recommended</option>
+                  <option value="cheapest">Cheapest</option>
+                  <option value="fastest">Fastest</option>
+                </select>
+              </div>
+            </div>
+          )}
         </div>
 
 
 
         {/* Results Grid */}
-        <div className="container mb-5">
+        <div className="container mb-5" style={{marginTop: '20px'}}>
           {loading ? (
             <div className="text-center py-5">
               <div className="spinner-border" role="status">
@@ -305,18 +334,20 @@ const Travels = () => {
                         />
                         <div className="travel-overlay">
                           <div className="overlay-content">
-                            {option.type === 'bus' ? (
-                              <button 
-                                className="book-btn"
-                                onClick={() => handleSeatSelection(option.name)}
-                              >
-                                View Seats
-                              </button>
-                            ) : (
-                              <button className="book-btn">
-                                Book Now
-                              </button>
-                            )}
+                            <button 
+                              className="book-btn"
+                              onClick={() => {
+                                if (option.type === 'bus') {
+                                  navigate('/bus-seat-selection', { state: option });
+                                } else if (option.type === 'train') {
+                                  navigate('/train-class-selection', { state: option });
+                                } else {
+                                  navigate('/booking-details', { state: option });
+                                }
+                              }}
+                            >
+                              {option.type === 'bus' ? 'Select Seats' : option.type === 'train' ? 'Select Class' : 'Book Now'}
+                            </button>
                           </div>
                         </div>
                         {option.rating && (
@@ -350,14 +381,7 @@ const Travels = () => {
         </div>
       </div>
       
-      {/* Seat Selection Modal */}
-      {showSeatSelection && (
-        <SeatSelection
-          busName={selectedBus}
-          onClose={() => setShowSeatSelection(false)}
-          onConfirm={handleSeatConfirm}
-        />
-      )}
+
     </div>
   );
 };
