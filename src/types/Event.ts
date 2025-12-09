@@ -9,6 +9,7 @@ export interface Event {
   releaseDate?: string;
   language?: string;
   genre?: string;
+  genres?: string[]; // for multi-genre support
   format?: string;
   price?: number;
   location?: string;
