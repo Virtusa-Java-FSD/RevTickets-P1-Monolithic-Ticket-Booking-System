@@ -2,6 +2,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f5f5f5;
   min-height: 100vh;
+  margin-top: -56px;
+  padding-top: 0;
 }
 
 .shadow-hover {
@@ -17,7 +19,48 @@
   position: relative;
   height: 180px;
   overflow: hidden;
-  margin-top: 1.5rem;
+  margin-top: 56px;
+  width: 100%;
+}
+
+/* Ensure no gap between header and banner */
+.movies-page .container-fluid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.movies-page .banner-carousel {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Fix for sidebar layout - ensure banner spans full width */
+.movies-page {
+  position: relative;
+}
+
+.movies-page .banner-carousel {
+  position: relative;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  margin-left: calc(-72px);
+}
+
+/* When sidebar is open */
+.app-main.sidebar-open .movies-page .banner-carousel {
+  margin-left: calc(-280px);
+}
+
+@media (max-width: 768px) {
+  .movies-page .banner-carousel {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .app-main.sidebar-open .movies-page .banner-carousel {
+    margin-left: 0;
+  }
 }
 
 .banner-slide {

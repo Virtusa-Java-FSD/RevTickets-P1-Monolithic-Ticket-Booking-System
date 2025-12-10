@@ -53,34 +53,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	};
 
 	const login = async (email: string, password: string) => {
-		// Fake client-side authentication - accepts any credentials
-		if (email && password) {
-			const mockUser = {
-				id: '1',
-				name: email,
-				email: email,
-				role: 'user'
-			};
-			const mockToken = 'fake-token-' + Date.now();
-			persist(mockToken, mockUser);
+		const response = await loginRequest(email, password);
+		if (response.token && response.user) {
+			persist(response.token, response.user);
 		} else {
-			throw new Error('Please enter username and password');
+			throw new Error('Invalid credentials');
 		}
 	};
 
 	const register = async (name: string, email: string, phone: string, password: string) => {
-		// Fake client-side registration
-		if (name && email && password) {
-			const mockUser = {
-				id: '1',
-				name: name,
-				email: email,
-				role: 'user'
-			};
-			const mockToken = 'fake-token-' + Date.now();
-			persist(mockToken, mockUser);
+		const response = await registerRequest(name, email, phone, password);
+		if (response.token && response.user) {
+			persist(response.token, response.user);
 		} else {
-			throw new Error('Please fill all fields');
+			throw new Error('Registration failed');
 		}
 	};
 

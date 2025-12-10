@@ -273,7 +273,7 @@ const Concerts = () => {
 
   return (
     <div className="travels-page">
-      <div className="container-fluid">
+      <div className="container-fluid p-0">
         {/* Banner Carousel */}
         <div className="banner-carousel">
           {bannerImages.map((banner, index) => (

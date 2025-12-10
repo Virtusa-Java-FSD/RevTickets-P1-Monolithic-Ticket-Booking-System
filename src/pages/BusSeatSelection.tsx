@@ -10,15 +10,24 @@ interface Seat {
   price: number;
   status: 'available' | 'booked' | 'selected';
   deck: 'lower' | 'upper';
+  gender?: 'Male' | 'Female';
+  position?: { x: number; y: number };
+  type?: 'Seater' | 'Sleeper';
+  genderRestriction?: 'Male' | 'Female';
 }
 
 const BusSeatSelection = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const busData = location.state || {};
+  const busData = location.state || {
+    serviceType: 'AC Sleeper',
+    hasUpperDeck: true,
+    layoutType: 'standard' // 'standard' or 'manual'
+  };
   
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [hasUpperDeck, setHasUpperDeck] = useState(true);
 
   useEffect(() => {
     generateSeats();
@@ -31,37 +40,49 @@ const BusSeatSelection = () => {
   const generateSeats = () => {
     const allSeats: Seat[] = [];
     const columns = ['A', 'B', 'C', 'D'];
+    const upperDeckExists = busData.hasUpperDeck !== false && Math.random() > 0.3;
     
+    // Generate lower deck seats
     for (let row = 1; row <= 9; row++) {
       columns.forEach(col => {
         const random = Math.random();
+        const isBooked = random > 0.7;
         allSeats.push({
           id: `L${row}${col}`,
           row,
           col,
           number: `${row}${col}`,
           price: 1200,
-          status: random > 0.7 ? 'booked' : 'available',
-          deck: 'lower'
+          status: isBooked ? 'booked' : 'available',
+          deck: 'lower',
+          gender: isBooked ? (Math.random() > 0.5 ? 'Male' : 'Female') : undefined,
+          type: Math.random() > 0.5 ? 'Seater' : 'Sleeper'
         });
       });
     }
     
-    for (let row = 1; row <= 9; row++) {
-      columns.forEach(col => {
-        const random = Math.random();
-        allSeats.push({
-          id: `U${row}${col}`,
-          row,
-          col,
-          number: `${row}${col}`,
-          price: 1200,
-          status: random > 0.7 ? 'booked' : 'available',
-          deck: 'upper'
+    // Generate upper deck seats only if bus has upper deck
+    if (upperDeckExists) {
+      for (let row = 1; row <= 9; row++) {
+        columns.forEach(col => {
+          const random = Math.random();
+          const isBooked = random > 0.7;
+          allSeats.push({
+            id: `U${row}${col}`,
+            row,
+            col,
+            number: `${row}${col}`,
+            price: 1200,
+            status: isBooked ? 'booked' : 'available',
+            deck: 'upper',
+            gender: isBooked ? (Math.random() > 0.5 ? 'Male' : 'Female') : undefined,
+            type: Math.random() > 0.5 ? 'Seater' : 'Sleeper'
+          });
         });
-      });
+      }
     }
     
+    setHasUpperDeck(upperDeckExists);
     setSeats(allSeats);
   };
 
@@ -123,7 +144,7 @@ const BusSeatSelection = () => {
                         key={seat.id}
                         onClick={() => handleSeatClick(seat)}
                         disabled={seat.status === 'booked'}
-                        className={`seat-btn ${seat.status}`}
+                        className={`seat-btn ${seat.status === 'booked' && seat.gender === 'Male' ? 'seat-booked-male' : seat.status === 'booked' && seat.gender === 'Female' ? 'seat-booked-female' : seat.status} ${seat.type === 'Sleeper' ? 'sleeper' : ''}`}
                       >
                         {seat.col}
                       </button>
@@ -139,7 +160,7 @@ const BusSeatSelection = () => {
                         key={seat.id}
                         onClick={() => handleSeatClick(seat)}
                         disabled={seat.status === 'booked'}
-                        className={`seat-btn ${seat.status}`}
+                        className={`seat-btn ${seat.status === 'booked' && seat.gender === 'Male' ? 'seat-booked-male' : seat.status === 'booked' && seat.gender === 'Female' ? 'seat-booked-female' : seat.status} ${seat.type === 'Sleeper' ? 'sleeper' : ''}`}
                       >
                         {seat.col}
                       </button>
@@ -162,6 +183,9 @@ const BusSeatSelection = () => {
             <div>
               <h4 className="modal-title mb-1">{busData.name || 'Travels Plus'}</h4>
               <p className="mb-0 small opacity-75">Select your seats</p>
+              <span className={`badge ${busData.serviceType?.includes('AC') ? 'badge-ac' : 'badge-nonac'} mt-2`}>
+                {busData.serviceType || 'AC Sleeper'}
+              </span>
             </div>
             <button 
               type="button" 
@@ -182,8 +206,17 @@ const BusSeatSelection = () => {
                     <small className="fw-medium">Available</small>
                   </div>
                   <div className="d-flex align-items-center gap-2">
-                    <div className="seat-legend booked"></div>
-                    <small className="fw-medium">Booked</small>
+                    <div className="seat-legend booked-male"></div>
+                    <small className="fw-medium">Booked (Male)</small>
+                  </div>
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="seat-legend booked-female"></div>
+                    <small className="fw-medium">Booked (Female)</small>
+                  </div>
+                  <div className="d-flex align-items-center gap-2">
+                    <span className={`badge ${busData.serviceType?.includes('AC') ? 'badge-ac' : 'badge-nonac'}`}>
+                      {busData.serviceType || 'AC Sleeper'}
+                    </span>
                   </div>
                   <div className="d-flex align-items-center gap-2">
                     <div className="seat-legend selected"></div>
@@ -194,10 +227,10 @@ const BusSeatSelection = () => {
             </div>
 
             <div className="row g-4">
-              <div className="col-lg-4">{renderDeck('lower')}</div>
-              <div className="col-lg-4">{renderDeck('upper')}</div>
+              <div className={hasUpperDeck ? "col-lg-4" : "col-lg-6 mx-auto"}>{renderDeck('lower')}</div>
+              {hasUpperDeck && <div className="col-lg-4">{renderDeck('upper')}</div>}
               
-              <div className="col-lg-4">
+              <div className={hasUpperDeck ? "col-lg-4" : "col-lg-6"}>
                 <div className="card border-0 shadow-sm sticky-top" style={{top: '20px'}}>
                   <div className="card-body">
                     <h5 className="card-title mb-3">Selected Seats ({selectedSeats.length}/4)</h5>
