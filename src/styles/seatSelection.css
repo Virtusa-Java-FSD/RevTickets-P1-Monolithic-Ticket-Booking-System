@@ -1,0 +1,495 @@
+/* Seat Selection - RedBus Style */
+.seat-selection-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.seat-selection-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.seat-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.bus-info h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.bus-info p {
+  margin: 4px 0 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.seat-selection-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.seat-layout-container {
+  flex: 2;
+  padding: 24px;
+  overflow-y: auto;
+  border-right: 1px solid #e5e7eb;
+}
+
+.seat-legend {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.legend-seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid;
+}
+
+.legend-seat.available {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.legend-seat.booked {
+  background: #fca5a5;
+  border-color: #ef4444;
+}
+
+.legend-seat.selected {
+  background: #34d399;
+  border-color: #10b981;
+}
+
+.bus-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.deck-section {
+  width: 100%;
+  max-width: 400px;
+}
+
+.deck-title {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.seat-grid {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.seat-grid::before {
+  content: 'FRONT';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.row-number {
+  width: 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.seat-group {
+  display: flex;
+  gap: 4px;
+}
+
+.seat-group.left {
+  margin-right: 8px;
+}
+
+.seat-group.right {
+  margin-left: 8px;
+}
+
+.aisle {
+  width: 24px;
+  height: 2px;
+  background: #d1d5db;
+  border-radius: 1px;
+}
+
+.seat {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.seat.available {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.seat.available:hover {
+  background: #e5f3ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  transform: scale(1.1);
+}
+
+.seat.booked {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  background: #10b981;
+  border-color: #059669;
+  color: white;
+  transform: scale(1.1);
+}
+
+.bus-info-section {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.selected-seats-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.selected-seats-summary h4 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+.selected-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.selected-seat-tag {
+  background: #10b981;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.total-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #059669;
+  text-align: right;
+}
+
+.info-tabs {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-tab {
+  flex: 1;
+  padding: 12px 8px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.info-tab.active {
+  background: #667eea;
+  color: white;
+}
+
+.info-tab:hover:not(.active) {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.tab-content {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.tab-content li {
+  padding: 8px 0;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.boarding-point, .dropping-point {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.boarding-point p, .dropping-point p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+.rating-summary {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.overall-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-score {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.stars {
+  font-size: 1.2rem;
+}
+
+.recent-review {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #fbbf24;
+}
+
+.recent-review p {
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+.seat-selection-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.btn-cancel {
+  padding: 12px 24px;
+  border: 2px solid #d1d5db;
+  background: white;
+  color: #6b7280;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.btn-continue {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-continue:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.btn-continue:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .seat-selection-overlay {
+    padding: 10px;
+  }
+  
+  .seat-selection-container {
+    max-height: 95vh;
+  }
+  
+  .seat-selection-header {
+    padding: 16px 20px;
+  }
+  
+  .seat-selection-content {
+    flex-direction: column;
+  }
+  
+  .seat-layout-container {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px;
+  }
+  
+  .bus-info-section {
+    padding: 16px;
+  }
+  
+  .seat-legend {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .info-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .info-tab {
+    font-size: 0.8rem;
+    padding: 10px 6px;
+  }
+  
+  .seat-selection-footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-cancel, .btn-continue {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .seat-grid {
+    padding: 12px;
+  }
+  
+  .seat {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+  
+  .deck-section {
+    max-width: 320px;
+  }
+}

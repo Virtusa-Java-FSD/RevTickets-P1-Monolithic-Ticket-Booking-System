@@ -307,10 +307,6 @@ const Home = () => {
         </div>
       </div>
 
-
-
-
-
       <div className="categories-section">
         <div className="container">
           <h2 className="section-title">What are you looking for?</h2>
