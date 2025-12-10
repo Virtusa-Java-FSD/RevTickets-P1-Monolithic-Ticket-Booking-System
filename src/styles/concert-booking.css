@@ -461,6 +461,216 @@
   flex: 2;
 }
 
+/* Checkout Layout */
+.checkout-container {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  align-items: flex-start;
+}
+
+.checkout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 2;
+}
+
+.checkout-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.customer-details-section,
+.payment-method-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #212529;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.payment-option:hover {
+  border-color: #667eea;
+  background: #f8f9fa;
+}
+
+.payment-option input[type="radio"] {
+  cursor: pointer;
+}
+
+.payment-option label {
+  cursor: pointer;
+  margin: 0;
+  font-weight: 500;
+  flex: 1;
+}
+
+.payment-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.payment-icon.card {
+  background: #007bff;
+  color: white;
+}
+
+.payment-icon.upi {
+  background: #ff6b35;
+  color: white;
+}
+
+.payment-icon.wallet {
+  background: #28a745;
+  color: white;
+}
+
+.payment-details {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.booking-summary-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 20px;
+}
+
+.concert-info {
+  margin-bottom: 1.5rem;
+}
+
+.concert-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.booking-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.detail-label {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.detail-value {
+  font-weight: 500;
+  color: #212529;
+}
+
+@media (max-width: 1024px) {
+  .checkout-container {
+    flex-direction: column;
+  }
+  
+  .checkout-right {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .checkout-container {
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .customer-details-section,
+  .payment-method-section,
+  .booking-summary-section {
+    padding: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
   .booking-steps {
     padding: 1rem;
