@@ -1,5 +1,30 @@
 .events-page {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+}
+
+/* Full width header that extends beyond main content area */
+.events-page .bg-dark {
+  width: 100vw;
+  margin-left: -72px;
+  position: relative;
+}
+
+/* When sidebar is open, adjust for wider sidebar */
+.app-main.sidebar-open .events-page .bg-dark {
+  margin-left: -280px;
+}
+
+/* Mobile: no sidebar offset needed */
+@media (max-width: 768px) {
+  .events-page .bg-dark {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .app-main.sidebar-open .events-page .bg-dark {
+    margin-left: 0;
+  }
 }
 
 /* Hover animation */

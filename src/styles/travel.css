@@ -196,6 +196,35 @@
   color: #6c757d;
 }
 
+/* Fix for sidebar layout - ensure banner spans full width */
+.travels-page {
+  position: relative;
+}
+
+.travels-page .banner-carousel {
+  position: relative;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  margin-left: calc(-72px);
+}
+
+/* When sidebar is open */
+.app-main.sidebar-open .travels-page .banner-carousel {
+  margin-left: calc(-280px);
+}
+
+@media (max-width: 768px) {
+  .travels-page .banner-carousel {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .app-main.sidebar-open .travels-page .banner-carousel {
+    margin-left: 0;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .compact-filter-bar {
@@ -238,7 +267,7 @@
 .travels-page {
   min-height: 100vh;
   background: #f8f9fa;
-  margin-top: 0;
+  margin-top: -56px;
   padding-top: 0;
 }
 
@@ -246,6 +275,19 @@
   position: relative;
   height: 300px;
   overflow: hidden;
+  margin-top: 56px;
+  width: 100%;
+}
+
+/* Ensure no gap between header and banner */
+.travels-page .container-fluid {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.travels-page .banner-carousel {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .banner-slide {
@@ -427,4 +469,36 @@
   color: #28a745;
   font-weight: 600;
   font-size: 16px;
+}
+
+/* Bus Badge Styles */
+.bus-badge-wrapper {
+  margin-bottom: 8px;
+}
+
+.bus-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bus-badge-ac {
+  background-color: #1D4ED8;
+  color: white;
+}
+
+.bus-badge-nonac {
+  background-color: #6B7280;
+  color: white;
+}
+
+.bus-badge-icon {
+  font-size: 10px;
+  opacity: 0.9;
 }
