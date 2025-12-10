@@ -268,8 +268,8 @@
 
 .seat-legend {
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+  gap: 2rem;
+  justify-content: flex-start;
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
@@ -283,10 +283,11 @@
 }
 
 .legend-box {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   border: 2px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .legend-box.available {
@@ -302,6 +303,8 @@
   background: #e9ecef;
   border-color: #dee2e6;
 }
+
+
 
 .sticky-summary {
   position: sticky;
@@ -589,6 +592,55 @@
 .payment-details {
   font-size: 0.875rem;
   color: #6c757d;
+}
+
+/* Payment Method Radio Button Alignment */
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.payment-method-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.payment-method-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.payment-method-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payment-method-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.payment-method-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.payment-method-option:hover {
+  border-color: #667eea;
+  background-color: #f8f9fa;
 }
 
 .booking-summary-section {
