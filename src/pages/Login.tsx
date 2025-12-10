@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     return (
       <div className="auth-layout">
         <div className="auth-content">
-          <div className="typewriter-text-large mb-2">{displayText}</div>
+          <div className="typewriter-text-large mb-2">Welcome to RevTickets</div>
           <p>Your Gateway to Entertainment</p>
           <div className="features">
             <div>🎬 Movies</div>

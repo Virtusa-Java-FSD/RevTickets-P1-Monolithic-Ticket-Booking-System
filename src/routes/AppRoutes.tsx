@@ -11,6 +11,7 @@ import ConcertBooking from "../pages/ConcertBooking";
 import BookingConfirmation from "../pages/BookingConfirmation";
 import Travels from "../pages/Travels";
 import Dashboard from "../pages/Dashboard";
+import Booking from "../pages/Booking";
 import BookingDetails from "../pages/BookingDetails";
 import BookingSummary from "../pages/BookingSummary";
 import BusSeatSelection from "../pages/BusSeatSelection";
@@ -35,6 +36,7 @@ const AppRoutes = () => (
     <Route path="/movies" element={<Movies />} />
     <Route path="/movies/:movieId" element={<MovieDetail />} />
     <Route path="/events" element={<Events />} />
+    <Route path="/booking/event/:eventId" element={<Booking />} />
     <Route path="/concerts" element={<Concerts />} />
     <Route path="/booking/concert/:concertId" element={<ConcertBooking />} />
     <Route path="/booking-confirmation" element={<BookingConfirmation />} />
