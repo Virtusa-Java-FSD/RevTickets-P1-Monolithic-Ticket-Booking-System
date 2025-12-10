@@ -39,6 +39,7 @@ const BookingDetails = () => {
   const [passengers, setPassengers] = useState(initialPassengers);
   const [aadhaarErrors, setAadhaarErrors] = useState<{[key: number]: string}>({});
   const [passportErrors, setPassportErrors] = useState<{[key: number]: string}>({});
+  const [validationErrors, setValidationErrors] = useState<{[key: number]: {[key: string]: string}}>({});
   const [contact, setContact] = useState({ email: '', phone: '' });
   const [addOns, setAddOns] = useState({ baggage: false, seat: false });
 
@@ -60,6 +61,11 @@ const BookingDetails = () => {
     }]);
   };
 
+  const removePassenger = (index: number) => {
+    if (index === 0) return;
+    setPassengers(passengers.filter((_, i) => i !== index));
+  };
+
   const updatePassenger = (index: number, field: string, value: any) => {
     const updated = [...passengers];
     updated[index] = { ...updated[index], [field]: value };
@@ -75,8 +81,10 @@ const BookingDetails = () => {
 
   const validateAadhaar = (index: number, value: string) => {
     const errors = {...aadhaarErrors};
-    if (value && (!/^\d{12}$/.test(value))) {
-      errors[index] = 'Enter a valid 12-digit Aadhaar number';
+    if (!value) {
+      errors[index] = 'Aadhaar number is required';
+    } else if (!/^\d{12}$/.test(value)) {
+      errors[index] = 'Enter a valid 12-digit Aadhaar number.';
     } else {
       delete errors[index];
     }
@@ -85,7 +93,9 @@ const BookingDetails = () => {
 
   const validatePassport = (index: number, value: string) => {
     const errors = {...passportErrors};
-    if (value && (!/^[A-Z0-9]{6,9}$/.test(value))) {
+    if (isFlight && !value) {
+      errors[index] = 'Passport number is required.';
+    } else if (value && (!/^[A-Z0-9]{6,9}$/.test(value))) {
       errors[index] = 'Enter a valid passport number (6-9 alphanumeric characters)';
     } else {
       delete errors[index];
@@ -93,7 +103,53 @@ const BookingDetails = () => {
     setPassportErrors(errors);
   };
 
+  const validateAllFields = () => {
+    const errors: {[key: number]: {[key: string]: string}} = {};
+    let isValid = true;
+
+    passengers.forEach((passenger, index) => {
+      errors[index] = {};
+      
+      if (!passenger.firstName.trim()) {
+        errors[index].firstName = 'First name is required';
+        isValid = false;
+      }
+      if (!passenger.noLastName && !passenger.lastName.trim()) {
+        errors[index].lastName = 'Last name is required';
+        isValid = false;
+      }
+      if (isFlight && !passenger.dob) {
+        errors[index].dob = 'Date of birth is required';
+        isValid = false;
+      }
+      if ((isBus || isTrain) && !passenger.age) {
+        errors[index].age = 'Age is required';
+        isValid = false;
+      }
+      if (isFlight && !passenger.passport.trim()) {
+        errors[index].passport = 'Passport number is required.';
+        isValid = false;
+      }
+      if (!passenger.aadhaar.trim()) {
+        errors[index].aadhaar = 'Aadhaar number is required';
+        isValid = false;
+      } else if (passenger.aadhaar.length !== 12) {
+        errors[index].aadhaar = 'Enter a valid 12-digit Aadhaar number.';
+        isValid = false;
+      }
+    });
+
+    setValidationErrors(errors);
+    return isValid;
+  };
+
   const handleContinue = () => {
+    if (currentStep === 1) {
+      if (!validateAllFields()) {
+        return;
+      }
+    }
+    
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
       scrollToStep(currentStep + 1);
@@ -122,7 +178,24 @@ const BookingDetails = () => {
     }
   };
 
+  const isBookingValid = () => {
+    let isValid = true;
+    passengers.forEach((passenger) => {
+      if (!passenger.firstName.trim()) isValid = false;
+      if (!passenger.noLastName && !passenger.lastName.trim()) isValid = false;
+      if (isFlight && !passenger.dob) isValid = false;
+      if ((isBus || isTrain) && !passenger.age) isValid = false;
+      if (isFlight && !passenger.passport.trim()) isValid = false;
+      if (!passenger.aadhaar.trim() || passenger.aadhaar.length !== 12) isValid = false;
+    });
+    return isValid;
+  };
+
   const handleStepClick = (step: number) => {
+    if (step > 1 && !isBookingValid()) {
+      validateAllFields();
+      return;
+    }
     setCurrentStep(step);
     scrollToStep(step);
   };
@@ -174,7 +247,9 @@ const BookingDetails = () => {
         {/* Progress Steps */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '24px', marginBottom: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', position: 'sticky', top: '0', zIndex: 100 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            {steps.map((step, index) => (
+            {steps.map((step, index) => {
+              const isDisabled = index > 0 && !isBookingValid();
+              return (
               <div key={index} style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
                   <div 
@@ -187,11 +262,12 @@ const BookingDetails = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontWeight: '600',
-                      background: index + 1 === currentStep ? '#3b82f6' : index + 1 < currentStep ? '#10b981' : '#e5e7eb',
-                      color: index + 1 <= currentStep ? 'white' : '#9ca3af',
-                      cursor: 'pointer',
+                      background: isDisabled ? '#d1d5db' : (index + 1 === currentStep ? '#3b82f6' : index + 1 < currentStep ? '#10b981' : '#e5e7eb'),
+                      color: isDisabled ? '#9ca3af' : (index + 1 <= currentStep ? 'white' : '#9ca3af'),
+                      cursor: isDisabled ? 'not-allowed' : 'pointer',
                       transition: 'all 0.3s ease',
-                      border: index + 1 === currentStep ? '3px solid #60a5fa' : 'none'
+                      border: index + 1 === currentStep ? '3px solid #60a5fa' : 'none',
+                      opacity: isDisabled ? 0.5 : 1
                     }}>
                     {index + 1}
                   </div>
@@ -199,7 +275,8 @@ const BookingDetails = () => {
                     marginTop: '8px',
                     fontSize: '14px',
                     fontWeight: index + 1 <= currentStep ? '600' : '400',
-                    color: index + 1 <= currentStep ? '#3b82f6' : '#9ca3af'
+                    color: isDisabled ? '#9ca3af' : (index + 1 <= currentStep ? '#3b82f6' : '#9ca3af'),
+                    opacity: isDisabled ? 0.5 : 1
                   }}>
                     {step}
                   </span>
@@ -213,7 +290,7 @@ const BookingDetails = () => {
                   }} />
                 )}
               </div>
-            ))}
+            )})}
           </div>
         </div>
 
@@ -228,9 +305,31 @@ const BookingDetails = () => {
               <>
                 {passengers.map((passenger, index) => (
                   <div key={index} style={{ background: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-                    <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937' }}>
-                      Passenger {index + 1} {selectedSeats[index] && `- Seat ${selectedSeats[index].id}`}
-                    </h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', margin: 0 }}>
+                        Passenger {index + 1} {selectedSeats[index] && `- Seat ${selectedSeats[index].id}`}
+                      </h3>
+                      {index > 0 && (
+                        <button
+                          onClick={() => removePassenger(index)}
+                          style={{
+                            background: '#dc2626',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          🗑️ Delete
+                        </button>
+                      )}
+                    </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                       <div>
@@ -269,7 +368,7 @@ const BookingDetails = () => {
                           style={{
                             width: '100%',
                             padding: '10px 12px',
-                            border: '1px solid #d1d5db',
+                            border: validationErrors[index]?.firstName ? '2px solid #dc2626' : '1px solid #d1d5db',
                             borderRadius: '8px',
                             fontSize: '14px',
                             background: 'white',
@@ -277,6 +376,11 @@ const BookingDetails = () => {
                             outline: 'none'
                           }}
                         />
+                        {validationErrors[index]?.firstName && (
+                          <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                            {validationErrors[index].firstName}
+                          </span>
+                        )}
                       </div>
 
                       <div>
@@ -292,7 +396,7 @@ const BookingDetails = () => {
                           style={{
                             width: '100%',
                             padding: '10px 12px',
-                            border: '1px solid #d1d5db',
+                            border: validationErrors[index]?.lastName ? '2px solid #dc2626' : '1px solid #d1d5db',
                             borderRadius: '8px',
                             fontSize: '14px',
                             background: passenger.noLastName ? '#f9fafb' : 'white',
@@ -300,6 +404,11 @@ const BookingDetails = () => {
                             outline: 'none'
                           }}
                         />
+                        {validationErrors[index]?.lastName && (
+                          <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                            {validationErrors[index].lastName}
+                          </span>
+                        )}
                         <label style={{ display: 'flex', alignItems: 'center', marginTop: '8px', cursor: 'pointer' }}>
                           <input 
                             type="checkbox"
@@ -384,61 +493,66 @@ const BookingDetails = () => {
                             }}
                           />
                         ) : (
-                          <input 
-                            type="date"
-                            value={passenger.dob}
-                            onChange={(e) => updatePassenger(index, 'dob', e.target.value)}
-                            style={{
-                              width: '100%',
-                              padding: '10px 12px',
-                              border: '1px solid #d1d5db',
-                              borderRadius: '8px',
-                              fontSize: '14px',
-                              background: 'white',
-                              color: '#1f2937',
-                              outline: 'none'
-                            }}
-                          />
+                          <>
+                            <input 
+                              type="date"
+                              value={passenger.dob}
+                              onChange={(e) => updatePassenger(index, 'dob', e.target.value)}
+                              style={{
+                                width: '100%',
+                                padding: '10px 12px',
+                                border: validationErrors[index]?.dob ? '2px solid #dc2626' : '1px solid #d1d5db',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                background: 'white',
+                                color: '#1f2937',
+                                outline: 'none'
+                              }}
+                            />
+                            {validationErrors[index]?.dob && (
+                              <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                                {validationErrors[index].dob}
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
 
-                      {requiresAadhaar && (
-                        <div style={{ gridColumn: '1 / -1' }}>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
-                            Aadhaar Number <span style={{ color: '#ef4444' }}>*</span>
-                          </label>
-                          <input 
-                            type="text"
-                            value={passenger.aadhaar}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, '').slice(0, 12);
-                              updatePassenger(index, 'aadhaar', value);
-                            }}
-                            placeholder="Enter 12-digit Aadhaar number"
-                            maxLength={12}
-                            style={{
-                              width: '100%',
-                              padding: '10px 12px',
-                              border: aadhaarErrors[index] ? '1px solid #ef4444' : '1px solid #d1d5db',
-                              borderRadius: '8px',
-                              fontSize: '14px',
-                              background: 'white',
-                              color: '#1f2937',
-                              outline: 'none'
-                            }}
-                          />
-                          {aadhaarErrors[index] && (
-                            <span style={{ fontSize: '12px', color: '#ef4444', marginTop: '4px', display: 'block' }}>
-                              {aadhaarErrors[index]}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                      <div style={{ gridColumn: '1 / -1' }}>
+                        <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
+                          Aadhaar Number <span style={{ color: '#dc2626' }}>*</span>
+                        </label>
+                        <input 
+                          type="text"
+                          value={passenger.aadhaar}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '').slice(0, 12);
+                            updatePassenger(index, 'aadhaar', value);
+                          }}
+                          placeholder="Enter 12-digit Aadhaar number"
+                          maxLength={12}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: (aadhaarErrors[index] || validationErrors[index]?.aadhaar) ? '2px solid #dc2626' : '1px solid #d1d5db',
+                            borderRadius: '8px',
+                            fontSize: '14px',
+                            background: 'white',
+                            color: '#1f2937',
+                            outline: 'none'
+                          }}
+                        />
+                        {(aadhaarErrors[index] || validationErrors[index]?.aadhaar) && (
+                          <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                            {aadhaarErrors[index] || validationErrors[index]?.aadhaar}
+                          </span>
+                        )}
+                      </div>
 
                       {isFlight && (
                         <div style={{ gridColumn: '1 / -1' }}>
                           <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
-                            Passport Number <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '400' }}>(Optional)</span>
+                            Passport Number <span style={{ color: '#dc2626' }}>*</span>
                           </label>
                           <input 
                             type="text"
@@ -452,7 +566,7 @@ const BookingDetails = () => {
                             style={{
                               width: '100%',
                               padding: '10px 12px',
-                              border: passportErrors[index] ? '1px solid #ef4444' : '1px solid #d1d5db',
+                              border: (passportErrors[index] || validationErrors[index]?.passport) ? '2px solid #dc2626' : '1px solid #d1d5db',
                               borderRadius: '8px',
                               fontSize: '14px',
                               background: 'white',
@@ -460,9 +574,9 @@ const BookingDetails = () => {
                               outline: 'none'
                             }}
                           />
-                          {passportErrors[index] && (
-                            <span style={{ fontSize: '12px', color: '#ef4444', marginTop: '4px', display: 'block' }}>
-                              {passportErrors[index]}
+                          {(passportErrors[index] || validationErrors[index]?.passport) && (
+                            <span style={{ fontSize: '12px', color: '#dc2626', marginTop: '4px', display: 'block' }}>
+                              {passportErrors[index] || validationErrors[index]?.passport}
                             </span>
                           )}
                         </div>
@@ -653,9 +767,24 @@ const BookingDetails = () => {
             <div id="complete-section" style={{ scrollMarginTop: '100px' }}>
             {currentStep === 4 && (
               <div style={{ background: 'white', borderRadius: '12px', padding: '48px 24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', textAlign: 'center' }}>
-                <div style={{ fontSize: '64px', marginBottom: '16px' }}>✓</div>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '48px', color: 'white' }}>✓</div>
                 <h3 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '8px', color: '#1f2937' }}>Booking Confirmed!</h3>
-                <p style={{ color: '#6b7280' }}>Your booking has been successfully completed.</p>
+                <p style={{ color: '#6b7280', marginBottom: '24px' }}>Your booking has been successfully completed.</p>
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  style={{
+                    padding: '12px 32px',
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer'
+                  }}
+                >
+                  View Booking
+                </button>
               </div>
             )}
             </div>
@@ -663,6 +792,7 @@ const BookingDetails = () => {
 
           {/* Right Side - Trip Summary */}
           <div>
+            {currentStep !== 4 && (
             <div style={{ background: 'white', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', position: 'sticky', top: '20px' }}>
               <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937', borderBottom: '1px solid #e5e7eb', paddingBottom: '12px' }}>
                 Trip Summary
@@ -768,6 +898,7 @@ const BookingDetails = () => {
                 {currentStep === 4 ? 'View Booking' : 'Continue'}
               </button>
             </div>
+            )}
           </div>
         </div>
       </div>

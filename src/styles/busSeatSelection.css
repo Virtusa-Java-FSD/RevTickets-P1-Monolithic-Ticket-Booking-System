@@ -1,0 +1,264 @@
+/* Modal Overlay */
+.bus-seat-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  z-index: 1050;
+  overflow-y: auto;
+}
+
+.bus-seat-modal-container {
+  margin-top: 0 !important;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.bg-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Close Button */
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.modal-close-btn:hover {
+  background: rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+/* Seat Buttons */
+.seat-btn {
+  width: 48px;
+  height: 48px;
+  border: 2px solid;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background: white;
+}
+
+.seat-btn.available {
+  border-color: #dee2e6;
+  color: #495057;
+  background: white;
+}
+
+.seat-btn.available:hover {
+  border-color: #667eea;
+  transform: scale(1.05);
+}
+
+.seat-btn.booked {
+  border-color: #dc3545;
+  background: #dc3545;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.seat-btn.selected {
+  border-color: #28a745;
+  background: #28a745;
+  color: white;
+}
+
+.seat-row-number {
+  width: 24px;
+  text-align: center;
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.seat-aisle {
+  width: 32px;
+  border-top: 2px dashed #dee2e6;
+}
+
+/* Seat Legend */
+.seat-legend {
+  width: 32px;
+  height: 32px;
+  border: 2px solid;
+  border-radius: 6px;
+}
+
+.seat-legend.available {
+  background: white;
+  border-color: #dee2e6;
+}
+
+.seat-legend.booked {
+  background: #dc3545;
+  border-color: #dc3545;
+}
+
+.seat-legend.selected {
+  background: #28a745;
+  border-color: #28a745;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .bus-seat-modal-overlay {
+    padding-top: 70px;
+  }
+
+  .bus-seat-modal-container {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .bus-seat-modal-overlay .row {
+    flex-direction: column;
+  }
+
+  .bus-seat-modal-overlay .col-lg-4 {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  .sticky-top {
+    position: relative !important;
+    top: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .bus-seat-modal-overlay {
+    padding-top: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .bus-seat-modal-container {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .modal-header {
+    padding: 15px;
+  }
+
+  .modal-header h4 {
+    font-size: 1.1rem;
+  }
+
+  .modal-body {
+    padding: 15px !important;
+  }
+
+  .seat-btn {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 12px !important;
+  }
+
+  .seat-row-number {
+    width: 20px;
+    font-size: 12px;
+  }
+
+  .seat-aisle {
+    width: 20px;
+  }
+
+  .modal-close-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 28px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .bus-seat-modal-overlay {
+    padding-top: 60px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .bus-seat-modal-container {
+    margin: 0;
+    width: 100%;
+    max-height: calc(100vh - 70px);
+    border-radius: 8px;
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 70px);
+    border-radius: 8px;
+  }
+
+  .modal-body {
+    padding: 10px !important;
+    overflow-y: auto;
+  }
+
+  .seat-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 11px !important;
+  }
+
+  .seat-row-number {
+    width: 18px;
+    font-size: 11px;
+  }
+
+  .seat-aisle {
+    width: 15px;
+  }
+
+  .gap-3 {
+    gap: 0.5rem !important;
+  }
+
+  .gap-2 {
+    gap: 0.25rem !important;
+  }
+
+  .card-body {
+    padding: 10px !important;
+  }
+}

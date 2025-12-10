@@ -206,18 +206,21 @@ const Travels = () => {
             <button 
               className={`travel-tab ${activeTab === 'Flights' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Flights')}
+              tabIndex={0}
             >
               Flights
             </button>
             <button 
               className={`travel-tab ${activeTab === 'Buses' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Buses')}
+              tabIndex={-1}
             >
               Buses
             </button>
             <button 
               className={`travel-tab ${activeTab === 'Trains' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Trains')}
+              tabIndex={0}
             >
               Trains
             </button>

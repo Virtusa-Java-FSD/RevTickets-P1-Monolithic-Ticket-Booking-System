@@ -5,6 +5,7 @@ import App from './App.tsx'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/main.css";
 import "./styles/responsive.css";
+import "./styles/responsive-global.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 
