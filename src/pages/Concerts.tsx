@@ -424,9 +424,9 @@ const Concerts = () => {
               <p className="text-muted mb-4">
                 Showing <strong>{filteredConcerts.length}</strong> concert{filteredConcerts.length !== 1 ? "s" : ""}
               </p>
-              <div className="row g-0">
+              <div className="concerts-grid">
                 {filteredConcerts.map((concert) => (
-                  <div key={concert.id} style={{ flex: '0 0 20%', maxWidth: '20%', padding: '0 0.25rem', marginBottom: '1.5rem' }}>
+                  <div key={concert.id}>
                     <div className="travel-card">
                       <div className="travel-image-wrapper">
                         <img 

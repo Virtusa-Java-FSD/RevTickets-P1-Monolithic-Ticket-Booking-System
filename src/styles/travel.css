@@ -197,6 +197,33 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .concerts-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .compact-filter-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .city-input {
+    min-width: unset;
+  }
+  
+  .search-btn {
+    grid-column: 1 / -1;
+  }
+  
+  .concerts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .compact-filter-bar {
     flex-direction: column;
@@ -204,34 +231,80 @@
     padding: 16px;
   }
   
-  .compact-filter-bar > *, .date-group {
+  .compact-filter-bar > * {
     width: 100%;
   }
   
-  .date-group {
-    flex-direction: column;
+  .city-input, .date-input {
+    min-width: unset;
   }
   
-  .city-input, .date-input, .travel-type-select {
-    min-width: unset;
+  .banner-carousel {
+    height: 200px;
+  }
+  
+  .banner-content h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .travels-header {
+    padding: 15px 0;
+  }
+  
+  .travels-header h1 {
+    font-size: 1.25rem;
+  }
+  
+  .concerts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 576px) {
+  .banner-carousel {
+    height: 150px;
+  }
+  
+  .banner-content h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .banner-content p {
+    font-size: 0.875rem;
+  }
+  
   .compact-filter-bar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-rows: auto auto;
-    gap: 12px;
+    margin: 10px 0;
+    padding: 12px;
   }
   
-  .date-group {
-    grid-column: 1 / -1;
+  .travel-card {
+    margin-bottom: 1rem;
   }
   
-  .search-btn {
-    grid-column: 1 / -1;
+  .travel-image-wrapper {
+    height: 150px;
   }
+  
+  .travel-title {
+    font-size: 14px;
+  }
+  
+  .travel-timing {
+    font-size: 12px;
+  }
+  
+  .concerts-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.concerts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
 }
 
 /* Existing travel.css styles */
