@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
+import "../styles/events.css";
 
 const Events = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Events = () => {
   const [sortBy, setSortBy] = useState("title");
   const [imageHeight, setImageHeight] = useState(200);
 
-  // Load responsive image sizing
+  // Handle responsive image height
   useEffect(() => {
     const updateHeight = () => {
       if (window.innerWidth < 576) setImageHeight(150);
@@ -26,23 +27,23 @@ const Events = () => {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  // Load events mock data
+  // Load events
   useEffect(() => {
     setLoading(true);
 
     const mockEvents: Event[] = [
-      { id: "e1", title: "Tech Conference 2025", description: "Leading innovations & tech showcases", category: "other", industry: "Technology", rating: 8.5, price: 799, imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400" },
-      { id: "e2", title: "Food Festival", description: "Taste cuisines from around the world", category: "other", industry: "Food & Beverage", rating: 8.8, price: 499, imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400" },
-      { id: "e3", title: "Art Exhibition", description: "Contemporary art showcase", category: "other", industry: "Arts & Culture", rating: 8.2, price: 350, imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400" },
-      { id: "e4", title: "Sports Championship", description: "National level finals", category: "other", industry: "Sports", rating: 9.0, price: 999, imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400" },
-      { id: "e5", title: "Comedy Night", description: "Stand-up show with top comedians", category: "other", industry: "Entertainment", rating: 8.6, price: 299, imageUrl: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=400" },
-      { id: "e6", title: "Book Fair 2024", description: "Meet your favourite authors!", category: "other", industry: "Education", rating: 8.3, price: 150, imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400" },
-      { id: "e7", title: "Fashion Week", description: "International fashion show", category: "other", industry: "Fashion", rating: 8.9, price: 1299, imageUrl: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" },
-      { id: "e8", title: "Gaming Expo", description: "New releases & live tournaments", category: "other", industry: "Technology", rating: 9.1, price: 899, imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400" },
-      { id: "e9", title: "Wine Tasting Event", description: "Premium wine experience", category: "other", industry: "Food & Beverage", rating: 8.4, price: 599, imageUrl: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400" },
-      { id: "e10", title: "Startup Summit", description: "Entrepreneurship networking event", category: "other", industry: "Business", rating: 8.7, price: 699, imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400" },
-      { id: "e11", title: "Yoga Retreat", description: "Relaxation & wellness weekend", category: "other", industry: "Health & Wellness", rating: 8.5, price: 450, imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400" },
-      { id: "e12", title: "Car Show 2024", description: "Luxury & vintage exhibitions", category: "other", industry: "Automotive", rating: 8.8, price: 850, imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400" }
+      { id: "e1", title: "Tech Conference 2025", description: "Leading innovations & tech showcases", category: "other", industry: "Technology", rating: 4.5, price: 799, imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400" },
+      { id: "e2", title: "Food Festival", description: "Taste cuisines from around the world", category: "other", industry: "Food & Beverage", rating: 4.8, price: 499, imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400" },
+      { id: "e3", title: "Art Exhibition", description: "Contemporary art showcase", category: "other", industry: "Arts & Culture", rating: 4.2, price: 350, imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400" },
+      { id: "e4", title: "Sports Championship", description: "National level finals", category: "other", industry: "Sports", rating: 4.9, price: 999, imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400" },
+      { id: "e5", title: "Comedy Night", description: "Stand-up show with top comedians", category: "other", industry: "Entertainment", rating: 4.3, price: 299, imageUrl: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=400" },
+      { id: "e6", title: "Book Fair 2025", description: "Meet your favourite authors!", category: "other", industry: "Education", rating: 4.1, price: 150, imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400" },
+      { id: "e7", title: "Fashion Week", description: "International fashion show", category: "other", industry: "Fashion", rating: 4.7, price: 1299, imageUrl: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" },
+      { id: "e8", title: "Gaming Expo", description: "New releases & live tournaments", category: "other", industry: "Technology", rating: 5.0, price: 899, imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400" },
+      { id: "e9", title: "Wine Tasting Event", description: "Premium wine experience", category: "other", industry: "Food & Beverage", rating: 4.4, price: 599, imageUrl: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400" },
+      { id: "e10", title: "Startup Summit", description: "Entrepreneurship networking event", category: "other", industry: "Business", rating: 4.6, price: 699, imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400" },
+      { id: "e11", title: "Yoga Retreat", description: "Relaxation & wellness weekend", category: "other", industry: "Health & Wellness", rating: 4.5, price: 450, imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400" },
+      { id: "e12", title: "Car Show 2025", description: "Luxury & vintage exhibitions", category: "other", industry: "Automotive", rating: 4.8, price: 850, imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400" }
     ];
 
     setEvents(mockEvents);
@@ -50,7 +51,7 @@ const Events = () => {
     setLoading(false);
   }, []);
 
-  // Filter logic
+  // Filter Logic
   useEffect(() => {
     let list = [...events];
 
@@ -66,9 +67,9 @@ const Events = () => {
       list = list.filter(e => e.industry === selectedIndustry);
     }
 
-    if (sortBy === "rating") list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    else if (sortBy === "priceLow") list.sort((a, b) => (a.price || 0) - (b.price || 0));
-    else if (sortBy === "priceHigh") list.sort((a, b) => (b.price || 0) - (a.price || 0));
+    if (sortBy === "rating") list.sort((a, b) => (b.rating! - a.rating!));
+    else if (sortBy === "priceLow") list.sort((a, b) => (a.price! - b.price!));
+    else if (sortBy === "priceHigh") list.sort((a, b) => (b.price! - a.price!));
     else list.sort((a, b) => a.title.localeCompare(b.title));
 
     setFilteredEvents(list);
@@ -92,7 +93,7 @@ const Events = () => {
         </div>
       </div>
 
-      {/* ⭐ FILTER BAR MATCHING CONCERT STYLE */}
+      {/* FILTER BAR */}
       <div className="container mt-4">
         <div
           className="d-flex align-items-center gap-3 flex-wrap mb-4"
@@ -104,7 +105,6 @@ const Events = () => {
             boxShadow: "0 2px 10px rgba(0,0,0,0.08)"
           }}
         >
-          {/* Search */}
           <input
             className="form-control"
             style={{ maxWidth: "280px", borderRadius: "10px" }}
@@ -113,7 +113,6 @@ const Events = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          {/* Industry */}
           <select
             className="form-select"
             style={{ maxWidth: "200px", borderRadius: "10px" }}
@@ -124,7 +123,6 @@ const Events = () => {
             {industries.map(i => <option key={i}>{i}</option>)}
           </select>
 
-          {/* Sort */}
           <select
             className="form-select"
             style={{ maxWidth: "180px", borderRadius: "10px" }}
@@ -138,7 +136,6 @@ const Events = () => {
           </select>
         </div>
 
-        {/* COUNT */}
         <p className="text-muted mb-3">
           Showing <strong>{filteredEvents.length}</strong> event(s)
         </p>
@@ -147,20 +144,42 @@ const Events = () => {
         <div className="row g-3">
           {filteredEvents.map(event => (
             <div key={event.id} className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-              <div className="card shadow-sm h-100">
-                <img
-                  src={event.imageUrl}
-                  alt={event.title}
-                  className="card-img-top"
-                  style={{ height: `${imageHeight}px`, objectFit: "cover" }}
-                />
+              <div className="card shadow-hover h-100">
+
+                {/* ⭐ RATING OVERLAY ON IMAGE */}
+                <div style={{ position: "relative" }}>
+                  <img
+                    src={event.imageUrl}
+                    alt={event.title}
+                    className="card-img-top"
+                    style={{
+                      height: `${imageHeight}px`,
+                      objectFit: "cover",
+                    }}
+                  />
+
+                  {/* RATING BADGE */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "8px",
+                      left: "8px",
+                      background: "rgba(0,0,0,0.7)",
+                      color: "white",
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      fontSize: "0.75rem",
+                      fontWeight: "600"
+                    }}
+                  >
+                    ⭐ {event.rating}/5
+                  </span>
+                </div>
+
+                {/* CARD BODY */}
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{event.title}</h5>
                   <p className="small text-muted flex-grow-1">{event.description}</p>
-
-                  <span className="badge bg-warning text-dark mb-2">
-                    ⭐ {event.rating}
-                  </span>
 
                   <button
                     className="btn btn-primary mt-auto"
@@ -169,6 +188,7 @@ const Events = () => {
                     Book Now
                   </button>
                 </div>
+
               </div>
             </div>
           ))}
