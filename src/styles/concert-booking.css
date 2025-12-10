@@ -268,8 +268,8 @@
 
 .seat-legend {
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+  gap: 2rem;
+  justify-content: flex-start;
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
@@ -283,10 +283,11 @@
 }
 
 .legend-box {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 4px;
   border: 2px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .legend-box.available {
@@ -302,6 +303,8 @@
   background: #e9ecef;
   border-color: #dee2e6;
 }
+
+
 
 .sticky-summary {
   position: sticky;
@@ -591,6 +594,55 @@
   color: #6c757d;
 }
 
+/* Payment Method Radio Button Alignment */
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.payment-method-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.payment-method-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.payment-method-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payment-method-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.payment-method-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.payment-method-option:hover {
+  border-color: #667eea;
+  background-color: #f8f9fa;
+}
+
 .booking-summary-section {
   background: white;
   border-radius: 12px;
@@ -643,37 +695,42 @@
   color: #212529;
 }
 
-@media (max-width: 1024px) {
+
+
+@media (max-width: 1200px) {
+  .checkout-container {
+    gap: 1rem;
+  }
+  
+  .checkout-right {
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 992px) {
   .checkout-container {
     flex-direction: column;
   }
   
   .checkout-right {
     order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
+    min-width: unset;
   }
   
-  .checkout-container {
-    gap: 1rem;
-    margin: 1rem 0;
+  .booking-steps {
+    padding: 1.5rem 1rem;
   }
   
-  .customer-details-section,
-  .payment-method-section,
-  .booking-summary-section {
-    padding: 1rem;
+  .step-line {
+    width: 60px;
   }
 }
 
 @media (max-width: 768px) {
   .booking-steps {
     padding: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .step-line {
@@ -685,7 +742,14 @@
   }
 
   .seat-map {
-    overflow-x: scroll;
+    padding: 0.75rem;
+    overflow: visible;
+  }
+
+  .seat-row {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
   }
 
   .seat {
@@ -696,5 +760,132 @@
 
   .action-buttons {
     flex-direction: column;
+  }
+  
+  .row {
+    margin: 0;
+  }
+  
+  .col-lg-8, .col-lg-4 {
+    padding: 0 0.5rem;
+  }
+  
+  .booking-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .category-filter {
+    gap: 0.5rem;
+  }
+  
+  .cat-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .date-options, .time-options {
+    gap: 0.5rem;
+  }
+  
+  .date-btn, .time-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .booking-steps {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .step {
+    flex: 1;
+    min-width: 80px;
+  }
+  
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+  
+  .step-label {
+    font-size: 0.7rem;
+    text-align: center;
+  }
+  
+  .step-line {
+    width: 20px;
+  }
+  
+  .booking-card {
+    padding: 0.75rem;
+  }
+  
+  .booking-card h3 {
+    font-size: 1rem;
+  }
+  
+  .seat-map {
+    padding: 0.5rem;
+  }
+  
+  .seat {
+    width: 24px;
+    height: 24px;
+    font-size: 0.6rem;
+    margin: 1px;
+  }
+  
+  .row-label {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    order: -1;
+  }
+  
+  .seat-legend {
+    padding: 0.75rem;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .legend-item {
+    align-items: center;
+    gap: 0.4rem;
+  }
+  
+  .legend-box {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .legend-item {
+    font-size: 0.8rem;
+  }
+  
+  .category-filter {
+    flex-wrap: wrap;
+  }
+  
+  .date-options, .time-options {
+    flex-wrap: wrap;
+  }
+  
+  .summary-image {
+    height: 150px;
+  }
+  
+  .price-breakdown {
+    padding: 0.75rem;
+  }
+  
+  .proceed-btn, .confirm-btn {
+    padding: 0.875rem;
+    font-size: 0.9rem;
   }
 }

@@ -587,72 +587,40 @@ const ConcertBooking = () => {
 
               <div className="booking-card" style={{marginTop: '20px'}}>
                 <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937'}}>Payment Method</h3>
-                <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                      <input type="radio" name="payment" id="card" defaultChecked style={{width: '20px', height: '20px'}} />
-                      <div>
-                        <div style={{fontWeight: '600', color: '#1f2937'}}>💳 Credit/Debit Card</div>
-                        <div style={{fontSize: '13px', color: '#6b7280', marginTop: '2px'}}>Visa, Mastercard, Amex</div>
+                <div>
+                  <label className="payment-method-option">
+                    <div className="payment-method-content">
+                      <input type="radio" name="payment" id="card" defaultChecked />
+                      <div className="payment-method-info">
+                        <div className="payment-method-title">💳 Credit/Debit Card</div>
+                        <div className="payment-method-subtitle">Visa, Mastercard, Amex</div>
                       </div>
                     </div>
                   </label>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                      <input type="radio" name="payment" id="upi" style={{width: '20px', height: '20px'}} />
-                      <div>
-                        <div style={{fontWeight: '600', color: '#1f2937'}}>📱 UPI</div>
-                        <div style={{fontSize: '13px', color: '#6b7280', marginTop: '2px'}}>Google Pay, PhonePe, Paytm</div>
+                  <label className="payment-method-option">
+                    <div className="payment-method-content">
+                      <input type="radio" name="payment" id="upi" />
+                      <div className="payment-method-info">
+                        <div className="payment-method-title">📱 UPI</div>
+                        <div className="payment-method-subtitle">Google Pay, PhonePe, Paytm</div>
                       </div>
                     </div>
                   </label>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                      <input type="radio" name="payment" id="wallet" style={{width: '20px', height: '20px'}} />
-                      <div>
-                        <div style={{fontWeight: '600', color: '#1f2937'}}>👛 Wallet</div>
-                        <div style={{fontSize: '13px', color: '#6b7280', marginTop: '2px'}}>Amazon Pay, Mobikwik</div>
+                  <label className="payment-method-option">
+                    <div className="payment-method-content">
+                      <input type="radio" name="payment" id="wallet" />
+                      <div className="payment-method-info">
+                        <div className="payment-method-title">👛 Wallet</div>
+                        <div className="payment-method-subtitle">Amazon Pay, Mobikwik</div>
                       </div>
                     </div>
                   </label>
-                  <label style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    cursor: 'pointer'
-                  }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-                      <input type="radio" name="payment" id="netbanking" style={{width: '20px', height: '20px'}} />
-                      <div>
-                        <div style={{fontWeight: '600', color: '#1f2937'}}>🏦 Net Banking</div>
-                        <div style={{fontSize: '13px', color: '#6b7280', marginTop: '2px'}}>All major banks</div>
+                  <label className="payment-method-option">
+                    <div className="payment-method-content">
+                      <input type="radio" name="payment" id="netbanking" />
+                      <div className="payment-method-info">
+                        <div className="payment-method-title">🏦 Net Banking</div>
+                        <div className="payment-method-subtitle">All major banks</div>
                       </div>
                     </div>
                   </label>
