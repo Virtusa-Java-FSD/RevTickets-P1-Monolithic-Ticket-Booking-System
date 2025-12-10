@@ -247,43 +247,62 @@ const MovieDetail = () => {
         return;
       }
 
-      // Generate shows for current week only (from today until end of week)
+      // Generate shows for current week with multiple showtimes like BookMyShow
       const mockShows: Show[] = [];
-      const theaters = ["PVR Cinemas", "INOX Megaplex", "Cinepolis", "Carnival Cinemas", "Miraj Cinemas", "AMB Cinemas", "Asian Cinemas"];
-      const times = ["10:00 AM", "1:00 PM", "4:00 PM", "7:00 PM", "10:00 PM"];
-      const qualities = ["2D", "3D", "IMAX"];
+      const theaters = [
+        { name: "PVR Cinemas", formats: ["2D", "3D", "IMAX"] },
+        { name: "INOX Megaplex", formats: ["2D", "3D", "IMAX"] },
+        { name: "Cinepolis", formats: ["2D", "3D"] },
+        { name: "Carnival Cinemas", formats: ["2D"] },
+        { name: "Miraj Cinemas", formats: ["2D", "3D"] },
+        { name: "AMB Cinemas", formats: ["2D", "IMAX"] },
+      ];
       
-      // Calculate days remaining in current week (today to Sunday)
+      const timeSlots = [
+        "9:30 AM", "10:15 AM", "12:30 PM", "1:15 PM", "3:30 PM", 
+        "4:15 PM", "6:30 PM", "7:15 PM", "9:30 PM", "10:15 PM"
+      ];
+      
+      // Calculate days for next 7 days
       const today = new Date();
-      const currentDay = today.getDay(); // 0 = Sunday, 6 = Saturday
-      const daysUntilEndOfWeek = currentDay === 0 ? 7 : 7 - currentDay + 1; // Include today
       
-      for (let day = 0; day < daysUntilEndOfWeek; day++) {
+      for (let day = 0; day < 7; day++) {
         const dayOffset = 86400000 * day;
-        theaters.slice(0, 3 + Math.floor(Math.random() * 3)).forEach((theater, idx) => {
-          times.slice(0, 2 + Math.floor(Math.random() * 3)).forEach((time, timeIdx) => {
-            const [hours, minutes, period] = time.match(/(\d+):(\d+)\s(AM|PM)/)?.slice(1) || [];
-            let hour = parseInt(hours);
-            if (period === "PM" && hour !== 12) hour += 12;
-            if (period === "AM" && hour === 12) hour = 0;
-            
-            const showDate = new Date(Date.now() + dayOffset);
-            showDate.setHours(hour, parseInt(minutes), 0, 0);
-            
-            const baseFormat = qualities[Math.floor(Math.random() * qualities.length)];
-            const hasHD = Math.random() > 0.3;
-            const format = hasHD ? `${baseFormat} HD` : baseFormat;
-            
-            mockShows.push({
-              id: `s${movieId}-${day}-${idx}-${timeIdx}`,
-              eventId: movieId || "1",
-              showDateTime: showDate.toISOString(),
-              theater,
-              format,
-              language: foundMovie.language || "English",
-              price: foundMovie.price ? foundMovie.price + (Math.floor(Math.random() * 3) - 1) * 50 + (hasHD ? 50 : 0) : 250,
-              availableSeats: 20 + Math.floor(Math.random() * 60),
-              totalSeats: 100,
+        
+        theaters.forEach((theater, theaterIdx) => {
+          // Each theater gets 4-6 random showtimes per day
+          const numShows = 4 + Math.floor(Math.random() * 3);
+          const selectedTimes = timeSlots.sort(() => 0.5 - Math.random()).slice(0, numShows);
+          
+          selectedTimes.forEach((time, timeIdx) => {
+            theater.formats.forEach((format) => {
+              const [hours, minutes, period] = time.match(/(\d+):(\d+)\s(AM|PM)/)?.slice(1) || [];
+              let hour = parseInt(hours);
+              if (period === "PM" && hour !== 12) hour += 12;
+              if (period === "AM" && hour === 12) hour = 0;
+              
+              const showDate = new Date(Date.now() + dayOffset);
+              showDate.setHours(hour, parseInt(minutes), 0, 0);
+              
+              // Skip past showtimes for today
+              if (day === 0 && showDate < new Date()) return;
+              
+              const basePrice = foundMovie.price || 200;
+              let formatPrice = basePrice;
+              if (format === "3D") formatPrice += 50;
+              if (format === "IMAX") formatPrice += 100;
+              
+              mockShows.push({
+                id: `show-${movieId}-${day}-${theaterIdx}-${timeIdx}-${format}`,
+                eventId: movieId || "1",
+                showDateTime: showDate.toISOString(),
+                theater: theater.name,
+                format,
+                language: foundMovie.language || "English",
+                price: formatPrice,
+                availableSeats: Math.floor(Math.random() * 80) + 20,
+                totalSeats: 100,
+              });
             });
           });
         });
@@ -512,43 +531,58 @@ const MovieDetail = () => {
             </div>
           ) : (
             <div className="theaters-list">
-              {filteredShows.map((show) => (
-                <div key={show.id} className="theater-card">
+              {Object.entries(
+                filteredShows.reduce((acc, show) => {
+                  const key = `${show.theater}-${show.format}`;
+                  if (!acc[key]) {
+                    acc[key] = {
+                      theater: show.theater,
+                      format: show.format,
+                      shows: []
+                    };
+                  }
+                  acc[key].shows.push(show);
+                  return acc;
+                }, {} as Record<string, { theater: string; format: string; shows: typeof filteredShows }>)
+              ).map(([key, theaterGroup]) => (
+                <div key={key} className="theater-card">
                   <div className="theater-info">
-                    <h3 className="theater-name">{show.theater}</h3>
+                    <div className="theater-header">
+                      <h3 className="theater-name">{theaterGroup.theater}</h3>
+                      <span className="format-tag">{theaterGroup.format}</span>
+                    </div>
                     <div className="theater-meta">
-                      <span className="format-tag">{show.format}</span>
                       <span className="seats-info">
-                        {show.availableSeats > 0 ? (
-                          <>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                            </svg>
-                            {show.availableSeats} seats available
-                          </>
-                        ) : (
-                          <span className="sold-out">SOLD OUT</span>
-                        )}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                        Available
                       </span>
                     </div>
                   </div>
-                  <div className="showtime-info">
-                    <div className="showtime">
-                      {new Date(show.showDateTime).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                      })}
-                    </div>
-                    <div className="price">₹{show.price}</div>
-                    <button
-                      className="select-btn"
-                      onClick={() => handleShowSelection(show)}
-                      disabled={show.availableSeats === 0}
-                    >
-                      {show.availableSeats > 0 ? 'Select' : 'Full'}
-                    </button>
+                  <div className="showtimes-grid">
+                    {theaterGroup.shows
+                      .sort((a, b) => new Date(a.showDateTime).getTime() - new Date(b.showDateTime).getTime())
+                      .map((show) => (
+                        <button
+                          key={show.id}
+                          className={`showtime-btn ${show.availableSeats === 0 ? 'sold-out' : ''}`}
+                          onClick={() => handleShowSelection(show)}
+                          disabled={show.availableSeats === 0}
+                        >
+                          <div className="time">
+                            {new Date(show.showDateTime).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true
+                            })}
+                          </div>
+                          <div className="price">₹{show.price}</div>
+                          {show.availableSeats === 0 && <div className="sold-out-text">SOLD OUT</div>}
+                        </button>
+                      ))
+                    }
                   </div>
                 </div>
               ))}

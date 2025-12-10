@@ -73,7 +73,7 @@ const Payment = () => {
       <div className="container py-4">
         {!showPaymentMethods ? (
           <div className="text-center py-5">
-            <h3 className="mb-4 text-white fw-bold">Review Your Booking</h3>
+            <h3 className="mb-4 text-dark fw-bold">Review Your Booking</h3>
             <div className="booking-summary-card mx-auto" style={{ maxWidth: '450px' }}>
               <div className="summary-item">
                 <span>Selected Seats</span>

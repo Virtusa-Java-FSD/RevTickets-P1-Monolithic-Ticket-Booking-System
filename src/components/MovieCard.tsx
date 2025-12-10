@@ -91,3 +91,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 };
 
 export default MovieCard;
+
+
+
+

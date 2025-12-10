@@ -208,16 +208,16 @@ const SeatSelection = () => {
         {/* Legend */}
         <div className="seat-legend">
           <div className="legend-item">
-            <div className="legend-box available"></div>
+            <div className="legend-box available">🪑</div>
             <span>Available</span>
           </div>
           <div className="legend-item">
-            <div className="legend-box selected"></div>
+            <div className="legend-box selected">🪑</div>
             <span>Selected</span>
           </div>
           <div className="legend-item">
-            <div className="legend-box booked"></div>
-            <span>Sold</span>
+            <div className="legend-box booked">🪑</div>
+            <span>Booked</span>
           </div>
         </div>
       </div>
