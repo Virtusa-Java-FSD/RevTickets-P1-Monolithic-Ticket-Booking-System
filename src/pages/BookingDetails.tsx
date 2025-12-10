@@ -220,7 +220,7 @@ const BookingDetails = () => {
         {/* Back Button */}
         <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
           <button 
-            onClick={() => currentStep === 1 ? navigate(-1) : handleBack()}
+            onClick={() => currentStep === 1 ? (bookingData.type === 'train' ? navigate('/train-class-selection', { state: bookingData }) : navigate('/travels')) : handleBack()}
             style={{ 
               background: 'white', 
               border: '1px solid #e5e7eb', 

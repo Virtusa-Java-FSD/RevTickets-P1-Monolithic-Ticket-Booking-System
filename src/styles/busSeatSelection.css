@@ -86,6 +86,56 @@
   opacity: 0.7;
 }
 
+.seat-btn.seat-booked-male {
+  border-color: #3B82F6;
+  background: #3B82F6;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.seat-btn.seat-booked-female {
+  border-color: #EC4899;
+  background: #EC4899;
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* AC/Non-AC Badges */
+.badge-ac {
+  background-color: #1D4ED8;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-nonac {
+  background-color: #6B7280;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Sleeper seat styling */
+.seat-btn.sleeper {
+  border-radius: 4px;
+  position: relative;
+}
+
+.seat-btn.sleeper::after {
+  content: '🛏️';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 8px;
+  opacity: 0.7;
+}
+
 .seat-btn.selected {
   border-color: #28a745;
   background: #28a745;
@@ -121,6 +171,16 @@
 .seat-legend.booked {
   background: #dc3545;
   border-color: #dc3545;
+}
+
+.seat-legend.booked-male {
+  background: #3B82F6;
+  border-color: #3B82F6;
+}
+
+.seat-legend.booked-female {
+  background: #EC4899;
+  border-color: #EC4899;
 }
 
 .seat-legend.selected {

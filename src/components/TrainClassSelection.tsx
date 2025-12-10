@@ -39,7 +39,7 @@ const TrainClassSelection = () => {
         {/* Header */}
         <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/travels')}
             style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '14px', cursor: 'pointer', marginBottom: '10px' }}
           >
             ← Back

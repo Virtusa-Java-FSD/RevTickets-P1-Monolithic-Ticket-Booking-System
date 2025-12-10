@@ -297,7 +297,7 @@ const Movies = () => {
 
   return (
     <div className="movies-page">
-      <div className="container-fluid">
+      <div className="container-fluid p-0">
         {/* Banner Carousel */}
         <div className="banner-carousel">
           {movies.map((movie, index) => (

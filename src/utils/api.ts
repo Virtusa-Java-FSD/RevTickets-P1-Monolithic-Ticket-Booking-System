@@ -70,36 +70,30 @@ export const verifyOTP = async (payload: { email: string; otp: string }) => {
 };
 
 // Auth endpoints
-export const loginRequest = async (payload: { email: string; password: string }) => {
+export const loginRequest = async (email: string, password: string) => {
 	try {
-		console.log('Login request to:', `${baseURL}/auth/login`);
-		console.log('Login payload:', payload);
-		
-		const resp = await client.post("/auth/login", payload);
-		console.log('Login response:', resp.data);
-		console.log('Login status:', resp.status);
+		const resp = await client.post("/auth/login", { email, password });
 		return resp.data;
 	} catch (error: any) {
-		console.error('Login error:', error);
-		console.error('Login error response:', error.response?.data);
-		console.error('Login error status:', error.response?.status);
+		// Fallback to mock auth if backend is not available
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			console.warn('Backend not available, using mock authentication');
+			return await mockLogin(email, password);
+		}
 		throw new Error(error.response?.data?.message || 'Login failed');
 	}
 };
 
-export const registerRequest = async (payload: { name: string; email: string; phone: string; password: string }) => {
+export const registerRequest = async (name: string, email: string, phone: string, password: string) => {
 	try {
-		console.log('Registration request to:', `${baseURL}/auth/register`);
-		console.log('Registration payload:', payload);
-		
-		const resp = await client.post("/auth/register", payload);
-		console.log('Registration response:', resp.data);
-		console.log('Registration status:', resp.status);
+		const resp = await client.post("/auth/register", { name, email, phone, password });
 		return resp.data;
 	} catch (error: any) {
-		console.error('Registration error:', error);
-		console.error('Registration error response:', error.response?.data);
-		console.error('Registration error status:', error.response?.status);
+		// Fallback to mock auth if backend is not available
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			console.warn('Backend not available, using mock authentication');
+			return await mockRegister(name, email, phone, password);
+		}
 		throw new Error(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
 	}
 };

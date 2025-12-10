@@ -294,8 +294,9 @@ body.auth-page {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  z-index: 1002;
+  z-index: 1050;
   border-bottom: 1px solid #2d3142;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .header-left {
@@ -506,9 +507,10 @@ body.auth-page {
   background: #1a1d29;
   display: flex;
   flex-direction: column;
-  z-index: 1001;
+  z-index: 1040;
   transition: width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
   overflow: hidden;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-container.open {
