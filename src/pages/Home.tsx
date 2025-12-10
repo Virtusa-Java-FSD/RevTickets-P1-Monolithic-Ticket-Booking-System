@@ -317,7 +317,7 @@ const Home = () => {
           <div className="categories-grid">
             {categories.map((category, index) => (
               <Link key={index} to={category.path} className="text-decoration-none">
-                <div className="category-card" style={{'--card-gradient': category.gradient, '--card-shadow': category.shadow}}>
+                <div className="category-card" style={{'--card-gradient': category.gradient, '--card-shadow': category.shadow} as React.CSSProperties}>
                   <div className="card-glow"></div>
                   <div className="category-icon">
                     {category.icon}

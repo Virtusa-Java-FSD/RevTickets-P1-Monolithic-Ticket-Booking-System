@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
@@ -30,7 +29,6 @@ function AppContent() {
       <main className="app-main">
         <AppRoutes />
       </main>
-      <Footer />
     </>
   );
 }
