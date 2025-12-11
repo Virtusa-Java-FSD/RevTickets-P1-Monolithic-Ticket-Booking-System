@@ -214,15 +214,49 @@ const Home = () => {
             </button>
           </div>
           <div className="trending-scroll">
-            {[1,2,3,4,5,6].map(i => (
-              <div key={i} className="trending-card">
-                <div className="trending-image" style={{backgroundImage: `url(https://images.unsplash.com/photo-${1489599904472 + i}-84978f312f2e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80)`}}></div>
-                <div className="trending-info">
-                  <h4>Trending Item {i}</h4>
-                  <p>⭐ 4.{8+i}/5</p>
+            {(() => {
+              const movieImages = [
+                'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+              ];
+              const concertImages = [
+                'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+              ];
+              const eventImages = [
+                'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+                'https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+              ];
+              
+              const images = activeTab === 'Movies' ? movieImages : activeTab === 'Concerts' ? concertImages : eventImages;
+              const titles = activeTab === 'Movies' ? 
+                ['Avengers: Endgame', 'The Dark Knight', 'Inception', 'Interstellar', 'Spider-Man', 'Black Panther'] :
+                activeTab === 'Concerts' ? 
+                ['Rock Festival', 'Jazz Night', 'Pop Concert', 'Classical Evening', 'EDM Party', 'Indie Showcase'] :
+                ['Tech Conference', 'Art Exhibition', 'Food Festival', 'Sports Event', 'Comedy Show', 'Fashion Week'];
+              
+              return images.map((img, i) => (
+                <div key={i} className="trending-card">
+                  <div className="trending-image" style={{backgroundImage: `url(${img})`}}></div>
+                  <div className="trending-info">
+                    <h4>{titles[i]}</h4>
+                    <p>⭐ 4.{8+i}/5</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
       </div>
@@ -232,16 +266,45 @@ const Home = () => {
         <div className="container">
           <h2 className="section-title">⭐ Recommended For You</h2>
           <div className="recommended-grid">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="recommended-card">
-                <div className="recommended-image" style={{backgroundImage: `url(https://images.unsplash.com/photo-${1540039155733 + i}-5bb30b53aa14?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80)`}}></div>
-                <div className="recommended-content">
-                  <h4>Recommended {i}</h4>
-                  <p>Perfect match for you</p>
-                  <span className="recommended-badge">95% Match</span>
+            {(() => {
+              const recommendedItems = [
+                {
+                  image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Top Gun: Maverick',
+                  description: 'Action-packed blockbuster',
+                  match: '98%'
+                },
+                {
+                  image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Summer Music Festival',
+                  description: 'Live music experience',
+                  match: '95%'
+                },
+                {
+                  image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Marvel Studios',
+                  description: 'Superhero adventure',
+                  match: '92%'
+                },
+                {
+                  image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Rock Concert',
+                  description: 'Electric performance',
+                  match: '90%'
+                }
+              ];
+              
+              return recommendedItems.map((item, i) => (
+                <div key={i} className="recommended-card">
+                  <div className="recommended-image" style={{backgroundImage: `url(${item.image})`}}></div>
+                  <div className="recommended-content">
+                    <h4>{item.title}</h4>
+                    <p>{item.description}</p>
+                    <span className="recommended-badge">{item.match} Match</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
       </div>
@@ -251,12 +314,24 @@ const Home = () => {
         <div className="container">
           <h2 className="section-title">🎬 Upcoming Releases</h2>
           <div className="upcoming-scroll">
-            {[1,2,3,4,5,6,7].map(i => (
-              <div key={i} className="upcoming-card">
-                <div className="upcoming-poster" style={{backgroundImage: `url(https://images.unsplash.com/photo-${1493225457124 + i}-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80)`}}></div>
-                <h4>Coming Soon {i}</h4>
-              </div>
-            ))}
+            {(() => {
+              const upcomingItems = [
+                { image: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Avatar 3' },
+                { image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Fast X' },
+                { image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Guardians 3' },
+                { image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Coachella 2024' },
+                { image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Tomorrowland' },
+                { image: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'John Wick 5' },
+                { image: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80', title: 'Lollapalooza' }
+              ];
+              
+              return upcomingItems.map((item, i) => (
+                <div key={i} className="upcoming-card">
+                  <div className="upcoming-poster" style={{backgroundImage: `url(${item.image})`}}></div>
+                  <h4>{item.title}</h4>
+                </div>
+              ));
+            })()}
           </div>
         </div>
       </div>
@@ -266,16 +341,36 @@ const Home = () => {
         <div className="container">
           <h2 className="section-title">🏆 Top Picks This Week</h2>
           <div className="toppicks-grid">
-            {[1,2,3].map(i => (
-              <div key={i} className="toppicks-card">
-                <div className="toppicks-rank">#{i}</div>
-                <div className="toppicks-image" style={{backgroundImage: `url(https://images.unsplash.com/photo-${1469854523086 + i}-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80)`}}></div>
-                <div className="toppicks-info">
-                  <h4>Top Pick {i}</h4>
-                  <p>🎫 {1200 + i*100} bookings</p>
+            {(() => {
+              const topPicks = [
+                {
+                  image: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Spider-Man: No Way Home',
+                  bookings: 2500
+                },
+                {
+                  image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Coldplay World Tour',
+                  bookings: 1800
+                },
+                {
+                  image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                  title: 'Dune: Part Two',
+                  bookings: 1500
+                }
+              ];
+              
+              return topPicks.map((item, i) => (
+                <div key={i} className="toppicks-card">
+                  <div className="toppicks-rank">#{i + 1}</div>
+                  <div className="toppicks-image" style={{backgroundImage: `url(${item.image})`}}></div>
+                  <div className="toppicks-info">
+                    <h4>{item.title}</h4>
+                    <p>🎫 {item.bookings} bookings</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
       </div>

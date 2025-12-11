@@ -366,83 +366,490 @@ const Travels = () => {
               <p className="mb-0">No travel options found. Try adjusting your filters.</p>
             </div>
           ) : (
-            <>
-              <p className="text-muted mb-4">
-                Showing <strong>{filteredOptions.length}</strong> travel option{filteredOptions.length !== 1 ? "s" : ""}
-              </p>
-              <div className="row g-2">
-                {(() => {
+            <div className="results-layout">
+              {/* Sidebar Filters */}
+              <div className="filters-sidebar">
+                <div className="filters-header">
+                  <h5>Filters</h5>
+                  <button className="clear-all-btn">Clear All</button>
+                </div>
+                
+                {/* Flight Filters */}
+                {activeTab === 'Flights' && (
+                  <div className="filter-sections">
+                    <div className="filter-group">
+                      <h6>Popular Filters</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Non Stop</span>
+                        <span className="filter-price">₹ 9,338</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Hide Nearby Airports</span>
+                        <span className="filter-price">₹ 9,338</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>IndiGo</span>
+                        <span className="filter-price">₹ 9,338</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Air India</span>
+                        <span className="filter-price">₹ 10,957</span>
+                      </label>
+                      <button className="show-more-btn">+ 8 more</button>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Departure Airports</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Indira Gandhi International Airport</span>
+                        <span className="filter-price">₹ 9,338</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Hindon Airport (32Km)</span>
+                        <span className="filter-price">₹ 10,161</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>One Way Price</h6>
+                      <div className="price-slider">
+                        <input type="range" min="9338" max="24000" className="slider" />
+                        <div className="price-range">
+                          <span>₹ 9,338</span>
+                          <span>₹ 24,000</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Stops From New Delhi</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>1 Stop</span>
+                        <span className="filter-price">₹ 9,560</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Departure From New Delhi</h6>
+                      <div className="time-filters">
+                        <div className="time-slot">
+                          <span className="time-icon">🌅</span>
+                          <div>
+                            <div>Before 6 am</div>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">☀️</span>
+                          <div>
+                            <div>6 am - 12 pm</div>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">🌤️</span>
+                          <div>
+                            <div>12 pm - 6 pm</div>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">🌙</span>
+                          <div>
+                            <div>After 6 pm</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Airlines</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>🔴 Air India</span>
+                        <span className="filter-price">₹ 10,957</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>✖️ Air India Express</span>
+                        <span className="filter-price">₹ 11,157</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>🔶 Akasa Air</span>
+                        <span className="filter-price">₹ 12,424</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>🔵 IndiGo</span>
+                        <span className="filter-price">₹ 9,338</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>🟠 SpiceJet</span>
+                        <span className="filter-price">₹ 10,218</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Bus Filters */}
+                {activeTab === 'Buses' && (
+                  <div className="filter-sections">
+                    <div className="filter-group">
+                      <h6>AC / Non-AC</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>AC</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Non-AC</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Bus Type</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Sleeper</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Seater</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Seater/Sleeper</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Departure Time</h6>
+                      <div className="time-filters">
+                        <div className="time-slot">
+                          <span className="time-icon">🌅</span>
+                          <div>
+                            <div>Morning</div>
+                            <small>6AM - 12PM</small>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">☀️</span>
+                          <div>
+                            <div>Afternoon</div>
+                            <small>12PM - 6PM</small>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">🌆</span>
+                          <div>
+                            <div>Evening</div>
+                            <small>6PM - 12AM</small>
+                          </div>
+                        </div>
+                        <div className="time-slot">
+                          <span className="time-icon">🌙</span>
+                          <div>
+                            <div>Night</div>
+                            <small>12AM - 6AM</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Arrival Time</h6>
+                      <div className="collapsible-filter">▼</div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Bus Operators</h6>
+                      <div className="collapsible-filter">▼</div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Rating</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>⭐⭐⭐⭐⭐ 4+ & above</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>⭐⭐⭐⭐ 3.5+ & above</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>⭐⭐⭐ 3+ & above</span>
+                      </label>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Train Filters */}
+                {activeTab === 'Trains' && (
+                  <div className="filter-sections">
+                    <div className="filter-group">
+                      <h6>Filter results</h6>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Ticket class</h6>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>AC 2 Tier (2A)</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>AC 3 Tier (3A)</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>Sleeper (SL)</span>
+                      </label>
+                      <label className="filter-checkbox">
+                        <input type="checkbox" />
+                        <span>AC First Class (1A)</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Quota</h6>
+                      <label className="filter-radio">
+                        <input type="radio" name="quota" checked />
+                        <span>General + Tatkal</span>
+                      </label>
+                      <label className="filter-radio">
+                        <input type="radio" name="quota" />
+                        <span>Senior citizen (SS)</span>
+                      </label>
+                      <label className="filter-radio">
+                        <input type="radio" name="quota" />
+                        <span>Ladies quota (LD)</span>
+                      </label>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Departure time range</h6>
+                      <div className="collapsible-filter">▼</div>
+                    </div>
+                    
+                    <div className="filter-group">
+                      <h6>Arrival time range</h6>
+                      <div className="collapsible-filter">▼</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Results Content */}
+              <div className="results-content">
+                <div className="results-header">
+                  <p className="results-count">
+                    {activeTab === 'Buses' ? `${filteredOptions.length} buses found` : 
+                     activeTab === 'Trains' ? `${filteredOptions.length} Trains` : 
+                     `Flights from New Delhi to Mumbai`}
+                  </p>
+                  <div className="sort-options">
+                    <span>Sort by:</span>
+                    <select className="sort-select">
+                      <option>Recommended</option>
+                      <option>Price: Low to High</option>
+                      <option>Price: High to Low</option>
+                      <option>Duration</option>
+                      <option>Departure</option>
+                      <option>Arrival</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="results-container">
+                  {(() => {
                   const filteredOptions = travelOptions.filter((item) => {
                     if (activeTab === "Flights") return item.type === "flight";
                     if (activeTab === "Buses") return item.type === "bus";
                     if (activeTab === "Trains") return item.type === "train";
                     return false;
                   });
-                  return filteredOptions.map((option) => (
-                  <div key={option.id} style={{ flex: '0 0 20%', maxWidth: '20%', padding: '0 0.25rem' }}>
-                    <div className="travel-card">
-                      <div className="travel-image-wrapper">
-                        <img 
-                          src={option.imageUrl} 
-                          alt={option.name}
-                          className="travel-image"
-                        />
-                        <div className="travel-overlay">
-                          <div className="overlay-content">
-                            <button 
-                              className="book-btn"
-                              onClick={() => {
-                                if (option.type === 'bus') {
+                  return filteredOptions.map((option) => {
+                    if (option.type === 'flight') {
+                      return (
+                        <div key={option.id} className="flight-result-card">
+                          <div className="flight-card-content">
+                            <div className="airline-info">
+                              <div className="airline-logo">
+                                <img src={option.imageUrl} alt={option.name} />
+                              </div>
+                              <div className="airline-details">
+                                <h4>{option.name}</h4>
+                                <span className="flight-number">{option.serviceType}</span>
+                              </div>
+                            </div>
+                            <div className="flight-timing">
+                              <div className="departure">
+                                <span className="time">{option.departure}</span>
+                                <span className="city">{option.route.split(' → ')[0]}</span>
+                              </div>
+                              <div className="flight-duration">
+                                <div className="duration-line"></div>
+                                <span className="duration">{option.duration}</span>
+                                <span className="flight-type">Non-stop</span>
+                              </div>
+                              <div className="arrival">
+                                <span className="time">{option.arrival}</span>
+                                <span className="city">{option.route.split(' → ')[1]}</span>
+                              </div>
+                            </div>
+                            <div className="flight-price">
+                              <span className="price">₹{option.price}</span>
+                              <span className="per-adult">per adult</span>
+                            </div>
+                            <div className="flight-actions">
+                              <button 
+                                className="view-fares-btn"
+                                onClick={() => navigate('/booking-details', { state: option })}
+                              >
+                                VIEW FARES
+                              </button>
+                            </div>
+                          </div>
+                          {option.price < 5000 && <div className="flight-badge cheapest">CHEAPEST</div>}
+                        </div>
+                      );
+                    } else if (option.type === 'bus') {
+                      return (
+                        <div key={option.id} className="bus-result-card">
+                          <div className="bus-card-content">
+                            <div className="bus-operator">
+                              <div className="operator-info">
+                                <h4>{option.name}</h4>
+                                <div className="bus-rating">
+                                  <span className="rating-star">★</span>
+                                  <span className="rating-value">{option.rating}</span>
+                                </div>
+                              </div>
+                              <div className="bus-type-info">
+                                <span className={`bus-type-badge ${option.isAC ? 'ac' : 'non-ac'}`}>
+                                  {getBusBadge(option)}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="bus-timing">
+                              <div className="departure">
+                                <span className="time">{option.departure}</span>
+                                <span className="location">{option.route.split(' → ')[0]}</span>
+                              </div>
+                              <div className="journey-line">
+                                <div className="duration">{option.duration}</div>
+                                <div className="line"></div>
+                              </div>
+                              <div className="arrival">
+                                <span className="time">{option.arrival}</span>
+                                <span className="location">{option.route.split(' → ')[1]}</span>
+                              </div>
+                            </div>
+                            <div className="bus-amenities">
+                              {option.isAC && <span className="amenity">🌡️ AC</span>}
+                              <span className="amenity">📱 Charging</span>
+                              <span className="amenity">💺 Blanket</span>
+                              <span className="amenity">💧 Water</span>
+                            </div>
+                            <div className="bus-price-section">
+                              <div className="price-info">
+                                <span className="starts-from">Starts from</span>
+                                <span className="price">₹{option.price}</span>
+                              </div>
+                              <button 
+                                className="view-seats-btn"
+                                onClick={() => {
                                   setSelectedBus(option);
                                   setShowSeatModal(true);
-                                } else if (option.type === 'train') {
-                                  navigate('/train-class-selection', { state: option });
-                                } else {
-                                  navigate('/booking-details', { state: option });
-                                }
-                              }}
-                            >
-                              {option.type === 'bus' ? 'Select Seats' : option.type === 'train' ? 'Select Class' : 'Book Now'}
-                            </button>
+                                }}
+                              >
+                                View Seats
+                              </button>
+                            </div>
+                          </div>
+                          <div className="seats-available">
+                            <span className="seats-left">15 seats left</span>
+                            <span className="window-seats">🪟 Window seats available</span>
                           </div>
                         </div>
-                        {option.rating && (
-                          <div className="rating-badge">
-                            <svg width="8" height="8" viewBox="0 0 24 24" fill="#fbbf24">
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                            </svg>
-                            <span>{option.rating}/5</span>
+                      );
+                    } else if (option.type === 'train') {
+                      return (
+                        <div key={option.id} className="train-result-card">
+                          <div className="train-card-header">
+                            <div className="train-info">
+                              <h4 className="train-name">{option.name}</h4>
+                              <span className="train-number">#{option.id.padStart(5, '0')}</span>
+                            </div>
+                            <div className="train-days">
+                              <span className="runs-on">Runs On:</span>
+                              <div className="day-indicators">
+                                <span className="day active">M</span>
+                                <span className="day active">T</span>
+                                <span className="day active">W</span>
+                                <span className="day active">T</span>
+                                <span className="day active">F</span>
+                                <span className="day active">S</span>
+                                <span className="day">S</span>
+                              </div>
+                            </div>
                           </div>
-                        )}
-
-                      </div>
-                      <div className="travel-info">
-                        <h3 className="travel-title">{option.name}</h3>
-                        {option.type === 'bus' && (
-                          <div className="bus-badge-wrapper">
-                            <span className={`bus-badge ${option.isAC ? 'bus-badge-ac' : 'bus-badge-nonac'}`}>
-                              <span className="bus-badge-icon">
-                                {option.isAC ? '❄️' : '☀️'}
-                              </span>
-                              {getBusBadge(option)}
-                            </span>
+                          <div className="train-timing">
+                            <div className="departure">
+                              <span className="time">{option.departure}</span>
+                              <span className="station">{option.route.split(' → ')[0]}</span>
+                            </div>
+                            <div className="journey-info">
+                              <div className="timeline"></div>
+                              <span className="duration">{option.duration}</span>
+                            </div>
+                            <div className="arrival">
+                              <span className="time">{option.arrival}</span>
+                              <span className="station">{option.route.split(' → ')[1]}</span>
+                            </div>
                           </div>
-                        )}
-                        <div className="travel-meta">
-                          <span className="service-type">{option.serviceType}</span>
-                          <span className="route">{option.route}</span>
+                          <div className="train-classes">
+                            <div className="class-options">
+                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: Math.round(option.price * 0.4) } })}>
+                                <span className="class-name">SL</span>
+                                <span className="class-price">₹{Math.round(option.price * 0.4)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '3A', selectedPrice: Math.round(option.price * 0.7) } })}>
+                                <span className="class-name">3A</span>
+                                <span className="class-price">₹{Math.round(option.price * 0.7)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '2A', selectedPrice: option.price } })}>
+                                <span className="class-name">2A</span>
+                                <span className="class-price">₹{option.price}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '1A', selectedPrice: Math.round(option.price * 1.5) } })}>
+                                <span className="class-name">1A</span>
+                                <span className="class-price">₹{Math.round(option.price * 1.5)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="train-recommended">
+                            <span className="recommended-badge">RECOMMENDED</span>
+                          </div>
                         </div>
-                        <div className="travel-timing">
-                          {option.departure} → {option.arrival} ({option.duration})
-                        </div>
-                        <div className="travel-price">₹{option.price} onwards</div>
-                      </div>
-                    </div>
-                  </div>
-                  ));
-                })()}
+                      );
+                    }
+                    return null;
+                  });
+                  })()}
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
