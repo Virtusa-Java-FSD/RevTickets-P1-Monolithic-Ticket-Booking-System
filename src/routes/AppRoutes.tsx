@@ -13,6 +13,7 @@ import ConcertBooking from "../pages/ConcertBooking";
 import BookingConfirmation from "../pages/BookingConfirmation";
 import Travels from "../pages/Travels";
 import Dashboard from "../pages/Dashboard";
+import Profile from "../pages/Profile";
 import Booking from "../pages/Booking";
 import BookingDetails from "../pages/BookingDetails";
 import BookingSummary from "../pages/BookingSummary";
@@ -58,6 +59,14 @@ const AppRoutes = () => (
       element={
         <PrivateRoute>
           <Dashboard />
+        </PrivateRoute>
+      }
+    />
+    <Route
+      path="/profile"
+      element={
+        <PrivateRoute>
+          <Profile />
         </PrivateRoute>
       }
     />
