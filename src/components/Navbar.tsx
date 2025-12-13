@@ -6,7 +6,7 @@ import { MovieIcon, EventIcon, ConcertIcon, TravelIcon } from "../assets/icons";
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const [isVisible, setIsVisible] = useState(true);
+  const [, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const isHomePage = location.pathname === '/';

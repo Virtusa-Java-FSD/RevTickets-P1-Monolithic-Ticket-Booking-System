@@ -12,7 +12,7 @@ interface Seat {
 }
 
 const SeatSelection = () => {
-  const { showId } = useParams();
+  const {} = useParams();
   const navigate = useNavigate();
 
   const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];

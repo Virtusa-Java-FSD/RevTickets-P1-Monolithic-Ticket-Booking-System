@@ -11,7 +11,7 @@ const client = axios.create({
 // Add request interceptor for authentication
 client.interceptors.request.use(
 	(config) => {
-		console.log('Making request to:', config.baseURL + config.url);
+		console.log('Making request to:', (config.baseURL || '') + (config.url || ''));
 		console.log('Request headers:', config.headers);
 		console.log('Request data:', config.data);
 

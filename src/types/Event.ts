@@ -17,4 +17,8 @@ export interface Event {
   seats?: number;
   speakers?: number;
   isNewRelease?: boolean;
+  showtimes?: string[];
+  reviewCount?: number;
+  seatsAvailable?: number;
+  industry?: string;
 }
