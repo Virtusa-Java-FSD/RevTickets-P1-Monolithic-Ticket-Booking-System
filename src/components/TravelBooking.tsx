@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookingDetails, PassengerDetails } from '../types/Travel';
+import type { BookingDetails, PassengerDetails } from '../types/Travel';
 
 interface TravelBookingProps {
   bookingDetails: BookingDetails;

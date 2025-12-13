@@ -6,10 +6,10 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<'dashboard' | 'bookings' | 'profile'>('dashboard');
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo] = useState({
     name: user?.name || 'User',
     email: user?.email || '',
-    phone: (user as any)?.phone || '' // Type assertion since phone may not be in User type
+    phone: '+91 9876543210'
   });
 
   const [bookings, setBookings] = useState<any[]>([]);

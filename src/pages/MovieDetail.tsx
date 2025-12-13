@@ -9,7 +9,7 @@ const MovieDetail = () => {
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Event | null>(null);
   const [shows, setShows] = useState<Show[]>([]);
-  const [selectedShow, setSelectedShow] = useState<Show | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [customDate, setCustomDate] = useState<string>("");
@@ -264,7 +264,6 @@ const MovieDetail = () => {
       ];
       
       // Calculate days for next 7 days
-      const today = new Date();
       
       for (let day = 0; day < 7; day++) {
         const dayOffset = 86400000 * day;
@@ -325,7 +324,6 @@ const MovieDetail = () => {
   };
 
   const handleShowSelection = (show: Show) => {
-    setSelectedShow(show);
     navigate(`/seat-selection/${show.id}`);
   };
 
@@ -472,7 +470,7 @@ const MovieDetail = () => {
                   <button
                     key={format}
                     className={`format-filter-btn ${selectedFormat === format ? 'active' : ''}`}
-                    onClick={() => setSelectedFormat(format)}
+                    onClick={() => setSelectedFormat(format || '')}
                   >
                     {format}
                   </button>
@@ -536,8 +534,8 @@ const MovieDetail = () => {
                   const key = `${show.theater}-${show.format}`;
                   if (!acc[key]) {
                     acc[key] = {
-                      theater: show.theater,
-                      format: show.format,
+                      theater: show.theater || '',
+                      format: show.format || '',
                       shows: []
                     };
                   }

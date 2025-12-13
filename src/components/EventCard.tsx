@@ -1,7 +1,7 @@
 import type { Event } from "../types/Event";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useResponsiveImageHeight } from "../hooks/useResponsiveImageHeight";
+
 
 interface EventCardProps {
   event: Event;

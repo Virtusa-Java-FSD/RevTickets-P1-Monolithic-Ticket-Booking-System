@@ -16,7 +16,7 @@ const BusSeatSelection = () => {
   const location = useLocation();
   const bookingData = location.state || {};
   
-  const [activeDeck, setActiveDeck] = useState<'lower' | 'upper'>('lower');
+  const [activeDeck] = useState<'lower' | 'upper'>('lower');
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
 

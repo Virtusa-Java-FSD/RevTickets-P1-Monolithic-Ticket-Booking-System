@@ -15,15 +15,11 @@ const Events = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState("all");
   const [sortBy, setSortBy] = useState("title");
-  const [imageHeight, setImageHeight] = useState(200);
   const [showAuthModal, setShowAuthModal] = useState(false);
-
   // Handle responsive image height
   useEffect(() => {
     const updateHeight = () => {
-      if (window.innerWidth < 576) setImageHeight(150);
-      else if (window.innerWidth < 768) setImageHeight(180);
-      else setImageHeight(200);
+      // Responsive height logic can be added here if needed
     };
     updateHeight();
     window.addEventListener("resize", updateHeight);

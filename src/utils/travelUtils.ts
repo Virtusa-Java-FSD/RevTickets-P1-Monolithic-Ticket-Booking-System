@@ -1,7 +1,7 @@
-import { Flight, Bus, Train, Seat, BusLayout } from '../types/Travel';
+import type { Flight, Bus, Train, Seat, BusLayout } from '../types/Travel';
 
 // Mock data generators
-export const generateFlights = (from: string, to: string, date: string): Flight[] => {
+export const generateFlights = (from: string, to: string): Flight[] => {
   const airlines = [
     { name: 'IndiGo', code: '6E', logo: '6E' },
     { name: 'SpiceJet', code: 'SG', logo: 'SG' },
@@ -40,7 +40,7 @@ export const generateFlights = (from: string, to: string, date: string): Flight[
   });
 };
 
-export const generateBuses = (from: string, to: string, date: string): Bus[] => {
+export const generateBuses = (from: string, to: string): Bus[] => {
   const operators = [
     'VRL Travels', 'SRS Travels', 'Orange Travels', 'RedBus', 'Kallada Travels',
     'KPN Travels', 'Parveen Travels', 'Raj National Express', 'Neeta Travels'
@@ -75,7 +75,7 @@ export const generateBuses = (from: string, to: string, date: string): Bus[] => 
   });
 };
 
-export const generateTrains = (from: string, to: string, date: string): Train[] => {
+export const generateTrains = (from: string, to: string): Train[] => {
   const trains = [
     { name: 'Rajdhani Express', number: '12001' },
     { name: 'Shatabdi Express', number: '12002' },

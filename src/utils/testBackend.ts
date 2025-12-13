@@ -19,7 +19,7 @@ export const testBackendConnection = async () => {
 // Test with a simple ping
 export const pingBackend = async () => {
   try {
-    const response = await fetch('http://localhost:8081', {
+    await fetch('http://localhost:8081', {
       method: 'GET',
       mode: 'no-cors'
     });

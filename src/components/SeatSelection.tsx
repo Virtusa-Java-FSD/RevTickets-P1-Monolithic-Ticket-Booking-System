@@ -16,7 +16,7 @@ interface SeatSelectionProps {
   onConfirm: (selectedSeats: Seat[]) => void;
 }
 
-const SeatSelection: React.FC<SeatSelectionProps> = ({ busName, onClose, onConfirm }) => {
+const SeatSelection: React.FC<SeatSelectionProps> = ({ busName, onClose }) => {
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [activeTab, setActiveTab] = useState('why-book');
   const navigate = useNavigate();
