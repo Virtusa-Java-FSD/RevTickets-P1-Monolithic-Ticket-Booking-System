@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthModal from "../components/AuthModal";
 import "../styles/travel.css";
 import "../styles/busSeatSelection.css";
 
@@ -39,6 +40,7 @@ const Travels = () => {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [showSeatModal, setShowSeatModal] = useState(false);
   const [selectedBus, setSelectedBus] = useState<TravelOption | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
 
   const bannerImages = [
@@ -70,127 +72,41 @@ const Travels = () => {
     return () => clearInterval(interval);
   }, [bannerImages.length]);
 
-  const loadTravelOptions = () => {
-    const mockOptions: TravelOption[] = [
-      {
-        id: '1',
-        name: 'Air India',
-        type: 'flight',
-        imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
-        rating: 4.2,
-        serviceType: 'Economy',
-        departure: '08:00',
-        arrival: '10:30',
-        duration: '2h 30m',
-        price: 5500,
-        route: 'DEL → BOM'
-      },
-      {
-        id: '2',
-        name: 'RedBus Express',
-        type: 'bus',
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
-        rating: 4.0,
-        serviceType: 'AC Sleeper',
-        departure: '22:00',
-        arrival: '06:00',
-        duration: '8h 00m',
-        price: 1200,
-        route: 'Mumbai → Delhi',
+  const loadTravelOptions = async () => {
+    try {
+      const { getTravels } = await import('../utils/api');
+      const data = await getTravels();
+
+      // Transform backend data to match frontend interface
+      const transformedData: TravelOption[] = data.map((travel: any) => ({
+        id: travel.id?.toString() || '',
+        name: travel.operator,
+        type: travel.type,
+        imageUrl: travel.type === 'flight'
+          ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop'
+          : travel.type === 'bus'
+            ? 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop'
+            : 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
+        rating: travel.rating || 4.0,
+        serviceType: travel.type === 'flight' ? 'Economy' : travel.type === 'bus' ? 'AC Sleeper' : '2AC',
+        departure: travel.departureTime,
+        arrival: travel.arrivalTime,
+        duration: travel.duration,
+        price: travel.price,
+        route: `${travel.departure} → ${travel.arrival}`,
         isAC: true,
-        busType: 'Sleeper',
-        layout: '(2+1)'
-      },
-      {
-        id: '3',
-        name: 'Rajdhani Express',
-        type: 'train',
-        imageUrl: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
-        rating: 4.5,
-        serviceType: '2AC',
-        departure: '16:55',
-        arrival: '08:35',
-        duration: '15h 40m',
-        price: 2800,
-        route: 'NDLS → MMCT'
-      },
-      {
-        id: '4',
-        name: 'IndiGo',
-        type: 'flight',
-        imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop',
-        rating: 4.3,
-        serviceType: 'Economy',
-        departure: '14:15',
-        arrival: '16:45',
-        duration: '2h 30m',
-        price: 4200,
-        route: 'BLR → MAA'
-      },
-      {
-        id: '5',
-        name: 'Travels Plus',
-        type: 'bus',
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
-        rating: 3.8,
-        serviceType: 'AC Seater',
-        departure: '06:30',
-        arrival: '12:00',
-        duration: '5h 30m',
-        price: 800,
-        route: 'Pune → Mumbai',
-        isAC: true,
-        busType: 'Seater',
-        layout: '(2+2)'
-      },
-      {
-        id: '6',
-        name: 'Shatabdi Express',
-        type: 'train',
-        imageUrl: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
-        rating: 4.4,
-        serviceType: 'CC',
-        departure: '06:00',
-        arrival: '11:00',
-        duration: '5h 00m',
-        price: 1500,
-        route: 'NDLS → AGC'
-      },
-      {
-        id: '7',
-        name: 'Orange Travels',
-        type: 'bus',
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
-        rating: 4.1,
-        serviceType: 'Non-AC Seater',
-        departure: '14:30',
-        arrival: '18:00',
-        duration: '3h 30m',
-        price: 450,
-        route: 'Chennai → Bangalore',
-        isAC: false,
-        busType: 'Seater',
-        layout: '(2+2)'
-      },
-      {
-        id: '8',
-        name: 'VRL Travels',
-        type: 'bus',
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop',
-        rating: 4.3,
-        serviceType: 'AC Seater/Sleeper',
-        departure: '20:15',
-        arrival: '05:45',
-        duration: '9h 30m',
-        price: 1500,
-        route: 'Hyderabad → Mumbai',
-        isAC: true,
-        busType: 'Seater/Sleeper',
-        layout: '(2+1)'
-      }
-    ];
-    setTravelOptions(mockOptions);
-    setFilteredOptions(mockOptions);
+        busType: 'Sleeper' as const,
+        layout: '(2+1)' as const
+      }));
+
+      setTravelOptions(transformedData);
+      setFilteredOptions(transformedData);
+    } catch (error) {
+      console.error('Failed to load travel options:', error);
+      // Fallback to empty array if backend fails
+      setTravelOptions([]);
+      setFilteredOptions([]);
+    }
   };
 
   const handleSearch = () => {
@@ -213,6 +129,20 @@ const Travels = () => {
     const busType = option.busType || 'Seater';
     const layout = option.layout || '';
     return `${acText} ${busType} ${layout}`.trim();
+  };
+
+  const checkAuthAndProceed = (callback: () => void) => {
+    const authData = localStorage.getItem('rev_auth');
+    if (!authData) {
+      setShowAuthModal(true);
+      return;
+    }
+    callback();
+  };
+
+  const handleAuthModalLogin = () => {
+    setShowAuthModal(false);
+    navigate('/login');
   };
 
 
@@ -248,28 +178,28 @@ const Travels = () => {
           <div className="container">
             <h1 className="h3 mb-1">Travel Booking</h1>
             <p className="mb-0 small">Book flights, buses, and trains at best prices!</p>
-            
+
           </div>
         </div>
 
         {/* Travel Tabs - Moved outside header */}
         <div className="container">
           <div className="travel-tabs-wrapper">
-            <button 
+            <button
               className={`travel-tab ${activeTab === 'Flights' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Flights')}
               tabIndex={0}
             >
               Flights
             </button>
-            <button 
+            <button
               className={`travel-tab ${activeTab === 'Buses' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Buses')}
               tabIndex={-1}
             >
               Buses
             </button>
-            <button 
+            <button
               className={`travel-tab ${activeTab === 'Trains' ? 'active-tab' : ''}`}
               onClick={() => setActiveTab('Trains')}
               tabIndex={0}
@@ -280,41 +210,41 @@ const Travels = () => {
 
           {/* Compact Filter Bar */}
           <div className="compact-filter-bar">
-              <input 
-                type="text" 
-                placeholder="From City" 
-                className="city-input"
-                value={searchData.from}
-                onChange={(e) => setSearchData({...searchData, from: e.target.value})}
+            <input
+              type="text"
+              placeholder="From City"
+              className="city-input"
+              value={searchData.from}
+              onChange={(e) => setSearchData({ ...searchData, from: e.target.value })}
+            />
+            <button className="swap-btn" onClick={() => setSearchData({ ...searchData, from: searchData.to, to: searchData.from })}>
+              ↔
+            </button>
+            <input
+              type="text"
+              placeholder="To City"
+              className="city-input"
+              value={searchData.to}
+              onChange={(e) => setSearchData({ ...searchData, to: e.target.value })}
+            />
+            <div className="date-group">
+              <input
+                type="date"
+                className="date-input"
+                value={searchData.date}
+                onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
               />
-              <button className="swap-btn" onClick={() => setSearchData({...searchData, from: searchData.to, to: searchData.from})}>
-                ↔
+              <button className="date-btn" onClick={() => setSearchData({ ...searchData, date: new Date().toISOString().split('T')[0] })}>
+                Today
               </button>
-              <input 
-                type="text" 
-                placeholder="To City" 
-                className="city-input"
-                value={searchData.to}
-                onChange={(e) => setSearchData({...searchData, to: e.target.value})}
-              />
-              <div className="date-group">
-                <input 
-                  type="date" 
-                  className="date-input"
-                  value={searchData.date}
-                  onChange={(e) => setSearchData({...searchData, date: e.target.value})}
-                />
-                <button className="date-btn" onClick={() => setSearchData({...searchData, date: new Date().toISOString().split('T')[0]})}>
-                  Today
-                </button>
-                <button className="date-btn" onClick={() => {
-                  const tomorrow = new Date();
-                  tomorrow.setDate(tomorrow.getDate() + 1);
-                  setSearchData({...searchData, date: tomorrow.toISOString().split('T')[0]});
-                }}>
-                  Tomorrow
-                </button>
-              </div>
+              <button className="date-btn" onClick={() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                setSearchData({ ...searchData, date: tomorrow.toISOString().split('T')[0] });
+              }}>
+                Tomorrow
+              </button>
+            </div>
 
             <button className="search-btn" onClick={handleSearch}>
               Search
@@ -326,7 +256,7 @@ const Travels = () => {
             <div className="flight-filters">
               <div className="filter-section">
                 <label>Stops</label>
-                <select value={filters.stops} onChange={(e) => setFilters({...filters, stops: e.target.value})}>
+                <select value={filters.stops} onChange={(e) => setFilters({ ...filters, stops: e.target.value })}>
                   <option value="all">All</option>
                   <option value="direct">Direct</option>
                   <option value="1stop">1 Stop</option>
@@ -335,12 +265,12 @@ const Travels = () => {
               </div>
               <div className="filter-section">
                 <label>Price Range</label>
-                <input type="range" min="0" max="10000" value={filters.priceRange[1]} onChange={(e) => setFilters({...filters, priceRange: [0, parseInt(e.target.value)]})} />
+                <input type="range" min="0" max="10000" value={filters.priceRange[1]} onChange={(e) => setFilters({ ...filters, priceRange: [0, parseInt(e.target.value)] })} />
                 <span>₹0 - ₹{filters.priceRange[1]}</span>
               </div>
               <div className="filter-section">
                 <label>Sort By</label>
-                <select value={filters.sortBy} onChange={(e) => setFilters({...filters, sortBy: e.target.value})}>
+                <select value={filters.sortBy} onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}>
                   <option value="recommended">Recommended</option>
                   <option value="cheapest">Cheapest</option>
                   <option value="fastest">Fastest</option>
@@ -353,7 +283,7 @@ const Travels = () => {
 
 
         {/* Results Grid */}
-        <div className="container mb-5" style={{marginTop: '20px'}}>
+        <div className="container mb-5" style={{ marginTop: '20px' }}>
           {loading ? (
             <div className="text-center py-5">
               <div className="spinner-border" role="status">
@@ -373,7 +303,7 @@ const Travels = () => {
                   <h5>Filters</h5>
                   <button className="clear-all-btn">Clear All</button>
                 </div>
-                
+
                 {/* Flight Filters */}
                 {activeTab === 'Flights' && (
                   <div className="filter-sections">
@@ -401,7 +331,7 @@ const Travels = () => {
                       </label>
                       <button className="show-more-btn">+ 8 more</button>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Departure Airports</h6>
                       <label className="filter-checkbox">
@@ -415,7 +345,7 @@ const Travels = () => {
                         <span className="filter-price">₹ 10,161</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>One Way Price</h6>
                       <div className="price-slider">
@@ -426,7 +356,7 @@ const Travels = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Stops From New Delhi</h6>
                       <label className="filter-checkbox">
@@ -435,7 +365,7 @@ const Travels = () => {
                         <span className="filter-price">₹ 9,560</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Departure From New Delhi</h6>
                       <div className="time-filters">
@@ -465,7 +395,7 @@ const Travels = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Airlines</h6>
                       <label className="filter-checkbox">
@@ -496,7 +426,7 @@ const Travels = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Bus Filters */}
                 {activeTab === 'Buses' && (
                   <div className="filter-sections">
@@ -511,7 +441,7 @@ const Travels = () => {
                         <span>Non-AC</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Bus Type</h6>
                       <label className="filter-checkbox">
@@ -527,7 +457,7 @@ const Travels = () => {
                         <span>Seater/Sleeper</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Departure Time</h6>
                       <div className="time-filters">
@@ -561,17 +491,17 @@ const Travels = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Arrival Time</h6>
                       <div className="collapsible-filter">▼</div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Bus Operators</h6>
                       <div className="collapsible-filter">▼</div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Rating</h6>
                       <label className="filter-checkbox">
@@ -589,14 +519,14 @@ const Travels = () => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Train Filters */}
                 {activeTab === 'Trains' && (
                   <div className="filter-sections">
                     <div className="filter-group">
                       <h6>Filter results</h6>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Ticket class</h6>
                       <label className="filter-checkbox">
@@ -616,7 +546,7 @@ const Travels = () => {
                         <span>AC First Class (1A)</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Quota</h6>
                       <label className="filter-radio">
@@ -632,12 +562,12 @@ const Travels = () => {
                         <span>Ladies quota (LD)</span>
                       </label>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Departure time range</h6>
                       <div className="collapsible-filter">▼</div>
                     </div>
-                    
+
                     <div className="filter-group">
                       <h6>Arrival time range</h6>
                       <div className="collapsible-filter">▼</div>
@@ -645,14 +575,14 @@ const Travels = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Results Content */}
               <div className="results-content">
                 <div className="results-header">
                   <p className="results-count">
-                    {activeTab === 'Buses' ? `${filteredOptions.length} buses found` : 
-                     activeTab === 'Trains' ? `${filteredOptions.length} Trains` : 
-                     `Flights from New Delhi to Mumbai`}
+                    {activeTab === 'Buses' ? `${filteredOptions.length} buses found` :
+                      activeTab === 'Trains' ? `${filteredOptions.length} Trains` :
+                        `Flights from New Delhi to Mumbai`}
                   </p>
                   <div className="sort-options">
                     <span>Sort by:</span>
@@ -668,184 +598,184 @@ const Travels = () => {
                 </div>
                 <div className="results-container">
                   {(() => {
-                  const filteredOptions = travelOptions.filter((item) => {
-                    if (activeTab === "Flights") return item.type === "flight";
-                    if (activeTab === "Buses") return item.type === "bus";
-                    if (activeTab === "Trains") return item.type === "train";
-                    return false;
-                  });
-                  return filteredOptions.map((option) => {
-                    if (option.type === 'flight') {
-                      return (
-                        <div key={option.id} className="flight-result-card">
-                          <div className="flight-card-content">
-                            <div className="airline-info">
-                              <div className="airline-logo">
-                                <img src={option.imageUrl} alt={option.name} />
-                              </div>
-                              <div className="airline-details">
-                                <h4>{option.name}</h4>
-                                <span className="flight-number">{option.serviceType}</span>
-                              </div>
-                            </div>
-                            <div className="flight-timing">
-                              <div className="departure">
-                                <span className="time">{option.departure}</span>
-                                <span className="city">{option.route.split(' → ')[0]}</span>
-                              </div>
-                              <div className="flight-duration">
-                                <div className="duration-line"></div>
-                                <span className="duration">{option.duration}</span>
-                                <span className="flight-type">Non-stop</span>
-                              </div>
-                              <div className="arrival">
-                                <span className="time">{option.arrival}</span>
-                                <span className="city">{option.route.split(' → ')[1]}</span>
-                              </div>
-                            </div>
-                            <div className="flight-price">
-                              <span className="price">₹{option.price}</span>
-                              <span className="per-adult">per adult</span>
-                            </div>
-                            <div className="flight-actions">
-                              <button 
-                                className="view-fares-btn"
-                                onClick={() => navigate('/booking-details', { state: option })}
-                              >
-                                VIEW FARES
-                              </button>
-                            </div>
-                          </div>
-                          {option.price < 5000 && <div className="flight-badge cheapest">CHEAPEST</div>}
-                        </div>
-                      );
-                    } else if (option.type === 'bus') {
-                      return (
-                        <div key={option.id} className="bus-result-card">
-                          <div className="bus-card-content">
-                            <div className="bus-operator">
-                              <div className="operator-info">
-                                <h4>{option.name}</h4>
-                                <div className="bus-rating">
-                                  <span className="rating-star">★</span>
-                                  <span className="rating-value">{option.rating}</span>
+                    const filteredOptions = travelOptions.filter((item) => {
+                      if (activeTab === "Flights") return item.type === "flight";
+                      if (activeTab === "Buses") return item.type === "bus";
+                      if (activeTab === "Trains") return item.type === "train";
+                      return false;
+                    });
+                    return filteredOptions.map((option) => {
+                      if (option.type === 'flight') {
+                        return (
+                          <div key={option.id} className="flight-result-card">
+                            <div className="flight-card-content">
+                              <div className="airline-info">
+                                <div className="airline-logo">
+                                  <img src={option.imageUrl} alt={option.name} />
+                                </div>
+                                <div className="airline-details">
+                                  <h4>{option.name}</h4>
+                                  <span className="flight-number">{option.serviceType}</span>
                                 </div>
                               </div>
-                              <div className="bus-type-info">
-                                <span className={`bus-type-badge ${option.isAC ? 'ac' : 'non-ac'}`}>
-                                  {getBusBadge(option)}
-                                </span>
+                              <div className="flight-timing">
+                                <div className="departure">
+                                  <span className="time">{option.departure}</span>
+                                  <span className="city">{option.route.split(' → ')[0]}</span>
+                                </div>
+                                <div className="flight-duration">
+                                  <div className="duration-line"></div>
+                                  <span className="duration">{option.duration}</span>
+                                  <span className="flight-type">Non-stop</span>
+                                </div>
+                                <div className="arrival">
+                                  <span className="time">{option.arrival}</span>
+                                  <span className="city">{option.route.split(' → ')[1]}</span>
+                                </div>
+                              </div>
+                              <div className="flight-price">
+                                <span className="price">₹{option.price}</span>
+                                <span className="per-adult">per adult</span>
+                              </div>
+                              <div className="flight-actions">
+                                <button
+                                  className="view-fares-btn"
+                                  onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: option }))}
+                                >
+                                  VIEW FARES
+                                </button>
                               </div>
                             </div>
-                            <div className="bus-timing">
+                            {option.price < 5000 && <div className="flight-badge cheapest">CHEAPEST</div>}
+                          </div>
+                        );
+                      } else if (option.type === 'bus') {
+                        return (
+                          <div key={option.id} className="bus-result-card">
+                            <div className="bus-card-content">
+                              <div className="bus-operator">
+                                <div className="operator-info">
+                                  <h4>{option.name}</h4>
+                                  <div className="bus-rating">
+                                    <span className="rating-star">★</span>
+                                    <span className="rating-value">{option.rating}</span>
+                                  </div>
+                                </div>
+                                <div className="bus-type-info">
+                                  <span className={`bus-type-badge ${option.isAC ? 'ac' : 'non-ac'}`}>
+                                    {getBusBadge(option)}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="bus-timing">
+                                <div className="departure">
+                                  <span className="time">{option.departure}</span>
+                                  <span className="location">{option.route.split(' → ')[0]}</span>
+                                </div>
+                                <div className="journey-line">
+                                  <div className="duration">{option.duration}</div>
+                                  <div className="line"></div>
+                                </div>
+                                <div className="arrival">
+                                  <span className="time">{option.arrival}</span>
+                                  <span className="location">{option.route.split(' → ')[1]}</span>
+                                </div>
+                              </div>
+                              <div className="bus-amenities">
+                                {option.isAC && <span className="amenity">🌡️ AC</span>}
+                                <span className="amenity">📱 Charging</span>
+                                <span className="amenity">💺 Blanket</span>
+                                <span className="amenity">💧 Water</span>
+                              </div>
+                              <div className="bus-price-section">
+                                <div className="price-info">
+                                  <span className="starts-from">Starts from</span>
+                                  <span className="price">₹{option.price}</span>
+                                </div>
+                                <button
+                                  className="view-seats-btn"
+                                  onClick={() => checkAuthAndProceed(() => {
+                                    setSelectedBus(option);
+                                    setShowSeatModal(true);
+                                  })}
+                                >
+                                  View Seats
+                                </button>
+                              </div>
+                            </div>
+                            <div className="seats-available">
+                              <span className="seats-left">15 seats left</span>
+                              <span className="window-seats">🪟 Window seats available</span>
+                            </div>
+                          </div>
+                        );
+                      } else if (option.type === 'train') {
+                        return (
+                          <div key={option.id} className="train-result-card">
+                            <div className="train-card-header">
+                              <div className="train-info">
+                                <h4 className="train-name">{option.name}</h4>
+                                <span className="train-number">#{option.id.padStart(5, '0')}</span>
+                              </div>
+                              <div className="train-days">
+                                <span className="runs-on">Runs On:</span>
+                                <div className="day-indicators">
+                                  <span className="day active">M</span>
+                                  <span className="day active">T</span>
+                                  <span className="day active">W</span>
+                                  <span className="day active">T</span>
+                                  <span className="day active">F</span>
+                                  <span className="day active">S</span>
+                                  <span className="day">S</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="train-timing">
                               <div className="departure">
                                 <span className="time">{option.departure}</span>
-                                <span className="location">{option.route.split(' → ')[0]}</span>
+                                <span className="station">{option.route.split(' → ')[0]}</span>
                               </div>
-                              <div className="journey-line">
-                                <div className="duration">{option.duration}</div>
-                                <div className="line"></div>
+                              <div className="journey-info">
+                                <div className="timeline"></div>
+                                <span className="duration">{option.duration}</span>
                               </div>
                               <div className="arrival">
                                 <span className="time">{option.arrival}</span>
-                                <span className="location">{option.route.split(' → ')[1]}</span>
+                                <span className="station">{option.route.split(' → ')[1]}</span>
                               </div>
                             </div>
-                            <div className="bus-amenities">
-                              {option.isAC && <span className="amenity">🌡️ AC</span>}
-                              <span className="amenity">📱 Charging</span>
-                              <span className="amenity">💺 Blanket</span>
-                              <span className="amenity">💧 Water</span>
-                            </div>
-                            <div className="bus-price-section">
-                              <div className="price-info">
-                                <span className="starts-from">Starts from</span>
-                                <span className="price">₹{option.price}</span>
+                            <div className="train-classes">
+                              <div className="class-options">
+                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: Math.round(option.price * 0.4) } }))}>
+                                  <span className="class-name">SL</span>
+                                  <span className="class-price">₹{Math.round(option.price * 0.4)}</span>
+                                  <span className="availability">Available</span>
+                                </div>
+                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '3A', selectedPrice: Math.round(option.price * 0.7) } }))}>
+                                  <span className="class-name">3A</span>
+                                  <span className="class-price">₹{Math.round(option.price * 0.7)}</span>
+                                  <span className="availability">Available</span>
+                                </div>
+                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '2A', selectedPrice: option.price } }))}>
+                                  <span className="class-name">2A</span>
+                                  <span className="class-price">₹{option.price}</span>
+                                  <span className="availability">Available</span>
+                                </div>
+                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '1A', selectedPrice: Math.round(option.price * 1.5) } }))}>
+                                  <span className="class-name">1A</span>
+                                  <span className="class-price">₹{Math.round(option.price * 1.5)}</span>
+                                  <span className="availability">Available</span>
+                                </div>
                               </div>
-                              <button 
-                                className="view-seats-btn"
-                                onClick={() => {
-                                  setSelectedBus(option);
-                                  setShowSeatModal(true);
-                                }}
-                              >
-                                View Seats
-                              </button>
+                            </div>
+                            <div className="train-recommended">
+                              <span className="recommended-badge">RECOMMENDED</span>
                             </div>
                           </div>
-                          <div className="seats-available">
-                            <span className="seats-left">15 seats left</span>
-                            <span className="window-seats">🪟 Window seats available</span>
-                          </div>
-                        </div>
-                      );
-                    } else if (option.type === 'train') {
-                      return (
-                        <div key={option.id} className="train-result-card">
-                          <div className="train-card-header">
-                            <div className="train-info">
-                              <h4 className="train-name">{option.name}</h4>
-                              <span className="train-number">#{option.id.padStart(5, '0')}</span>
-                            </div>
-                            <div className="train-days">
-                              <span className="runs-on">Runs On:</span>
-                              <div className="day-indicators">
-                                <span className="day active">M</span>
-                                <span className="day active">T</span>
-                                <span className="day active">W</span>
-                                <span className="day active">T</span>
-                                <span className="day active">F</span>
-                                <span className="day active">S</span>
-                                <span className="day">S</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="train-timing">
-                            <div className="departure">
-                              <span className="time">{option.departure}</span>
-                              <span className="station">{option.route.split(' → ')[0]}</span>
-                            </div>
-                            <div className="journey-info">
-                              <div className="timeline"></div>
-                              <span className="duration">{option.duration}</span>
-                            </div>
-                            <div className="arrival">
-                              <span className="time">{option.arrival}</span>
-                              <span className="station">{option.route.split(' → ')[1]}</span>
-                            </div>
-                          </div>
-                          <div className="train-classes">
-                            <div className="class-options">
-                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: Math.round(option.price * 0.4) } })}>
-                                <span className="class-name">SL</span>
-                                <span className="class-price">₹{Math.round(option.price * 0.4)}</span>
-                                <span className="availability">Available</span>
-                              </div>
-                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '3A', selectedPrice: Math.round(option.price * 0.7) } })}>
-                                <span className="class-name">3A</span>
-                                <span className="class-price">₹{Math.round(option.price * 0.7)}</span>
-                                <span className="availability">Available</span>
-                              </div>
-                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '2A', selectedPrice: option.price } })}>
-                                <span className="class-name">2A</span>
-                                <span className="class-price">₹{option.price}</span>
-                                <span className="availability">Available</span>
-                              </div>
-                              <div className="class-box available" onClick={() => navigate('/booking-details', { state: { ...option, selectedClass: '1A', selectedPrice: Math.round(option.price * 1.5) } })}>
-                                <span className="class-name">1A</span>
-                                <span className="class-price">₹{Math.round(option.price * 1.5)}</span>
-                                <span className="availability">Available</span>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="train-recommended">
-                            <span className="recommended-badge">RECOMMENDED</span>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  });
+                        );
+                      }
+                      return null;
+                    });
                   })()}
                 </div>
               </div>
@@ -853,20 +783,20 @@ const Travels = () => {
           )}
         </div>
       </div>
-      
+
       {/* Bus Seat Selection Modal */}
       {showSeatModal && selectedBus && (
-        <BusSeatModal 
-          busData={selectedBus} 
+        <BusSeatModal
+          busData={selectedBus}
           onClose={() => setShowSeatModal(false)}
           onContinue={(selectedSeats, totalFare) => {
             setShowSeatModal(false);
-            navigate('/bus-boarding-drop', { 
-              state: { 
-                busData: selectedBus, 
+            navigate('/bus-boarding-drop', {
+              state: {
+                busData: selectedBus,
                 selectedSeats,
                 totalFare
-              } 
+              }
             });
           }}
         />
@@ -911,7 +841,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
     const allSeats: Seat[] = [];
     const columns = ['A', 'B', 'C', 'D'];
     const upperDeckExists = Math.random() > 0.3;
-    
+
     for (let row = 1; row <= 9; row++) {
       columns.forEach(col => {
         const random = Math.random();
@@ -929,7 +859,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
         });
       });
     }
-    
+
     if (upperDeckExists) {
       for (let row = 1; row <= 9; row++) {
         columns.forEach(col => {
@@ -949,16 +879,16 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
         });
       }
     }
-    
+
     setHasUpperDeck(upperDeckExists);
     setSeats(allSeats);
   };
 
   const handleSeatClick = (seat: Seat) => {
     if (seat.status === 'booked') return;
-    
+
     const isSelected = selectedSeats.find(s => s.id === seat.id);
-    
+
     if (isSelected) {
       setSelectedSeats(selectedSeats.filter(s => s.id !== seat.id));
       setSeats(seats.map(s => s.id === seat.id ? { ...s, status: 'available' } : s));
@@ -977,7 +907,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
   const renderDeck = (deckType: 'lower' | 'upper') => {
     const deckSeats = seats.filter(s => s.deck === deckType);
     const rows = Array.from(new Set(deckSeats.map(s => s.row))).sort((a, b) => a - b);
-    
+
     return (
       <div className="card border-0 shadow-sm h-100">
         <div className="card-body">
@@ -999,7 +929,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
                       >
                         {seat.col}
                       </button>
-                    ) : <div key={col} style={{width: '48px'}} />;
+                    ) : <div key={col} style={{ width: '48px' }} />;
                   })}
                 </div>
                 <div className="seat-aisle" />
@@ -1015,7 +945,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
                       >
                         {seat.col}
                       </button>
-                    ) : <div key={col} style={{width: '48px'}} />;
+                    ) : <div key={col} style={{ width: '48px' }} />;
                   })}
                 </div>
               </div>
@@ -1038,8 +968,8 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
                 {busData.serviceType}
               </span>
             </div>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="modal-close-btn"
               onClick={onClose}
               aria-label="Close"
@@ -1047,7 +977,7 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
               ×
             </button>
           </div>
-          
+
           <div className="modal-body bg-light p-4">
             <div className="card border-0 shadow-sm mb-4">
               <div className="card-body py-3">
@@ -1075,12 +1005,12 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
             <div className="row g-4">
               <div className={hasUpperDeck ? "col-lg-4" : "col-lg-6 mx-auto"}>{renderDeck('lower')}</div>
               {hasUpperDeck && <div className="col-lg-4">{renderDeck('upper')}</div>}
-              
+
               <div className={hasUpperDeck ? "col-lg-4" : "col-lg-6"}>
-                <div className="card border-0 shadow-sm sticky-top" style={{top: '20px'}}>
+                <div className="card border-0 shadow-sm sticky-top" style={{ top: '20px' }}>
                   <div className="card-body">
                     <h5 className="card-title mb-3">Selected Seats ({selectedSeats.length}/4)</h5>
-                    
+
                     {selectedSeats.length === 0 ? (
                       <p className="text-muted text-center py-5 small">No seats selected</p>
                     ) : (
@@ -1104,13 +1034,13 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
                     </div>
 
                     <div className="d-grid gap-2">
-                      <button 
+                      <button
                         className="btn btn-outline-secondary"
                         onClick={onClose}
                       >
                         Cancel
                       </button>
-                      <button 
+                      <button
                         className="btn btn-primary btn-lg"
                         onClick={handleContinue}
                         disabled={selectedSeats.length === 0}

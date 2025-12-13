@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
+import { getEvents } from "../utils/api";
+import AuthModal from "../components/AuthModal";
 import "../styles/travel.css";
 
 const Concerts = () => {
@@ -18,6 +20,7 @@ const Concerts = () => {
   const [appliedSortBy, setAppliedSortBy] = useState<string>("title");
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const genreDropdownRef = useRef<HTMLDivElement>(null);
 
   const bannerImages = [
@@ -62,155 +65,54 @@ const Concerts = () => {
   const loadConcerts = async () => {
     try {
       setLoading(true);
-      const mockConcerts: Event[] = [
-        {
-          id: "c1",
-          title: "Ed Sheeran World Tour",
-          description: "Experience the magic of Ed Sheeran live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=400&fit=crop",
-          rating: 9.2,
-          genres: ["Pop"],
-        },
-        {
-          id: "c2",
-          title: "Coldplay Music of the Spheres",
-          description: "Coldplay's spectacular world tour with stunning visuals",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=300&h=400&fit=crop",
-          rating: 9.5,
-          genres: ["Rock"],
-        },
-        {
-          id: "c3",
-          title: "AR Rahman Live",
-          description: "The Mozart of Madras performs his greatest hits",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=400&fit=crop",
-          rating: 9.0,
-          genres: ["Classical"],
-        },
-        {
-          id: "c4",
-          title: "Arijit Singh Concert",
-          description: "Bollywood's favorite voice live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=400&fit=crop",
-          rating: 8.8,
-          genres: ["Bollywood"],
-        },
-        {
-          id: "c5",
-          title: "Imagine Dragons Evolve Tour",
-          description: "Rock the night with Imagine Dragons",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=400&fit=crop",
-          rating: 8.9,
-          genres: ["Rock"],
-        },
-        {
-          id: "c6",
-          title: "Dua Lipa Future Nostalgia",
-          description: "Pop sensation Dua Lipa's electrifying performance",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&h=400&fit=crop",
-          rating: 8.7,
-          genres: ["Pop"],
-        },
-        {
-          id: "c7",
-          title: "Taylor Swift Eras Tour",
-          description: "Journey through all of Taylor's musical eras",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=300&h=400&fit=crop",
-          rating: 9.8,
-          genres: ["Pop"],
-        },
-        {
-          id: "c8",
-          title: "The Weeknd After Hours",
-          description: "Experience The Weeknd's electrifying performance",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=300&h=400&fit=crop",
-          rating: 9.1,
-          genres: ["Pop", "R&B"],
-        },
-        {
-          id: "c9",
-          title: "Metallica World Tour",
-          description: "Heavy metal legends live on stage",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=400&fit=crop",
-          rating: 9.3,
-          genres: ["Rock", "Metal"],
-        },
-        {
-          id: "c10",
-          title: "Billie Eilish Happier Than Ever",
-          description: "Intimate performance by the pop sensation",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=400&fit=crop",
-          rating: 8.9,
-          genres: ["Pop"],
-        },
-        {
-          id: "c11",
-          title: "BTS Permission to Dance",
-          description: "K-Pop superstars in an unforgettable show",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=400&fit=crop",
-          rating: 9.6,
-          genres: ["K-Pop", "Pop"],
-        },
-        {
-          id: "c12",
-          title: "Shreya Ghoshal Live",
-          description: "Melodious evening with India's nightingale",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=400&fit=crop",
-          rating: 8.7,
-          genres: ["Bollywood", "Classical"],
-        },
-        {
-          id: "c13",
-          title: "Drake It's All a Blur",
-          description: "Hip-hop icon's biggest tour yet",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=300&h=400&fit=crop",
-          rating: 8.8,
-          genres: ["Hip-Hop", "R&B"],
-        },
-        {
-          id: "c14",
-          title: "Adele Weekends with Adele",
-          description: "Powerful vocals in an intimate setting",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=300&h=400&fit=crop",
-          rating: 9.4,
-          genres: ["Pop", "Soul"],
-        },
-        {
-          id: "c15",
-          title: "Sunidhi Chauhan Live",
-          description: "Energetic performance by Bollywood's powerhouse",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=400&fit=crop",
-          rating: 8.6,
-          genres: ["Bollywood"],
-        },
-      ];
-      setConcerts(mockConcerts);
-      setFilteredConcerts(mockConcerts);
+      // Fetch events from backend instead of using mock data
+      // Assuming 'concert' category or filtering on client side if API doesn't support filter
+      const allEvents = await getEvents(); // This imports from ../utils/api
+
+      // Filter only concerts if needed, or if API returns all mixed
+      // Adjust this based on your backend data. If seeded events are mixed, filter by category or type.
+      // For now, let's assume we want to show all events or filter by category 'concert' if that field exists
+      // The mock data had category: "concert". Let's check if real data has it.
+      // If backend seed data uses "other" or "movie", they might not show up if we filter strictly.
+      // Let's show all for now and user can filter.
+
+      const realConcerts = allEvents.filter((e: any) => e.category === 'concert' || e.category === 'other' || !e.category);
+
+      if (realConcerts.length > 0) {
+        setConcerts(realConcerts);
+        setFilteredConcerts(realConcerts);
+      } else {
+        // Fallback or empty state
+        setConcerts([]);
+        setFilteredConcerts([]);
+      }
+
     } catch (err) {
       console.error("Error loading concerts:", err);
+      // Optional: keep mock data as fallback if API fails? 
+      // Better to show error or empty state to avoid confusion with "c14" IDs.
     } finally {
       setLoading(false);
     }
   };
 
+  const checkAuthAndProceed = (callback: () => void) => {
+    const authData = localStorage.getItem('rev_auth');
+    if (!authData) {
+      setShowAuthModal(true);
+      return;
+    }
+    callback();
+  };
+
+  const handleAuthModalLogin = () => {
+    setShowAuthModal(false);
+    navigate('/login');
+  };
+
   useEffect(() => {
     let result = [...concerts];
-    
+
     if (appliedSearchTerm.trim()) {
       result = result.filter(
         (concert) =>
@@ -220,7 +122,7 @@ const Concerts = () => {
     }
 
     if (appliedGenres.length > 0) {
-      result = result.filter((concert) => 
+      result = result.filter((concert) =>
         concert.genres?.some(genre => appliedGenres.includes(genre))
       );
     }
@@ -246,8 +148,8 @@ const Concerts = () => {
   const genres = Array.from(new Set(concerts.flatMap((concert) => concert.genres || [])));
 
   const toggleGenre = (genre: string) => {
-    setSelectedGenres(prev => 
-      prev.includes(genre) 
+    setSelectedGenres(prev =>
+      prev.includes(genre)
         ? prev.filter(g => g !== genre)
         : [...prev, genre]
     );
@@ -304,19 +206,19 @@ const Concerts = () => {
         {/* Compact Filter Bar - All in One Line */}
         <div className="container">
           <div className="compact-filter-bar">
-            <input 
-              type="text" 
-              placeholder="🔍 Search concerts..." 
+            <input
+              type="text"
+              placeholder="🔍 Search concerts..."
               className="city-input"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            
+
             {/* Genre Multi-Select */}
-            <div ref={genreDropdownRef} style={{position: 'relative', minWidth: '200px'}}>
-              <div 
-                className="city-input" 
-                style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}
+            <div ref={genreDropdownRef} style={{ position: 'relative', minWidth: '200px' }}>
+              <div
+                className="city-input"
+                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                 onClick={() => setIsGenreDropdownOpen(!isGenreDropdownOpen)}
               >
                 <span>{selectedGenres.length > 0 ? `${selectedGenres.length} Genre(s)` : 'Select Genres'}</span>
@@ -337,14 +239,14 @@ const Concerts = () => {
                 boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
               }}>
                 {genres.map((genre) => (
-                  <label key={genre} style={{display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', cursor: 'pointer'}}>
+                  <label key={genre} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', cursor: 'pointer' }}>
                     <input
                       type="checkbox"
                       checked={selectedGenres.includes(genre)}
                       onChange={() => toggleGenre(genre)}
-                      style={{cursor: 'pointer'}}
+                      style={{ cursor: 'pointer' }}
                     />
-                    <span style={{fontSize: '14px'}}>{genre}</span>
+                    <span style={{ fontSize: '14px' }}>{genre}</span>
                   </label>
                 ))}
                 {selectedGenres.length > 0 && (
@@ -392,12 +294,12 @@ const Concerts = () => {
             <button className="search-btn" onClick={handleSearch}>
               Search
             </button>
-            
+
             {(searchTerm || selectedGenres.length > 0 || selectedRating !== "all" || sortBy !== "title") && (
-              <button 
-                className="search-btn" 
+              <button
+                className="search-btn"
                 onClick={handleClearFilters}
-                style={{background: 'transparent', color: '#dc3545', border: '2px solid #dc3545'}}
+                style={{ background: 'transparent', color: '#dc3545', border: '2px solid #dc3545' }}
                 title="Clear all filters"
               >
                 ✕ Clear
@@ -407,7 +309,7 @@ const Concerts = () => {
         </div>
 
         {/* Results Grid */}
-        <div className="container mb-5" style={{marginTop: '20px'}}>
+        <div className="container mb-5" style={{ marginTop: '20px' }}>
           {loading ? (
             <div className="text-center py-5">
               <div className="spinner-border" role="status">
@@ -429,16 +331,16 @@ const Concerts = () => {
                   <div key={concert.id}>
                     <div className="travel-card">
                       <div className="travel-image-wrapper">
-                        <img 
-                          src={concert.imageUrl} 
+                        <img
+                          src={concert.imageUrl}
                           alt={concert.title}
                           className="travel-image"
                         />
                         <div className="travel-overlay">
                           <div className="overlay-content">
-                            <button 
+                            <button
                               className="book-btn"
-                              onClick={() => navigate(`/booking/concert/${concert.id}`)}
+                              onClick={() => checkAuthAndProceed(() => navigate(`/booking/concert/${concert.id}`))}
                             >
                               Book Now
                             </button>
@@ -447,7 +349,7 @@ const Concerts = () => {
                         {concert.rating && (
                           <div className="rating-badge">
                             <svg width="8" height="8" viewBox="0 0 24 24" fill="#fbbf24">
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
                             <span>{concert.rating}/10</span>
                           </div>
@@ -470,6 +372,12 @@ const Concerts = () => {
           )}
         </div>
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={handleAuthModalLogin}
+      />
     </div>
   );
 };

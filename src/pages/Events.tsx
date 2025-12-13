@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
+import AuthModal from "../components/AuthModal";
 import "../styles/events.css";
 import "../styles/travel.css";
 
@@ -15,6 +16,7 @@ const Events = () => {
   const [selectedIndustry, setSelectedIndustry] = useState("all");
   const [sortBy, setSortBy] = useState("title");
   const [imageHeight, setImageHeight] = useState(200);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Handle responsive image height
   useEffect(() => {
@@ -76,6 +78,20 @@ const Events = () => {
     setFilteredEvents(list);
   }, [searchTerm, selectedIndustry, sortBy, events]);
 
+  const checkAuthAndProceed = (callback: () => void) => {
+    const authData = localStorage.getItem('rev_auth');
+    if (!authData) {
+      setShowAuthModal(true);
+      return;
+    }
+    callback();
+  };
+
+  const handleAuthModalLogin = () => {
+    setShowAuthModal(false);
+    navigate('/login');
+  };
+
   if (loading) return <h3 className="text-center mt-5">Loading events...</h3>;
 
   const industries = Array.from(new Set(events.map(e => e.industry)));
@@ -106,13 +122,13 @@ const Events = () => {
 
         <div className="container">
           <div className="compact-filter-bar">
-            <input 
+            <input
               className="city-input"
               placeholder="🔍 Search events..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <select 
+            <select
               className="city-input"
               value={selectedIndustry}
               onChange={(e) => setSelectedIndustry(e.target.value)}
@@ -120,7 +136,7 @@ const Events = () => {
               <option value="all">All Industries</option>
               {industries.map(i => <option key={i}>{i}</option>)}
             </select>
-            <select 
+            <select
               className="city-input"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -133,7 +149,7 @@ const Events = () => {
           </div>
         </div>
 
-        <div className="container mb-5" style={{marginTop: '20px'}}>
+        <div className="container mb-5" style={{ marginTop: '20px' }}>
           <p className="text-muted mb-4">
             Showing <strong>{filteredEvents.length}</strong> event{filteredEvents.length !== 1 ? "s" : ""}
           </p>
@@ -142,16 +158,16 @@ const Events = () => {
               <div key={event.id} style={{ flex: '0 0 20%', maxWidth: '20%', padding: '0 0.25rem' }}>
                 <div className="travel-card">
                   <div className="travel-image-wrapper">
-                    <img 
-                      src={event.imageUrl} 
+                    <img
+                      src={event.imageUrl}
                       alt={event.title}
                       className="travel-image"
                     />
                     <div className="travel-overlay">
                       <div className="overlay-content">
-                        <button 
+                        <button
                           className="book-btn"
-                          onClick={() => navigate(`/booking/event/${event.id}`)}
+                          onClick={() => checkAuthAndProceed(() => navigate(`/booking/event/${event.id}`))}
                         >
                           Book Now
                         </button>
@@ -160,7 +176,7 @@ const Events = () => {
                     {event.rating && (
                       <div className="rating-badge">
                         <svg width="8" height="8" viewBox="0 0 24 24" fill="#fbbf24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
                         <span>{event.rating}/5</span>
                       </div>
@@ -187,6 +203,12 @@ const Events = () => {
           )}
         </div>
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={handleAuthModalLogin}
+      />
     </div>
   );
 };

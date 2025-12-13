@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
+import { getEvent, getShowsByEventId } from "../utils/api";
 import "../styles/concert-booking.css";
 
 interface Seat {
@@ -14,6 +15,7 @@ interface Seat {
 
 const ConcertBooking = () => {
   const { concertId } = useParams();
+  console.log("ConcertBooking loaded with ID:", concertId);
   const navigate = useNavigate();
   const [concert, setConcert] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,161 +31,56 @@ const ConcertBooking = () => {
   });
   const [step, setStep] = useState(1);
 
-  const showTimes = ["5:00 PM", "7:00 PM", "9:00 PM"];
-  const availableDates = [
-    new Date(Date.now() + 86400000).toISOString().split("T")[0],
-    new Date(Date.now() + 172800000).toISOString().split("T")[0],
-    new Date(Date.now() + 259200000).toISOString().split("T")[0],
-  ];
+  const [shows, setShows] = useState<any[]>([]);
+  const [selectedShow, setSelectedShow] = useState<any>(null);
+
+  // Derive available dates from shows
+  const availableDates = [...new Set(shows.map((s: any) => s.showDate))].sort();
+  // Derive times for selected date
+  const showTimes = selectedDate
+    ? shows.filter((s: any) => s.showDate === selectedDate).map((s: any) => s.showTime).sort()
+    : [];
 
   useEffect(() => {
     loadConcertDetails();
     generateSeats();
   }, [concertId]);
 
+  useEffect(() => {
+    if (selectedDate && selectedTime) {
+      const show = shows.find((s: any) => s.showDate === selectedDate && s.showTime === selectedTime);
+      setSelectedShow(show);
+
+      if (show && show.bookedSeats) {
+        setSeats(prevSeats => prevSeats.map(seat => ({
+          ...seat,
+          isBooked: show.bookedSeats.includes(seat.id)
+        })));
+      } else {
+        // Reset if no show or no booked seats
+        setSeats(prevSeats => prevSeats.map(seat => ({
+          ...seat,
+          isBooked: false
+        })));
+      }
+    } else {
+      setSelectedShow(null);
+      setSeats(prevSeats => prevSeats.map(seat => ({
+        ...seat,
+        isBooked: false
+      })));
+    }
+  }, [selectedDate, selectedTime, shows]);
+
   const loadConcertDetails = async () => {
     try {
       setLoading(true);
-      const mockConcerts: Event[] = [
-        {
-          id: "c1",
-          title: "Ed Sheeran World Tour",
-          description: "Experience the magic of Ed Sheeran live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=400&fit=crop",
-          rating: 9.2,
-          genres: ["Pop"],
-        },
-        {
-          id: "c2",
-          title: "Coldplay Music of the Spheres",
-          description: "Coldplay's spectacular world tour with stunning visuals",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=300&h=400&fit=crop",
-          rating: 9.5,
-          genres: ["Rock"],
-        },
-        {
-          id: "c3",
-          title: "AR Rahman Live",
-          description: "The Mozart of Madras performs his greatest hits",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=400&fit=crop",
-          rating: 9.0,
-          genres: ["Classical"],
-        },
-        {
-          id: "c4",
-          title: "Arijit Singh Concert",
-          description: "Bollywood's favorite voice live in concert",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300&h=400&fit=crop",
-          rating: 8.8,
-          genres: ["Bollywood"],
-        },
-        {
-          id: "c5",
-          title: "Imagine Dragons Evolve Tour",
-          description: "Rock the night with Imagine Dragons",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&h=400&fit=crop",
-          rating: 8.9,
-          genres: ["Rock"],
-        },
-        {
-          id: "c6",
-          title: "Dua Lipa Future Nostalgia",
-          description: "Pop sensation Dua Lipa's electrifying performance",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&h=400&fit=crop",
-          rating: 8.7,
-          genres: ["Pop"],
-        },
-        {
-          id: "c7",
-          title: "Taylor Swift Eras Tour",
-          description: "Journey through all of Taylor's musical eras",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=300&h=400&fit=crop",
-          rating: 9.8,
-          genres: ["Pop"],
-        },
-        {
-          id: "c8",
-          title: "The Weeknd After Hours",
-          description: "Experience The Weeknd's electrifying performance",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=300&h=400&fit=crop",
-          rating: 9.1,
-          genres: ["Pop", "R&B"],
-        },
-        {
-          id: "c9",
-          title: "Metallica World Tour",
-          description: "Heavy metal legends live on stage",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=300&h=400&fit=crop",
-          rating: 9.3,
-          genres: ["Rock", "Metal"],
-        },
-        {
-          id: "c10",
-          title: "Billie Eilish Happier Than Ever",
-          description: "Intimate performance by the pop sensation",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=400&fit=crop",
-          rating: 8.9,
-          genres: ["Pop"],
-        },
-        {
-          id: "c11",
-          title: "BTS Permission to Dance",
-          description: "K-Pop superstars in an unforgettable show",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=400&fit=crop",
-          rating: 9.6,
-          genres: ["K-Pop", "Pop"],
-        },
-        {
-          id: "c12",
-          title: "Shreya Ghoshal Live",
-          description: "Melodious evening with India's nightingale",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=400&fit=crop",
-          rating: 8.7,
-          genres: ["Bollywood", "Classical"],
-        },
-        {
-          id: "c13",
-          title: "Drake It's All a Blur",
-          description: "Hip-hop icon's biggest tour yet",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=300&h=400&fit=crop",
-          rating: 8.8,
-          genres: ["Hip-Hop", "R&B"],
-        },
-        {
-          id: "c14",
-          title: "Adele Weekends with Adele",
-          description: "Powerful vocals in an intimate setting",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=300&h=400&fit=crop",
-          rating: 9.4,
-          genres: ["Pop", "Soul"],
-        },
-        {
-          id: "c15",
-          title: "Sunidhi Chauhan Live",
-          description: "Energetic performance by Bollywood's powerhouse",
-          category: "concert",
-          imageUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=400&fit=crop",
-          rating: 8.6,
-          genres: ["Bollywood"],
-        },
-      ];
-
-      const foundConcert = mockConcerts.find((c) => c.id === concertId);
-      setConcert(foundConcert || null);
+      if (concertId) {
+        const event = await getEvent(concertId);
+        setConcert(event);
+        const eventShows = await getShowsByEventId(concertId);
+        setShows(eventShows);
+      }
     } catch (err) {
       console.error("Error loading concert:", err);
     } finally {
@@ -208,7 +105,7 @@ const ConcertBooking = () => {
             number: i,
             category: cat.name as "VIP" | "Premium" | "Standard",
             price: cat.price,
-            isBooked: Math.random() > 0.7,
+            isBooked: false, // Will be updated based on show
           });
         }
       });
@@ -257,21 +154,24 @@ const ConcertBooking = () => {
       alert("Please fill all customer details");
       return;
     }
-    
-    const bookingData = {
-      concertTitle: concert?.title,
-      date: selectedDate,
-      time: selectedTime,
-      seats: selectedSeats.map((s) => s.id).join(", "),
-      seatDetails: selectedSeats,
-      customerName: customerInfo.name,
-      customerEmail: customerInfo.email,
-      customerPhone: customerInfo.phone,
-      convenienceFee: getConvenienceFee(),
-      totalAmount: getTotalPrice() + getConvenienceFee()
-    };
-    
-    navigate("/booking-confirmation", { state: bookingData });
+
+    // Redirect to Payment Page
+    navigate('/payment', {
+      state: {
+        total: getTotalPrice() + getConvenienceFee(),
+        seats: selectedSeats.map(s => s.id),
+        bookingType: 'CONCERT', // Treated as Event in backend potentially, or Add Concert Type
+        // If backend only has EVENT/MOVIE/TRAVEL, map CONCERT to EVENT
+        eventId: concertId,
+        showId: selectedShow ? selectedShow.id : null,
+        event: concert,
+        additionalDetails: {
+          customerInfo,
+          date: selectedDate,
+          time: selectedTime
+        }
+      }
+    });
   };
 
   const filteredSeats =
@@ -303,8 +203,24 @@ const ConcertBooking = () => {
     <div className="concert-booking-page">
       <div className="booking-header">
         <div className="container">
-          <button className="back-btn" onClick={() => step === 1 ? navigate("/concerts") : setStep(1)}>
-            ← {step === 1 ? "Back to Concerts" : "Back to Seat Selection"}
+          <button
+            className="back-btn"
+            onClick={() => step === 1 ? navigate("/concerts") : setStep(1)}
+            style={{
+              padding: '6px 12px',
+              fontSize: '14px',
+              background: 'transparent',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              color: '#333',
+              marginBottom: '10px',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>←</span> {step === 1 ? "Back" : "Back"}
           </button>
           <h1>{concert.title}</h1>
           <p>{concert.description}</p>
@@ -342,7 +258,11 @@ const ConcertBooking = () => {
                       <button
                         key={date}
                         className={`date-btn ${selectedDate === date ? "selected" : ""}`}
-                        onClick={() => setSelectedDate(date)}
+                        onClick={() => {
+                          setSelectedDate(date);
+                          setSelectedTime("");
+                          setSelectedSeats([]);
+                        }}
                       >
                         {new Date(date).toLocaleDateString("en-US", {
                           month: "short",
@@ -356,7 +276,13 @@ const ConcertBooking = () => {
                       <button
                         key={time}
                         className={`time-btn ${selectedTime === time ? "selected" : ""}`}
-                        onClick={() => setSelectedTime(time)}
+                        onClick={() => {
+                          setSelectedTime(time);
+                          setSelectedSeats([]);
+                        }}
+                        disabled={!selectedDate}
+                        style={{ opacity: !selectedDate ? 0.5 : 1, cursor: !selectedDate ? 'not-allowed' : 'pointer' }}
+                        title={!selectedDate ? "Select a date first" : ""}
                       >
                         {time}
                       </button>
@@ -364,8 +290,8 @@ const ConcertBooking = () => {
                   </div>
                 </div>
 
-                <h3 className="mt-4">Select Your Seats</h3>
-                <div className="category-filter">
+                <h3 className="mt-4" style={{ opacity: selectedTime ? 1 : 0.5 }}>Select Your Seats</h3>
+                <div className="category-filter" style={{ opacity: selectedTime ? 1 : 0.5, pointerEvents: selectedTime ? 'auto' : 'none' }}>
                   <button
                     className={`cat-btn ${activeCategory === "all" ? "active" : ""}`}
                     onClick={() => setActiveCategory("all")}
@@ -392,9 +318,9 @@ const ConcertBooking = () => {
                   </button>
                 </div>
 
-                <div className="stage-indicator">🎤 STAGE</div>
+                <div className="stage-indicator" style={{ opacity: selectedTime ? 1 : 0.5 }}>🎤 STAGE</div>
 
-                <div className="seat-map">
+                <div className="seat-map" style={{ opacity: selectedTime ? 1 : 0.5 }}>
                   {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map((row) => (
                     <div key={row} className="seat-row">
                       <span className="row-label">{row}</span>
@@ -403,16 +329,21 @@ const ConcertBooking = () => {
                         .map((seat) => (
                           <button
                             key={seat.id}
-                            className={`seat ${seat.category.toLowerCase()} ${
-                              seat.isBooked
-                                ? "booked"
-                                : selectedSeats.find((s) => s.id === seat.id)
+                            className={`seat ${seat.category.toLowerCase()} ${seat.isBooked
+                              ? "booked"
+                              : selectedSeats.find((s) => s.id === seat.id)
                                 ? "selected"
                                 : ""
-                            }`}
-                            onClick={() => handleSeatClick(seat)}
+                              }`}
+                            onClick={() => {
+                              if (!selectedTime) {
+                                alert("Please select a date and time first.");
+                                return;
+                              }
+                              handleSeatClick(seat);
+                            }}
                             disabled={seat.isBooked}
-                            title={`${seat.id} - ₹${seat.price}`}
+                            title={!selectedTime ? "Select time first" : `${seat.id} - ₹${seat.price}`}
                           >
                             {seat.number}
                           </button>
@@ -517,10 +448,10 @@ const ConcertBooking = () => {
           <div className="row g-4 mt-3">
             <div className="col-lg-8">
               <div className="booking-card">
-                <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937'}}>Customer Details</h3>
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px'}}>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937' }}>Customer Details</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                   <div>
-                    <label style={{display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px'}}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
                       Full Name *
                     </label>
                     <input
@@ -541,7 +472,7 @@ const ConcertBooking = () => {
                     />
                   </div>
                   <div>
-                    <label style={{display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px'}}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
                       Email Address *
                     </label>
                     <input
@@ -562,7 +493,7 @@ const ConcertBooking = () => {
                     />
                   </div>
                   <div>
-                    <label style={{display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px'}}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '6px' }}>
                       Phone Number *
                     </label>
                     <input
@@ -585,82 +516,45 @@ const ConcertBooking = () => {
                 </div>
               </div>
 
-              <div className="booking-card" style={{marginTop: '20px'}}>
-                <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937'}}>Payment Method</h3>
-                <div>
-                  <label className="payment-method-option">
-                    <div className="payment-method-content">
-                      <input type="radio" name="payment" id="card" defaultChecked />
-                      <div className="payment-method-info">
-                        <div className="payment-method-title">💳 Credit/Debit Card</div>
-                        <div className="payment-method-subtitle">Visa, Mastercard, Amex</div>
-                      </div>
-                    </div>
-                  </label>
-                  <label className="payment-method-option">
-                    <div className="payment-method-content">
-                      <input type="radio" name="payment" id="upi" />
-                      <div className="payment-method-info">
-                        <div className="payment-method-title">📱 UPI</div>
-                        <div className="payment-method-subtitle">Google Pay, PhonePe, Paytm</div>
-                      </div>
-                    </div>
-                  </label>
-                  <label className="payment-method-option">
-                    <div className="payment-method-content">
-                      <input type="radio" name="payment" id="wallet" />
-                      <div className="payment-method-info">
-                        <div className="payment-method-title">👛 Wallet</div>
-                        <div className="payment-method-subtitle">Amazon Pay, Mobikwik</div>
-                      </div>
-                    </div>
-                  </label>
-                  <label className="payment-method-option">
-                    <div className="payment-method-content">
-                      <input type="radio" name="payment" id="netbanking" />
-                      <div className="payment-method-info">
-                        <div className="payment-method-title">🏦 Net Banking</div>
-                        <div className="payment-method-subtitle">All major banks</div>
-                      </div>
-                    </div>
-                  </label>
-                </div>
+              {/* Payment Method section removed as it is handled by Razorpay */}
 
-                <div style={{display: 'flex', gap: '12px', marginTop: '24px'}}>
-                  <button 
-                    onClick={() => setStep(1)}
-                    style={{
-                      flex: 1,
-                      padding: '14px',
-                      background: 'white',
-                      color: '#667eea',
-                      border: '2px solid #667eea',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    ← Back
-                  </button>
-                  <button 
-                    onClick={handleConfirmBooking}
-                    style={{
-                      flex: 2,
-                      padding: '14px',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Confirm & Pay ₹{getTotalPrice() + getConvenienceFee()}
-                  </button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '24px' }}>
+                <button
+                  onClick={() => setStep(1)}
+                  style={{
+                    padding: '8px 16px',
+                    background: 'white',
+                    color: '#4b5563',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <span>←</span> Back
+                </button>
+                <button
+                  onClick={handleConfirmBooking}
+                  style={{
+                    padding: '12px 32px',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 6px -1px rgba(102, 126, 234, 0.4)'
+                  }}
+                >
+                  Confirm & Pay ₹{getTotalPrice() + getConvenienceFee()}
+                </button>
               </div>
+
             </div>
 
             <div className="col-lg-4">
@@ -698,7 +592,7 @@ const ConcertBooking = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

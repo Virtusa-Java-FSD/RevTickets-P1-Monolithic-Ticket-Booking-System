@@ -5,17 +5,32 @@ interface MovieCardProps {
   movie: Event;
   onDetailClick?: (movie: Event) => void;
   onBookClick?: (movie: Event) => void;
+  onAuthRequired?: () => void;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ 
-  movie, 
-  onDetailClick, 
-  onBookClick
+const MovieCard: React.FC<MovieCardProps> = ({
+  movie,
+  onDetailClick,
+  onBookClick,
+  onAuthRequired
 }) => {
   const navigate = useNavigate();
 
   const handleBooking = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // Check authentication
+    const authData = localStorage.getItem('rev_auth');
+    if (!authData) {
+      if (onAuthRequired) {
+        onAuthRequired();
+      } else {
+        alert('Please sign in to book tickets!');
+        navigate('/login');
+      }
+      return;
+    }
+
     if (onBookClick) {
       onBookClick(movie);
     } else {
@@ -34,8 +49,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
   return (
     <div className="movie-card" onClick={handleCardClick}>
       <div className="movie-poster-wrapper">
-        <img 
-          src={movie.imageUrl} 
+        <img
+          src={movie.imageUrl}
           alt={movie.title}
           className="movie-poster-img"
           onError={(e) => {
@@ -54,7 +69,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
         {movie.rating && (
           <div className="rating-badge">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="#fbbf24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
             <span>{movie.rating}/10</span>
           </div>
