@@ -1,32 +1,16 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Sidebar from "./components/Sidebar";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import { BrowserRouter } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import { AuthProvider } from "./context/AuthContext";
 
 function AppContent() {
-  const { user } = useAuth();
-  
-  console.log('Auth state:', { user }); // Debug log
-
-  if (!user) {
-    return (
-      <div className="auth-only-layout">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </div>
-    );
-  }
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
     <>
-      <Sidebar />
-      <main className="app-main">
+      {!isAdminRoute && <Sidebar />}
+      <main className={isAdminRoute ? "admin-main" : "app-main"}>
         <AppRoutes />
       </main>
     </>

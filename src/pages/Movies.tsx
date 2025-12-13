@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Event } from "../types/Event";
 import MovieCard from "../components/MovieCard";
 import Footer from "../components/Footer";
+import AuthModal from "../components/AuthModal";
 import "../styles/movies.css";
 
 const Movies = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState<Event[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +17,7 @@ const Movies = () => {
   const [selectedGenre, setSelectedGenre] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("title");
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     loadMovies();
@@ -282,6 +286,15 @@ const Movies = () => {
   const languages = Array.from(new Set(movies.map((movie) => movie.language).filter(Boolean))) as string[];
   const genres = Array.from(new Set(movies.flatMap((movie) => movie.genre?.split(',').map(g => g.trim()) || []).filter(Boolean))) as string[];
 
+  const handleAuthRequired = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleAuthModalLogin = () => {
+    setShowAuthModal(false);
+    navigate('/login');
+  };
+
   if (loading) {
     return (
       <div className="container my-5">
@@ -426,7 +439,7 @@ const Movies = () => {
               <div className="row g-2">
                 {filteredMovies.map((movie) => (
                   <div key={movie.id} style={{ flex: '0 0 20%', maxWidth: '20%', padding: '0 0.25rem' }}>
-                    <MovieCard movie={movie} />
+                    <MovieCard movie={movie} onAuthRequired={handleAuthRequired} />
                   </div>
                 ))}
               </div>
@@ -434,6 +447,12 @@ const Movies = () => {
           )}
         </div>
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={handleAuthModalLogin}
+      />
       <Footer />
     </div>
   );

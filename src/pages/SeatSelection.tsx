@@ -14,10 +14,10 @@ interface Seat {
 const SeatSelection = () => {
   const { showId } = useParams();
   const navigate = useNavigate();
-  
+
   const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
   const seatsPerRow = 10;
-  
+
   const [seats, setSeats] = useState<Seat[]>(() => {
     const allSeats: Seat[] = [];
     rows.forEach((row, rowIndex) => {
@@ -25,7 +25,7 @@ const SeatSelection = () => {
         const isBooked = Math.random() > 0.75;
         let category: "classic" | "premium" | "executive" = "classic";
         let price = 150;
-        
+
         if (rowIndex < 2) {
           category = "executive";
           price = 300;
@@ -33,7 +33,7 @@ const SeatSelection = () => {
           category = "premium";
           price = 200;
         }
-        
+
         allSeats.push({
           id: `${row}${i}`,
           row,
@@ -66,6 +66,8 @@ const SeatSelection = () => {
         state: {
           seats: selectedSeats.map((s) => s.id),
           total: totalPrice,
+          showId: showId,
+          bookingType: "MOVIE"
         },
       });
     }
@@ -81,7 +83,7 @@ const SeatSelection = () => {
         <div className="container">
           <button className="back-btn" onClick={() => navigate('/movies')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M5 12L12 19M5 12L12 5"/>
+              <path d="M19 12H5M5 12L12 19M5 12L12 5" />
             </svg>
           </button>
           <div>

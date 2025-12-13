@@ -10,25 +10,23 @@ const BusBookingSummary = () => {
   const totalAmount = baseFare + taxes;
 
   const handleCheckout = () => {
-    alert('Proceeding to payment gateway...');
-    navigate('/payment-success', {
+    navigate('/payment', {
       state: {
-        bookingType: 'bus',
-        bookingDetails: {
-          busData,
-          selectedSeats,
-          boardingPoint,
-          droppingPoint,
-          passengers,
-          totalAmount
-        }
+        total: totalAmount,
+        seats: selectedSeats.map((s: any) => s.number),
+        bookingType: 'TRAVEL', // or BUS
+        travelId: busData?.id, // Assuming busData has an id
+        busData: busData, // Pass full object just in case
+        boardingPoint,
+        droppingPoint,
+        passengers
       }
     });
   };
 
   return (
     <div className="min-vh-100 bg-light py-4">
-      <div className="container" style={{maxWidth: '1100px'}}>
+      <div className="container" style={{ maxWidth: '1100px' }}>
         <div className="mb-4">
           <button className="btn btn-link text-decoration-none p-0 mb-3" onClick={() => navigate(-1)}>
             <i className="bi bi-arrow-left me-2"></i>Back
@@ -41,28 +39,28 @@ const BusBookingSummary = () => {
           <div className="card-body p-3">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center gap-2">
-                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px'}}>
+                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
                   <i className="bi bi-check"></i>
                 </div>
                 <small className="fw-medium">Seats</small>
               </div>
-              <div style={{flex: 1, height: '2px', background: '#28a745', margin: '0 8px'}}></div>
+              <div style={{ flex: 1, height: '2px', background: '#28a745', margin: '0 8px' }}></div>
               <div className="d-flex align-items-center gap-2">
-                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px'}}>
+                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
                   <i className="bi bi-check"></i>
                 </div>
                 <small className="fw-medium">Boarding</small>
               </div>
-              <div style={{flex: 1, height: '2px', background: '#28a745', margin: '0 8px'}}></div>
+              <div style={{ flex: 1, height: '2px', background: '#28a745', margin: '0 8px' }}></div>
               <div className="d-flex align-items-center gap-2">
-                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px'}}>
+                <div className="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
                   <i className="bi bi-check"></i>
                 </div>
                 <small className="fw-medium">Passengers</small>
               </div>
-              <div style={{flex: 1, height: '2px', background: '#667eea', margin: '0 8px'}}></div>
+              <div style={{ flex: 1, height: '2px', background: '#667eea', margin: '0 8px' }}></div>
               <div className="d-flex align-items-center gap-2">
-                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-semibold" style={{width: '32px', height: '32px'}}>4</div>
+                <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-semibold" style={{ width: '32px', height: '32px' }}>4</div>
                 <small className="fw-medium">Payment</small>
               </div>
             </div>
@@ -141,10 +139,10 @@ const BusBookingSummary = () => {
           </div>
 
           <div className="col-lg-4">
-            <div className="card border-0 shadow-sm sticky-top" style={{top: '20px'}}>
+            <div className="card border-0 shadow-sm sticky-top" style={{ top: '20px' }}>
               <div className="card-body">
                 <h5 className="card-title mb-3">Payment Summary</h5>
-                
+
                 <div className="mb-3">
                   <div className="d-flex justify-content-between mb-2">
                     <span className="text-muted">Base Fare ({selectedSeats?.length} seats)</span>

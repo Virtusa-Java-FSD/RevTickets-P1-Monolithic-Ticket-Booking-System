@@ -23,6 +23,8 @@ import BusPassengerInfo from "../pages/BusPassengerInfo";
 import BusBookingSummary from "../pages/BusBookingSummary";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import TrainClassSelection from "../components/TrainClassSelection";
+import AdminLogin from "../pages/AdminLogin";
+import AdminDashboard from "../pages/AdminDashboard";
 import { useAuth } from "../context/AuthContext";
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
@@ -39,6 +41,7 @@ const AppRoutes = () => (
     <Route path="/movies" element={<Movies />} />
     <Route path="/movies/:movieId" element={<MovieDetail />} />
     <Route path="/seat-selection/:showId" element={<SeatSelection />} />
+
     <Route path="/payment" element={<Payment />} />
     <Route path="/events" element={<Events />} />
     <Route path="/booking/event/:eventId" element={<Booking />} />
@@ -51,6 +54,7 @@ const AppRoutes = () => (
     <Route path="/bus-passenger-info" element={<BusPassengerInfo />} />
     <Route path="/bus-booking-summary" element={<BusBookingSummary />} />
     <Route path="/payment-success" element={<PaymentSuccess />} />
+
     <Route path="/train-class-selection" element={<TrainClassSelection />} />
     <Route path="/booking-details" element={<BookingDetails />} />
     <Route path="/booking-summary" element={<BookingSummary />} />
@@ -70,6 +74,10 @@ const AppRoutes = () => (
         </PrivateRoute>
       }
     />
+
+    {/* Admin Routes */}
+    <Route path="/admin/login" element={<AdminLogin />} />
+    <Route path="/admin/dashboard" element={<AdminDashboard />} />
   </Routes>
 );
 

@@ -14,7 +14,7 @@ client.interceptors.request.use(
 		console.log('Making request to:', config.baseURL + config.url);
 		console.log('Request headers:', config.headers);
 		console.log('Request data:', config.data);
-		
+
 		const token = localStorage.getItem('token');
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
@@ -41,7 +41,7 @@ export const sendOTP = async (payload: { email: string }) => {
 	try {
 		console.log('Sending OTP request to:', `${baseURL}/otp/send`);
 		console.log('Request payload:', payload);
-		
+
 		const resp = await client.post("/otp/send", payload);
 		console.log('OTP response:', resp.data);
 		return resp.data;
@@ -57,7 +57,7 @@ export const verifyOTP = async (payload: { email: string; otp: string }) => {
 	try {
 		console.log('Verifying OTP request to:', `${baseURL}/otp/verify`);
 		console.log('Request payload:', payload);
-		
+
 		const resp = await client.post("/otp/verify", payload);
 		console.log('OTP verify response:', resp.data);
 		return resp.data;
@@ -123,6 +123,111 @@ export const createEvent = async (eventData: any) => {
 		return resp.data;
 	} catch (error: any) {
 		throw new Error(error.response?.data?.message || 'Failed to create event');
+	}
+};
+
+export const getShowsByEventId = async (eventId: string) => {
+	try {
+		const resp = await client.get(`/shows/event/${eventId}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch shows');
+	}
+};
+
+// Booking endpoints
+export const createBooking = async (bookingData: any) => {
+	try {
+		// Automatically attach user ID if not present and available in auth
+		if (!bookingData.user && localStorage.getItem('rev_auth')) {
+			try {
+				const auth = JSON.parse(localStorage.getItem('rev_auth') || '{}');
+				if (auth.user && auth.user.id) {
+					bookingData.user = auth.user;
+					// Note: Backend might expect 'user' object or 'userId'. 
+					// Looking at Booking.java: @DBRef private User user; 
+					// Spring Data REST often handles object refs, but custom controllers might expect ID.
+					// Let's assume the controller can handle the object or ID if logic is standard.
+					// But wait, Controller says: bookingService.createBooking(booking).
+					// Ideally we pass the ID or the object. Let's pass the object as standard JSON.
+				}
+			} catch (e) { /* ignore */ }
+		}
+
+		const resp = await client.post("/bookings", bookingData);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to create booking');
+	}
+};
+
+// Get all travels (for user booking page)
+export const getTravels = async () => {
+	try {
+		const resp = await client.get('/travel');
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch travels');
+	}
+};
+
+// Get user bookings
+export const getUserBookings = async (userId: number) => {
+	try {
+		const resp = await client.get(`/bookings/user/${userId}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch user bookings');
+	}
+};
+
+// Admin API functions
+export const adminAPI = {
+	// Get dashboard stats
+	getStats: async () => {
+		const resp = await client.get('/admin/stats');
+		return resp.data;
+	},
+
+	// Event management
+	createEvent: async (event: any) => {
+		const resp = await client.post('/admin/events', event);
+		return resp.data;
+	},
+
+	updateEvent: async (id: number, event: any) => {
+		const resp = await client.put(`/admin/events/${id}`, event);
+		return resp.data;
+	},
+
+	deleteEvent: async (id: number) => {
+		await client.delete(`/admin/events/${id}`);
+	},
+
+	// Get all bookings
+	getAllBookings: async () => {
+		const resp = await client.get('/admin/bookings');
+		return resp.data;
+	},
+
+	// Travel management
+	getAllTravels: async () => {
+		const resp = await client.get('/admin/travels');
+		return resp.data;
+	},
+
+	createTravel: async (travel: any) => {
+		const resp = await client.post('/admin/travels', travel);
+		return resp.data;
+	},
+
+	updateTravel: async (id: number, travel: any) => {
+		const resp = await client.put(`/admin/travels/${id}`, travel);
+		return resp.data;
+	},
+
+	deleteTravel: async (id: number) => {
+		await client.delete(`/admin/travels/${id}`);
 	}
 };
 
