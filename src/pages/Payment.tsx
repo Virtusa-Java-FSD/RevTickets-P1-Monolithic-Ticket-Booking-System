@@ -42,7 +42,7 @@ const Payment = () => {
     // For this demo, we use client-side generation (Test Mode)
 
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_YourKeyHere",
+      key: "rzp_test_RrAj72tYAEHdEt", // Razorpay Test Mode Key
       amount: total * 100, // Amount in paise
       currency: "INR",
       name: "RevTickets",

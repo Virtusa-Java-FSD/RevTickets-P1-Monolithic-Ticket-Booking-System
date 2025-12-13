@@ -56,7 +56,7 @@ const Auth: React.FC = () => {
     }
     
     try {
-      await register(name, regEmail, regPassword);
+      await register(name, regEmail, phone, regPassword);
       navigate("/dashboard");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Registration failed");

@@ -1,29 +1,5 @@
 import api from './api';
-import { AuthRequest, AuthResponse, User } from '../types/auth'; // We'll need to define these types
-
-// Define types locally if not yet available in a shared types file
-// You can move these to src/types/auth.ts later
-export interface AuthRequest {
-    email: string; // or username depending on backend
-    password: string;
-    // Add other fields for registration if needed (e.g., name, mobileNumber)
-    name?: string;
-    mobileNumber?: string;
-    role?: string;
-}
-
-export interface AuthResponse {
-    token: string;
-    user: User;
-    message?: string;
-}
-
-export interface User {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
-}
+import { AuthRequest, AuthResponse, User } from '../types/auth';
 
 export const authService = {
     login: async (credentials: AuthRequest): Promise<AuthResponse> => {
