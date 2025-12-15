@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/seatSelection.css";
 
@@ -15,37 +15,67 @@ const SeatSelection = () => {
   const { showId } = useParams();
   const navigate = useNavigate();
 
-  const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
-  const seatsPerRow = 10;
+  const [loading, setLoading] = useState(true);
+  const [show, setShow] = useState<any>(null);
+  const [seats, setSeats] = useState<Seat[]>([]);
 
-  const [seats, setSeats] = useState<Seat[]>(() => {
-    const allSeats: Seat[] = [];
-    rows.forEach((row, rowIndex) => {
-      for (let i = 1; i <= seatsPerRow; i++) {
-        const isBooked = Math.random() > 0.75;
-        let category: "classic" | "premium" | "executive" = "classic";
-        let price = 150;
+  useEffect(() => {
+    const loadShow = async () => {
+      try {
+        if (!showId) return;
+        const { getShow } = await import("../utils/api");
+        const showData = await getShow(showId);
+        setShow(showData);
 
-        if (rowIndex < 2) {
-          category = "executive";
-          price = 300;
-        } else if (rowIndex < 5) {
-          category = "premium";
-          price = 200;
-        }
+        // Generate seats based on show capacity or fixed layout
+        // For simplicity, we keep the fixed layout but ideally this should come from backend
+        // We will mark random seats as booked if backend doesn't provide seat map
+        const allSeats: Seat[] = [];
+        const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+        const seatsPerRow = 10;
 
-        allSeats.push({
-          id: `${row}${i}`,
-          row,
-          number: i,
-          status: isBooked ? "booked" : "available",
-          price,
-          category,
+        // Use bookedSeats from showData if available
+        const bookedSeatIds = showData.bookedSeats || [];
+
+        rows.forEach((row, rowIndex) => {
+          for (let i = 1; i <= seatsPerRow; i++) {
+            const seatId = `${row}${i}`;
+            // If we have real booked data, use it. Else mock some if necessary or start clean.
+            // Since we moved to real backend, let's trust the backend data.
+            // If backend has no bookedSeats, all are available.
+            const isBooked = bookedSeatIds.includes(seatId);
+
+            let category: "classic" | "premium" | "executive" = "classic";
+            let price = showData.price || 150;
+
+            if (rowIndex < 2) {
+              category = "executive";
+              price = (showData.price || 150) + 100;
+            } else if (rowIndex < 5) {
+              category = "premium";
+              price = (showData.price || 150) + 50;
+            }
+
+            allSeats.push({
+              id: seatId,
+              row,
+              number: i,
+              status: isBooked ? "booked" : "available",
+              price,
+              category,
+            });
+          }
         });
+        setSeats(allSeats);
+
+      } catch (err) {
+        console.error("Failed to load show:", err);
+      } finally {
+        setLoading(false);
       }
-    });
-    return allSeats;
-  });
+    };
+    loadShow();
+  }, [showId]);
 
   const handleSeatClick = (seatId: string) => {
     setSeats((prev) =>
@@ -61,6 +91,14 @@ const SeatSelection = () => {
   const totalPrice = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
 
   const handleProceed = () => {
+    // Check authentication before proceeding
+    const authData = localStorage.getItem('rev_auth');
+    if (!authData) {
+      alert("Please login to proceed with booking");
+      navigate('/login');
+      return;
+    }
+
     if (selectedSeats.length > 0) {
       navigate("/payment", {
         state: {

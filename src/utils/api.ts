@@ -135,6 +135,15 @@ export const getShowsByEventId = async (eventId: string) => {
 	}
 };
 
+export const getShow = async (id: string) => {
+	try {
+		const resp = await client.get(`/shows/${id}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch show');
+	}
+};
+
 // Booking endpoints
 export const createBooking = async (bookingData: any) => {
 	try {
