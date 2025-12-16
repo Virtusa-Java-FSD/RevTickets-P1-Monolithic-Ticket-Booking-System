@@ -249,6 +249,47 @@ export const getTravels = async () => {
 	}
 };
 
+export const searchTravels = async (type?: string, from?: string, to?: string) => {
+	try {
+		const params = new URLSearchParams();
+		if (type) params.append('type', type);
+		if (from) params.append('from', from);
+		if (to) params.append('to', to);
+		
+		const resp = await client.get(`/travel/search?${params.toString()}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to search travels');
+	}
+};
+
+export const getFlights = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/flights?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch flights');
+	}
+};
+
+export const getBuses = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/buses?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch buses');
+	}
+};
+
+export const getTrains = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/trains?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch trains');
+	}
+};
+
 export const getUserBookings = async (userId: number) => {
 	try {
 		const resp = await client.get(`/bookings/user/${userId}`);

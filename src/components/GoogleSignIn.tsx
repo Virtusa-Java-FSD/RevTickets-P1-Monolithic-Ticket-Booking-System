@@ -27,7 +27,10 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ mode = 'login' }) => {
             if (window.google && buttonRef.current) {
                 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
                 
-                if (!clientId || clientId === 'YOUR_GOOGLE_CLIENT_ID' || clientId.trim() === '') {
+                console.log('Google Client ID from env:', clientId ? 'Found' : 'Not found');
+                
+                if (!clientId || clientId === 'YOUR_GOOGLE_CLIENT_ID' || clientId === 'YOUR_GOOGLE_CLIENT_ID_HERE' || clientId.trim() === '') {
+                    console.warn('Google Client ID not configured. Please create .env file with VITE_GOOGLE_CLIENT_ID');
                     setShowFallback(true);
                     return;
                 }

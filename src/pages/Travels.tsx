@@ -34,10 +34,16 @@ const Travels = () => {
     stops: 'all',
     priceRange: [0, 10000],
     airlines: [] as string[],
-    sortBy: 'recommended'
+    sortBy: 'recommended',
+    acType: [] as string[],
+    busType: [] as string[],
+    trainClass: [] as string[],
+    rating: 0,
+    departureTime: [] as string[]
   });
   const [travelOptions, setTravelOptions] = useState<TravelOption[]>([]);
   const [filteredOptions, setFilteredOptions] = useState<TravelOption[]>([]);
+  const [allTravels, setAllTravels] = useState<TravelOption[]>([]);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const [showSeatModal, setShowSeatModal] = useState(false);
   const [selectedBus, setSelectedBus] = useState<TravelOption | null>(null);
@@ -73,59 +79,168 @@ const Travels = () => {
     return () => clearInterval(interval);
   }, [bannerImages.length]);
 
+  useEffect(() => {
+    const filtered = allTravels.filter(option => {
+      if (activeTab === 'Flights') return option.type === 'flight';
+      if (activeTab === 'Buses') return option.type === 'bus';
+      if (activeTab === 'Trains') return option.type === 'train';
+      return false;
+    });
+    setTravelOptions(filtered);
+    applyFilters(filtered);
+  }, [activeTab]);
+
+  const transformTravelData = (data: any[]): TravelOption[] => {
+    return data.map((travel: any) => ({
+      id: travel.id?.toString() || '',
+      name: travel.operator,
+      type: travel.type,
+      imageUrl: travel.type === 'flight'
+        ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop'
+        : travel.type === 'bus'
+          ? 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop'
+          : 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
+      rating: travel.rating || 4.0,
+      serviceType: travel.type === 'flight' ? 'Economy' : travel.type === 'bus' ? 'AC Sleeper' : '2AC',
+      departure: travel.departureTime,
+      arrival: travel.arrivalTime,
+      duration: travel.duration,
+      price: travel.price,
+      route: `${travel.departure} → ${travel.arrival}`,
+      isAC: true,
+      busType: 'Sleeper' as const,
+      layout: '(2+1)' as const
+    }));
+  };
+
   const loadTravelOptions = async () => {
     setLoading(true);
     try {
       const { getTravels } = await import('../utils/api');
       const data = await getTravels();
-
-      // Transform backend data to match frontend interface
-      const transformedData: TravelOption[] = data.map((travel: any) => ({
-        id: travel.id?.toString() || '',
-        name: travel.operator,
-        type: travel.type,
-        imageUrl: travel.type === 'flight'
-          ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&h=300&fit=crop'
-          : travel.type === 'bus'
-            ? 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=300&fit=crop'
-            : 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400&h=300&fit=crop',
-        rating: travel.rating || 4.0,
-        serviceType: travel.type === 'flight' ? 'Economy' : travel.type === 'bus' ? 'AC Sleeper' : '2AC',
-        departure: travel.departureTime,
-        arrival: travel.arrivalTime,
-        duration: travel.duration,
-        price: travel.price,
-        route: `${travel.departure} → ${travel.arrival}`,
-        isAC: true,
-        busType: 'Sleeper' as const,
-        layout: '(2+1)' as const
-      }));
-
+      const transformedData = transformTravelData(data);
+      setAllTravels(transformedData);
       setTravelOptions(transformedData);
-      setFilteredOptions(transformedData);
+      applyFilters(transformedData);
     } catch (error) {
       console.error('Failed to load travel options:', error);
-      // Fallback to empty array if backend fails
       setTravelOptions([]);
       setFilteredOptions([]);
+    } finally {
+      setLoading(false);
+      setAllTravels([]);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!searchData.from || !searchData.to) {
+      alert('Please enter both From and To locations');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { searchTravels, getFlights, getBuses, getTrains } = await import('../utils/api');
+      let data: any[] = [];
+
+      if (activeTab === 'Flights') {
+        data = await getFlights(searchData.from, searchData.to);
+      } else if (activeTab === 'Buses') {
+        data = await getBuses(searchData.from, searchData.to);
+      } else if (activeTab === 'Trains') {
+        data = await getTrains(searchData.from, searchData.to);
+      } else {
+        data = await searchTravels(activeTab.toLowerCase().slice(0, -1), searchData.from, searchData.to);
+      }
+
+      const transformedData = transformTravelData(data);
+      setTravelOptions(transformedData);
+      applyFilters(transformedData);
+    } catch (error) {
+      console.error('Search failed:', error);
+      alert('Search failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = () => {
-    setLoading(true);
-    setTimeout(() => {
-      let filtered = travelOptions.filter(option => {
-        if (activeTab === 'Flights') return option.type === 'flight';
-        if (activeTab === 'Buses') return option.type === 'bus';
-        if (activeTab === 'Trains') return option.type === 'train';
+  const applyFilters = (options: TravelOption[]) => {
+    let filtered = options.filter(option => {
+      if (activeTab === 'Flights' && option.type !== 'flight') return false;
+      if (activeTab === 'Buses' && option.type !== 'bus') return false;
+      if (activeTab === 'Trains' && option.type !== 'train') return false;
+
+      if (option.price < filters.priceRange[0] || option.price > filters.priceRange[1]) {
         return false;
-      });
-      setFilteredOptions(filtered);
-      setLoading(false);
-    }, 1000);
+      }
+
+      if (filters.rating > 0 && (option.rating || 0) < filters.rating) {
+        return false;
+      }
+
+      if (activeTab === 'Flights' && filters.airlines.length > 0) {
+        if (!filters.airlines.includes(option.name)) return false;
+      }
+
+      if (activeTab === 'Buses') {
+        if (filters.acType.length > 0) {
+          const hasAC = filters.acType.includes('AC') && option.isAC;
+          const hasNonAC = filters.acType.includes('Non-AC') && !option.isAC;
+          if (!hasAC && !hasNonAC) return false;
+        }
+        if (filters.busType.length > 0 && option.busType) {
+          if (!filters.busType.includes(option.busType)) return false;
+        }
+      }
+
+      if (activeTab === 'Trains' && filters.trainClass.length > 0) {
+        if (!filters.trainClass.some(cls => option.serviceType?.includes(cls))) return false;
+      }
+
+      return true;
+    });
+
+    filtered = sortOptions(filtered);
+    setFilteredOptions(filtered);
   };
+
+  const sortOptions = (options: TravelOption[]): TravelOption[] => {
+    const sorted = [...options];
+    switch (filters.sortBy) {
+      case 'cheapest':
+        return sorted.sort((a, b) => a.price - b.price);
+      case 'fastest':
+        return sorted.sort((a, b) => {
+          const aDuration = parseDuration(a.duration);
+          const bDuration = parseDuration(b.duration);
+          return aDuration - bDuration;
+        });
+      case 'price-high':
+        return sorted.sort((a, b) => b.price - a.price);
+      case 'departure':
+        return sorted.sort((a, b) => a.departure.localeCompare(b.departure));
+      case 'arrival':
+        return sorted.sort((a, b) => a.arrival.localeCompare(b.arrival));
+      default:
+        return sorted;
+    }
+  };
+
+  const parseDuration = (duration: string): number => {
+    const match = duration.match(/(\d+)h\s*(\d+)?m?/);
+    if (match) {
+      const hours = parseInt(match[1]) || 0;
+      const minutes = parseInt(match[2]) || 0;
+      return hours * 60 + minutes;
+    }
+    return 0;
+  };
+
+  useEffect(() => {
+    if (travelOptions.length > 0) {
+      applyFilters(travelOptions);
+    }
+  }, [filters]);
 
   const getBusBadge = (option: TravelOption) => {
     if (option.type !== 'bus') return null;
@@ -305,7 +420,24 @@ const Travels = () => {
               <div className="filters-sidebar">
                 <div className="filters-header">
                   <h5>Filters</h5>
-                  <button className="clear-all-btn">Clear All</button>
+                  <button 
+                    className="clear-all-btn"
+                    onClick={() => {
+                      setFilters({
+                        stops: 'all',
+                        priceRange: [0, 10000],
+                        airlines: [],
+                        sortBy: 'recommended',
+                        acType: [],
+                        busType: [],
+                        trainClass: [],
+                        rating: 0,
+                        departureTime: []
+                      });
+                    }}
+                  >
+                    Clear All
+                  </button>
                 </div>
 
                 {/* Flight Filters */}
@@ -314,26 +446,29 @@ const Travels = () => {
                     <div className="filter-group">
                       <h6>Popular Filters</h6>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
+                        <input 
+                          type="checkbox" 
+                          checked={filters.stops === 'direct'}
+                          onChange={(e) => setFilters({ ...filters, stops: e.target.checked ? 'direct' : 'all' })}
+                        />
                         <span>Non Stop</span>
-                        <span className="filter-price">₹ 9,338</span>
                       </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Hide Nearby Airports</span>
-                        <span className="filter-price">₹ 9,338</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>IndiGo</span>
-                        <span className="filter-price">₹ 9,338</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Air India</span>
-                        <span className="filter-price">₹ 10,957</span>
-                      </label>
-                      <button className="show-more-btn">+ 8 more</button>
+                      {Array.from(new Set(travelOptions.filter(o => o.type === 'flight').map(o => o.name))).map(airline => (
+                        <label key={airline} className="filter-checkbox">
+                          <input 
+                            type="checkbox" 
+                            checked={filters.airlines.includes(airline)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFilters({ ...filters, airlines: [...filters.airlines, airline] });
+                              } else {
+                                setFilters({ ...filters, airlines: filters.airlines.filter(a => a !== airline) });
+                              }
+                            }}
+                          />
+                          <span>{airline}</span>
+                        </label>
+                      ))}
                     </div>
 
                     <div className="filter-group">
@@ -353,10 +488,17 @@ const Travels = () => {
                     <div className="filter-group">
                       <h6>One Way Price</h6>
                       <div className="price-slider">
-                        <input type="range" min="9338" max="24000" className="slider" />
+                        <input 
+                          type="range" 
+                          min="0" 
+                          max={Math.max(10000, ...travelOptions.map(o => o.price))} 
+                          value={filters.priceRange[1]}
+                          className="slider"
+                          onChange={(e) => setFilters({ ...filters, priceRange: [0, parseInt(e.target.value)] })}
+                        />
                         <div className="price-range">
-                          <span>₹ 9,338</span>
-                          <span>₹ 24,000</span>
+                          <span>₹ {filters.priceRange[0].toLocaleString()}</span>
+                          <span>₹ {filters.priceRange[1].toLocaleString()}</span>
                         </div>
                       </div>
                     </div>
@@ -401,31 +543,22 @@ const Travels = () => {
                     </div>
 
                     <div className="filter-group">
-                      <h6>Airlines</h6>
+                      <h6>Rating</h6>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>🔴 Air India</span>
-                        <span className="filter-price">₹ 10,957</span>
+                        <input 
+                          type="checkbox" 
+                          checked={filters.rating === 4}
+                          onChange={(e) => setFilters({ ...filters, rating: e.target.checked ? 4 : 0 })}
+                        />
+                        <span>⭐⭐⭐⭐ 4+ & above</span>
                       </label>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>✖️ Air India Express</span>
-                        <span className="filter-price">₹ 11,157</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>🔶 Akasa Air</span>
-                        <span className="filter-price">₹ 12,424</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>🔵 IndiGo</span>
-                        <span className="filter-price">₹ 9,338</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>🟠 SpiceJet</span>
-                        <span className="filter-price">₹ 10,218</span>
+                        <input 
+                          type="checkbox" 
+                          checked={filters.rating === 3.5}
+                          onChange={(e) => setFilters({ ...filters, rating: e.target.checked ? 3.5 : 0 })}
+                        />
+                        <span>⭐⭐⭐ 3.5+ & above</span>
                       </label>
                     </div>
                   </div>
@@ -437,29 +570,53 @@ const Travels = () => {
                     <div className="filter-group">
                       <h6>AC / Non-AC</h6>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
+                        <input 
+                          type="checkbox" 
+                          checked={filters.acType.includes('AC')}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFilters({ ...filters, acType: [...filters.acType, 'AC'] });
+                            } else {
+                              setFilters({ ...filters, acType: filters.acType.filter(t => t !== 'AC') });
+                            }
+                          }}
+                        />
                         <span>AC</span>
                       </label>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
+                        <input 
+                          type="checkbox" 
+                          checked={filters.acType.includes('Non-AC')}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFilters({ ...filters, acType: [...filters.acType, 'Non-AC'] });
+                            } else {
+                              setFilters({ ...filters, acType: filters.acType.filter(t => t !== 'Non-AC') });
+                            }
+                          }}
+                        />
                         <span>Non-AC</span>
                       </label>
                     </div>
 
                     <div className="filter-group">
                       <h6>Bus Type</h6>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Sleeper</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Seater</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Seater/Sleeper</span>
-                      </label>
+                      {['Sleeper', 'Seater', 'Seater/Sleeper'].map(busType => (
+                        <label key={busType} className="filter-checkbox">
+                          <input 
+                            type="checkbox" 
+                            checked={filters.busType.includes(busType)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFilters({ ...filters, busType: [...filters.busType, busType] });
+                              } else {
+                                setFilters({ ...filters, busType: filters.busType.filter(t => t !== busType) });
+                              }
+                            }}
+                          />
+                          <span>{busType}</span>
+                        </label>
+                      ))}
                     </div>
 
                     <div className="filter-group">
@@ -509,16 +666,20 @@ const Travels = () => {
                     <div className="filter-group">
                       <h6>Rating</h6>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>⭐⭐⭐⭐⭐ 4+ & above</span>
+                        <input 
+                          type="checkbox" 
+                          checked={filters.rating === 4}
+                          onChange={(e) => setFilters({ ...filters, rating: e.target.checked ? 4 : 0 })}
+                        />
+                        <span>⭐⭐⭐⭐ 4+ & above</span>
                       </label>
                       <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>⭐⭐⭐⭐ 3.5+ & above</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>⭐⭐⭐ 3+ & above</span>
+                        <input 
+                          type="checkbox" 
+                          checked={filters.rating === 3.5}
+                          onChange={(e) => setFilters({ ...filters, rating: e.target.checked ? 3.5 : 0 })}
+                        />
+                        <span>⭐⭐⭐ 3.5+ & above</span>
                       </label>
                     </div>
                   </div>
@@ -528,27 +689,28 @@ const Travels = () => {
                 {activeTab === 'Trains' && (
                   <div className="filter-sections">
                     <div className="filter-group">
-                      <h6>Filter results</h6>
-                    </div>
-
-                    <div className="filter-group">
                       <h6>Ticket class</h6>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>AC 2 Tier (2A)</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>AC 3 Tier (3A)</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>Sleeper (SL)</span>
-                      </label>
-                      <label className="filter-checkbox">
-                        <input type="checkbox" />
-                        <span>AC First Class (1A)</span>
-                      </label>
+                      {['2A', '3A', 'SL', '1A'].map(trainClass => (
+                        <label key={trainClass} className="filter-checkbox">
+                          <input 
+                            type="checkbox" 
+                            checked={filters.trainClass.includes(trainClass)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setFilters({ ...filters, trainClass: [...filters.trainClass, trainClass] });
+                              } else {
+                                setFilters({ ...filters, trainClass: filters.trainClass.filter(c => c !== trainClass) });
+                              }
+                            }}
+                          />
+                          <span>
+                            {trainClass === '2A' ? 'AC 2 Tier (2A)' :
+                             trainClass === '3A' ? 'AC 3 Tier (3A)' :
+                             trainClass === 'SL' ? 'Sleeper (SL)' :
+                             'AC First Class (1A)'}
+                          </span>
+                        </label>
+                      ))}
                     </div>
 
                     <div className="filter-group">
@@ -590,24 +752,23 @@ const Travels = () => {
                   </p>
                   <div className="sort-options">
                     <span>Sort by:</span>
-                    <select className="sort-select">
-                      <option>Recommended</option>
-                      <option>Price: Low to High</option>
-                      <option>Price: High to Low</option>
-                      <option>Duration</option>
-                      <option>Departure</option>
-                      <option>Arrival</option>
+                    <select 
+                      className="sort-select"
+                      value={filters.sortBy}
+                      onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+                    >
+                      <option value="recommended">Recommended</option>
+                      <option value="cheapest">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="fastest">Duration</option>
+                      <option value="departure">Departure</option>
+                      <option value="arrival">Arrival</option>
                     </select>
                   </div>
                 </div>
                 <div className="results-container">
                   {(() => {
-                    const filtered = travelOptions.filter((item) => {
-                      if (activeTab === "Flights") return item.type === "flight";
-                      if (activeTab === "Buses") return item.type === "bus";
-                      if (activeTab === "Trains") return item.type === "train";
-                      return false;
-                    });
+                    const filtered = filteredOptions;
 
                     return filtered.map((option) => {
                       // Unified Card Structure based on Flight Card
