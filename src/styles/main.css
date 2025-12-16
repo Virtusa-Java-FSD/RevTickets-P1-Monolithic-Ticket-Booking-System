@@ -2136,3 +2136,7 @@ body {
 .seat.vip {
   color: black;
 }
+
+:root {
+  scrollbar-width: none;
+}
