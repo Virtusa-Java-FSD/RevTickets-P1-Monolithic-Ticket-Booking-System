@@ -2140,3 +2140,12 @@ body {
 :root {
   scrollbar-width: none;
 }
+
+.slider-dots{
+  display: none;
+}
+
+.trending-scroll,
+.upcoming-scroll  {
+  justify-content: space-between;
+}

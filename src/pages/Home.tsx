@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Footer from "../components/Footer";
 import { MovieIcon, EventIcon, ConcertIcon, TravelIcon } from '../assets/icons';
 
 const Home = () => {
@@ -422,6 +423,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

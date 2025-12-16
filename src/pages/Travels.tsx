@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthModal from "../components/AuthModal";
 import "../styles/travel.css";
 import "../styles/busSeatSelection.css";
+import Footer from "../components/Footer";
 
 interface TravelOption {
   id: string;
@@ -73,6 +74,7 @@ const Travels = () => {
   }, [bannerImages.length]);
 
   const loadTravelOptions = async () => {
+    setLoading(true);
     try {
       const { getTravels } = await import('../utils/api');
       const data = await getTravels();
@@ -106,6 +108,8 @@ const Travels = () => {
       // Fallback to empty array if backend fails
       setTravelOptions([]);
       setFilteredOptions([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -742,6 +746,8 @@ const Travels = () => {
         onClose={() => setShowAuthModal(false)}
         onLogin={handleAuthModalLogin}
       />
+      
+      <Footer />
     </div>
   );
 };
@@ -999,5 +1005,4 @@ const BusSeatModal: React.FC<BusSeatModalProps> = ({ busData, onClose, onContinu
     </div>
   );
 };
-
 export default Travels;

@@ -4,6 +4,7 @@ import type { Event } from "../types/Event";
 import AuthModal from "../components/AuthModal";
 import "../styles/events.css";
 import "../styles/travel.css";
+import Footer from "../components/Footer";
 
 const Events = () => {
   const navigate = useNavigate();
@@ -214,6 +215,7 @@ const Events = () => {
         onClose={() => setShowAuthModal(false)}
         onLogin={handleAuthModalLogin}
       />
+      <Footer />
     </div>
   );
 };
