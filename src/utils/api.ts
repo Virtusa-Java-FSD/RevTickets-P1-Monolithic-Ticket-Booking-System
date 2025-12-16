@@ -75,11 +75,6 @@ export const loginRequest = async (email: string, password: string) => {
 		const resp = await client.post("/auth/login", { email, password });
 		return resp.data;
 	} catch (error: any) {
-		// Fallback to mock auth if backend is not available
-		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
-			console.warn('Backend not available, using mock authentication');
-			return await mockLogin(email, password);
-		}
 		throw new Error(error.response?.data?.message || 'Login failed');
 	}
 };
@@ -89,11 +84,6 @@ export const registerRequest = async (name: string, email: string, phone: string
 		const resp = await client.post("/auth/register", { name, email, phone, password });
 		return resp.data;
 	} catch (error: any) {
-		// Fallback to mock auth if backend is not available
-		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
-			console.warn('Backend not available, using mock authentication');
-			return await mockRegister(name, email, phone, password);
-		}
 		throw new Error(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
 	}
 };

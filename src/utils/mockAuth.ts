@@ -1,6 +1,15 @@
 // Mock authentication service - fallback when backend is not available
-// No pre-populated users - users must register first
-export const mockUsers: any[] = [];
+// Pre-populated test user for demo
+export const mockUsers: any[] = [
+  {
+    id: 1,
+    name: 'Test User',
+    email: 'shivajioddi79@gmail.com',
+    phone: '+91 9876543210',
+    password: 'password',
+    role: 'USER'
+  }
+];
 
 export const mockLogin = async (email: string, password: string) => {
   await new Promise(resolve => setTimeout(resolve, 500));
