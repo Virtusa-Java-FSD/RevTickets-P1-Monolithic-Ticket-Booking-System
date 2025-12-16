@@ -26,4 +26,19 @@ export const authService = {
         if (userStr) return JSON.parse(userStr);
         return null;
     },
+
+    forgotPassword: async (email: string): Promise<{ message: string }> => {
+        const response = await api.post<{ message: string }>('/auth/forgot-password', { email });
+        return response.data;
+    },
+
+    resetPassword: async (token: string, newPassword: string): Promise<{ message: string }> => {
+        const response = await api.post<{ message: string }>('/auth/reset-password', { token, newPassword });
+        return response.data;
+    },
+
+    validateResetToken: async (token: string): Promise<{ valid: boolean; message?: string }> => {
+        const response = await api.get<{ valid: boolean; message?: string }>(`/auth/validate-reset-token?token=${token}`);
+        return response.data;
+    },
 };
