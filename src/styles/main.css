@@ -2113,3 +2113,20 @@ body {
     text-align: center;
   }
 }
+
+.cat-btn {
+  color: black;
+}
+
+.cat-btn.active {
+    color: black;
+}
+
+.trending-tab {
+  background: grey;
+  color: black;
+}
+
+.time-btn {
+  color: black;
+}
