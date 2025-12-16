@@ -28,26 +28,31 @@ const Events = () => {
 
   // Load events
   useEffect(() => {
-    setLoading(true);
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const { getEvents } = await import("../utils/api");
+        const data = await getEvents();
 
-    const mockEvents: Event[] = [
-      { id: "e1", title: "Tech Conference 2025", description: "Leading innovations & tech showcases", category: "other", industry: "Technology", rating: 4.5, price: 799, imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400" },
-      { id: "e2", title: "Food Festival", description: "Taste cuisines from around the world", category: "other", industry: "Food & Beverage", rating: 4.8, price: 499, imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400" },
-      { id: "e3", title: "Art Exhibition", description: "Contemporary art showcase", category: "other", industry: "Arts & Culture", rating: 4.2, price: 350, imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400" },
-      { id: "e4", title: "Sports Championship", description: "National level finals", category: "other", industry: "Sports", rating: 4.9, price: 999, imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400" },
-      { id: "e5", title: "Comedy Night", description: "Stand-up show with top comedians", category: "other", industry: "Entertainment", rating: 4.3, price: 299, imageUrl: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=400" },
-      { id: "e6", title: "Book Fair 2025", description: "Meet your favourite authors!", category: "other", industry: "Education", rating: 4.1, price: 150, imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400" },
-      { id: "e7", title: "Fashion Week", description: "International fashion show", category: "other", industry: "Fashion", rating: 4.7, price: 1299, imageUrl: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400" },
-      { id: "e8", title: "Gaming Expo", description: "New releases & live tournaments", category: "other", industry: "Technology", rating: 5.0, price: 899, imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400" },
-      { id: "e9", title: "Wine Tasting Event", description: "Premium wine experience", category: "other", industry: "Food & Beverage", rating: 4.4, price: 599, imageUrl: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400" },
-      { id: "e10", title: "Startup Summit", description: "Entrepreneurship networking event", category: "other", industry: "Business", rating: 4.6, price: 699, imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400" },
-      { id: "e11", title: "Yoga Retreat", description: "Relaxation & wellness weekend", category: "other", industry: "Health & Wellness", rating: 4.5, price: 450, imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400" },
-      { id: "e12", title: "Car Show 2025", description: "Luxury & vintage exhibitions", category: "other", industry: "Automotive", rating: 4.8, price: 850, imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400" }
-    ];
+        // Filter for events that are NOT movies, concerts or travels if necessary
+        // Adjust based on your backend data strategy. 
+        // For now, we assume getEvents returns general events.
+        // If the backend returns everything mixed, we might filter.
+        // Based on Event.java, there is 'category'.
 
-    setEvents(mockEvents);
-    setFilteredEvents(mockEvents);
-    setLoading(false);
+        // Ensure data is array
+        const eventsList = Array.isArray(data) ? data : [];
+        setEvents(eventsList);
+        setFilteredEvents(eventsList);
+      } catch (error) {
+        console.error("Failed to load events:", error);
+        // Fallback to empty or keep loading false
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   // Filter Logic

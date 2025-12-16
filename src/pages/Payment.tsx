@@ -42,12 +42,12 @@ const Payment = () => {
     // For this demo, we use client-side generation (Test Mode)
 
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_YourKeyHere",
+      key: "rzp_test_RrAj72tYAEHdEt", // Razorpay Test Mode Key
       amount: total * 100, // Amount in paise
       currency: "INR",
       name: "RevTickets",
       description: `Payment for ${bookingType || 'Tickets'}`,
-      image: "/Gemini_Generated_Image_u3szt5u3szt5u3sz.png", // Verify this path
+      image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&h=600&fit=crop", // Public URL to avoid CORS/Mixed Content issues
       handler: async function (response: any) {
         // Payment Success Handler
         console.log("Payment Successful", response);
@@ -103,12 +103,14 @@ const Payment = () => {
         paymentId: paymentId
       };
 
-      if (showId) {
-        bookingPayload.show = { id: showId };
-      } else if (travelId) {
-        bookingPayload.travel = { id: travelId };
-      } else if (eventId) {
-        bookingPayload.event = { id: eventId };
+      // Only attach relations if ID is numeric (real backend ID)
+      // Mock IDs (strings like "show-1") will cause backend 500 error due to type mismatch
+      if (showId && !isNaN(Number(showId))) {
+        bookingPayload.show = { id: Number(showId) };
+      } else if (travelId && !isNaN(Number(travelId))) {
+        bookingPayload.travel = { id: Number(travelId) };
+      } else if (eventId && !isNaN(Number(eventId))) {
+        bookingPayload.event = { id: Number(eventId) };
       }
 
       console.log('Creating booking with payload:', bookingPayload);
@@ -190,17 +192,7 @@ const Payment = () => {
               {processing ? "Processing..." : `Pay ₹${total} with Razorpay`}
             </button>
 
-            <button
-              className="btn btn-outline-secondary w-100 mt-2"
-              onClick={() => completeBooking("DEMO_PAYMENT_" + Date.now())}
-              disabled={processing}
-            >
-              Skip Payment (Demo Mode)
-            </button>
 
-            <p className="text-muted small mt-2 mb-0 text-center">
-              Demo mode: Booking will be created without actual payment
-            </p>
           </div>
         </div>
       </div>

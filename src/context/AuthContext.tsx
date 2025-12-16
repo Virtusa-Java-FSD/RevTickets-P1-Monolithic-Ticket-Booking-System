@@ -26,18 +26,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		try {
-			const raw = localStorage.getItem(STORAGE_KEY);
-			if (raw) {
-				const parsed = JSON.parse(raw);
-				setUser(parsed.user || null);
-				setToken(parsed.token || null);
-			}
-		} catch (e) {
-			// ignore
-		} finally {
-			setIsLoading(false);
-		}
+		// Clear storage on mount to ensure user is logged out when running the app
+		localStorage.removeItem(STORAGE_KEY);
+		localStorage.removeItem('token');
+		setIsLoading(false);
 	}, []);
 
 	const persist = (tok: string | null, usr: User | null) => {

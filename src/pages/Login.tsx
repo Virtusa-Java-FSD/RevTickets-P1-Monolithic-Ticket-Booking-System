@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { authService } from "../services/authService";
 import "../styles/auth.css";
 
 const Login: React.FC = () => {
@@ -42,11 +43,24 @@ const Login: React.FC = () => {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setMessage("Password reset link sent to your email!");
-    setTimeout(() => {
-      setShowForgotPassword(false);
-      setMessage(null);
-    }, 2000);
+    setMessage(null);
+    
+    if (!resetEmail) {
+      setError("Please enter your email address");
+      return;
+    }
+    
+    try {
+      const response = await authService.forgotPassword(resetEmail);
+      setMessage(response.message);
+      setTimeout(() => {
+        setShowForgotPassword(false);
+        setMessage(null);
+        setResetEmail("");
+      }, 3000);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to send reset email. Please try again.");
+    }
   };
 
   if (showForgotPassword) {

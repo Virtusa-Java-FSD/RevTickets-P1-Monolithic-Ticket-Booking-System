@@ -598,183 +598,118 @@ const Travels = () => {
                 </div>
                 <div className="results-container">
                   {(() => {
-                    const filteredOptions = travelOptions.filter((item) => {
+                    const filtered = travelOptions.filter((item) => {
                       if (activeTab === "Flights") return item.type === "flight";
                       if (activeTab === "Buses") return item.type === "bus";
                       if (activeTab === "Trains") return item.type === "train";
                       return false;
                     });
-                    return filteredOptions.map((option) => {
-                      if (option.type === 'flight') {
-                        return (
-                          <div key={option.id} className="flight-result-card">
-                            <div className="flight-card-content">
-                              <div className="airline-info">
-                                <div className="airline-logo">
-                                  <img src={option.imageUrl} alt={option.name} />
-                                </div>
-                                <div className="airline-details">
-                                  <h4>{option.name}</h4>
-                                  <span className="flight-number">{option.serviceType}</span>
-                                </div>
+
+                    return filtered.map((option) => {
+                      // Unified Card Structure based on Flight Card
+                      const isCheapest = option.price < 5000; // Example logic
+                      const badgeText = isCheapest ? "CHEAPEST" : null;
+
+                      const handleViewClick = () => {
+                        checkAuthAndProceed(() => {
+                          if (option.type === 'flight') {
+                            navigate('/booking-details', { state: option });
+                          } else if (option.type === 'bus') {
+                            setSelectedBus(option);
+                            setShowSeatModal(true);
+                          } else if (option.type === 'train') {
+                            // For trains, maybe default to Sleeper for the generic view, or open a class selector?
+                            // Matching "View Fares" behavior -> go to booking details with default/selected class
+                            // Or just navigate to existing booking flow
+                            navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: option.price } });
+                          }
+                        });
+                      };
+
+                      const subTitle = option.type === 'flight' ? option.serviceType
+                        : option.type === 'bus' ? (option.busType || 'Sleeper')
+                          : `#${option.id}`;
+
+                      const durationSubText = option.type === 'flight' ? "Non-stop"
+                        : option.type === 'bus' ? "Rest Stop"
+                          : "Runs Daily";
+
+                      const buttonText = option.type === 'flight' ? "VIEW FARES"
+                        : option.type === 'bus' ? "VIEW SEATS"
+                          : "VIEW FARES";
+
+                      return (
+                        <div key={option.id} className="flight-result-card">
+                          <div className="flight-card-content">
+                            <div className="airline-info">
+                              <div className="airline-logo">
+                                <img src={option.imageUrl} alt={option.name} />
                               </div>
-                              <div className="flight-timing">
-                                <div className="departure">
-                                  <span className="time">{option.departure}</span>
-                                  <span className="city">{option.route.split(' → ')[0]}</span>
-                                </div>
-                                <div className="flight-duration">
-                                  <div className="duration-line"></div>
-                                  <span className="duration">{option.duration}</span>
-                                  <span className="flight-type">Non-stop</span>
-                                </div>
-                                <div className="arrival">
-                                  <span className="time">{option.arrival}</span>
-                                  <span className="city">{option.route.split(' → ')[1]}</span>
-                                </div>
-                              </div>
-                              <div className="flight-price">
-                                <span className="price">₹{option.price}</span>
-                                <span className="per-adult">per adult</span>
-                              </div>
-                              <div className="flight-actions">
-                                <button
-                                  className="view-fares-btn"
-                                  onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: option }))}
-                                >
-                                  VIEW FARES
-                                </button>
-                              </div>
-                            </div>
-                            {option.price < 5000 && <div className="flight-badge cheapest">CHEAPEST</div>}
-                          </div>
-                        );
-                      } else if (option.type === 'bus') {
-                        return (
-                          <div key={option.id} className="bus-result-card">
-                            <div className="bus-card-content">
-                              <div className="bus-operator">
-                                <div className="operator-info">
-                                  <h4>{option.name}</h4>
-                                  <div className="bus-rating">
-                                    <span className="rating-star">★</span>
-                                    <span className="rating-value">{option.rating}</span>
-                                  </div>
-                                </div>
-                                <div className="bus-type-info">
-                                  <span className={`bus-type-badge ${option.isAC ? 'ac' : 'non-ac'}`}>
-                                    {getBusBadge(option)}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="bus-timing">
-                                <div className="departure">
-                                  <span className="time">{option.departure}</span>
-                                  <span className="location">{option.route.split(' → ')[0]}</span>
-                                </div>
-                                <div className="journey-line">
-                                  <div className="duration">{option.duration}</div>
-                                  <div className="line"></div>
-                                </div>
-                                <div className="arrival">
-                                  <span className="time">{option.arrival}</span>
-                                  <span className="location">{option.route.split(' → ')[1]}</span>
-                                </div>
-                              </div>
-                              <div className="bus-amenities">
-                                {option.isAC && <span className="amenity">🌡️ AC</span>}
-                                <span className="amenity">📱 Charging</span>
-                                <span className="amenity">💺 Blanket</span>
-                                <span className="amenity">💧 Water</span>
-                              </div>
-                              <div className="bus-price-section">
-                                <div className="price-info">
-                                  <span className="starts-from">Starts from</span>
-                                  <span className="price">₹{option.price}</span>
-                                </div>
-                                <button
-                                  className="view-seats-btn"
-                                  onClick={() => checkAuthAndProceed(() => {
-                                    setSelectedBus(option);
-                                    setShowSeatModal(true);
-                                  })}
-                                >
-                                  View Seats
-                                </button>
+                              <div className="airline-details">
+                                <h4>{option.name}</h4>
+                                <span className="flight-number">{subTitle}</span>
                               </div>
                             </div>
-                            <div className="seats-available">
-                              <span className="seats-left">15 seats left</span>
-                              <span className="window-seats">🪟 Window seats available</span>
-                            </div>
-                          </div>
-                        );
-                      } else if (option.type === 'train') {
-                        return (
-                          <div key={option.id} className="train-result-card">
-                            <div className="train-card-header">
-                              <div className="train-info">
-                                <h4 className="train-name">{option.name}</h4>
-                                <span className="train-number">#{option.id.padStart(5, '0')}</span>
-                              </div>
-                              <div className="train-days">
-                                <span className="runs-on">Runs On:</span>
-                                <div className="day-indicators">
-                                  <span className="day active">M</span>
-                                  <span className="day active">T</span>
-                                  <span className="day active">W</span>
-                                  <span className="day active">T</span>
-                                  <span className="day active">F</span>
-                                  <span className="day active">S</span>
-                                  <span className="day">S</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="train-timing">
+                            <div className="flight-timing">
                               <div className="departure">
                                 <span className="time">{option.departure}</span>
-                                <span className="station">{option.route.split(' → ')[0]}</span>
+                                <span className="city">{option.route.split(' → ')[0]}</span>
                               </div>
-                              <div className="journey-info">
-                                <div className="timeline"></div>
+                              <div className="flight-duration">
+                                <div className="duration-line"></div>
                                 <span className="duration">{option.duration}</span>
+                                <span className="flight-type">{durationSubText}</span>
                               </div>
                               <div className="arrival">
                                 <span className="time">{option.arrival}</span>
-                                <span className="station">{option.route.split(' → ')[1]}</span>
+                                <span className="city">{option.route.split(' → ')[1]}</span>
                               </div>
                             </div>
-                            <div className="train-classes">
-                              <div className="class-options">
-                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: Math.round(option.price * 0.4) } }))}>
-                                  <span className="class-name">SL</span>
-                                  <span className="class-price">₹{Math.round(option.price * 0.4)}</span>
-                                  <span className="availability">Available</span>
-                                </div>
-                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '3A', selectedPrice: Math.round(option.price * 0.7) } }))}>
-                                  <span className="class-name">3A</span>
-                                  <span className="class-price">₹{Math.round(option.price * 0.7)}</span>
-                                  <span className="availability">Available</span>
-                                </div>
-                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '2A', selectedPrice: option.price } }))}>
-                                  <span className="class-name">2A</span>
-                                  <span className="class-price">₹{option.price}</span>
-                                  <span className="availability">Available</span>
-                                </div>
-                                <div className="class-box available" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '1A', selectedPrice: Math.round(option.price * 1.5) } }))}>
-                                  <span className="class-name">1A</span>
-                                  <span className="class-price">₹{Math.round(option.price * 1.5)}</span>
-                                  <span className="availability">Available</span>
-                                </div>
-                              </div>
+                            <div className="flight-price">
+                              <span className="price">₹{option.price}</span>
+                              <span className="per-adult">per {option.type === 'bus' ? 'seat' : 'adult'}</span>
                             </div>
-                            <div className="train-recommended">
-                              <span className="recommended-badge">RECOMMENDED</span>
+                            <div className="flight-actions">
+                              {option.type !== 'train' && (
+                                <button
+                                  className="view-fares-btn"
+                                  onClick={handleViewClick}
+                                >
+                                  {buttonText}
+                                </button>
+                              )}
                             </div>
                           </div>
-                        );
-                      }
-                      return null;
+
+                          {/* Train Classes Row */}
+                          {option.type === 'train' && (
+                            <div className="train-classes-row">
+                              <div className="class-box" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: 'SL', selectedPrice: Math.round(option.price * 0.4) } }))}>
+                                <span className="class-name">SL</span>
+                                <span className="class-price">₹{Math.round(option.price * 0.4)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '3A', selectedPrice: Math.round(option.price * 0.7) } }))}>
+                                <span className="class-name">3A</span>
+                                <span className="class-price">₹{Math.round(option.price * 0.7)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '2A', selectedPrice: option.price } }))}>
+                                <span className="class-name">2A</span>
+                                <span className="class-price">₹{option.price}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                              <div className="class-box" onClick={() => checkAuthAndProceed(() => navigate('/booking-details', { state: { ...option, selectedClass: '1A', selectedPrice: Math.round(option.price * 1.5) } }))}>
+                                <span className="class-name">1A</span>
+                                <span className="class-price">₹{Math.round(option.price * 1.5)}</span>
+                                <span className="availability">Available</span>
+                              </div>
+                            </div>
+                          )}
+
+                          {badgeText && <div className="flight-badge cheapest">{badgeText}</div>}
+                        </div>
+                      );
                     });
                   })()}
                 </div>
@@ -801,6 +736,12 @@ const Travels = () => {
           }}
         />
       )}
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onLogin={handleAuthModalLogin}
+      />
     </div>
   );
 };

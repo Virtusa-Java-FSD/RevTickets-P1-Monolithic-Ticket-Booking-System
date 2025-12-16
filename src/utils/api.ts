@@ -125,6 +125,15 @@ export const getShowsByEventId = async (eventId: string) => {
 	}
 };
 
+export const getShow = async (id: string) => {
+	try {
+		const resp = await client.get(`/shows/${id}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch show');
+	}
+};
+
 // Booking endpoints
 export const createBooking = async (bookingData: any) => {
 	try {
@@ -147,7 +156,9 @@ export const createBooking = async (bookingData: any) => {
 		const resp = await client.post("/bookings", bookingData);
 		return resp.data;
 	} catch (error: any) {
-		throw new Error(error.response?.data?.message || 'Failed to create booking');
+		console.error('Booking creation error:', error);
+		console.error('Error response:', error.response?.data);
+		throw new Error(error.response?.data?.error || error.response?.data?.message || 'Failed to create booking');
 	}
 };
 

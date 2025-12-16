@@ -27,110 +27,21 @@ const Booking = () => {
   );
 
   useEffect(() => {
-    setLoading(true);
+    const fetchEvent = async () => {
+      if (!eventId) return;
+      try {
+        setLoading(true);
+        const { getEvent } = await import("../utils/api");
+        const data = await getEvent(eventId);
+        setEvent(data);
+      } catch (error) {
+        console.error("Failed to load event:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const mockEvents: Event[] = [
-      {
-        id: "e1",
-        title: "Tech Conference 2024",
-        description: "Annual technology conference with industry leaders",
-        category: "other",
-        rating: 8.5,
-        imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e2",
-        title: "Food Festival",
-        description: "Explore cuisines from around the world",
-        category: "other",
-        rating: 8.8,
-        imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e3",
-        title: "Art Exhibition",
-        description: "Contemporary art showcase featuring local artists",
-        category: "other",
-        rating: 8.2,
-        imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e4",
-        title: "Sports Championship",
-        description: "National sports championship finals",
-        category: "other",
-        rating: 9.0,
-        imageUrl: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e5",
-        title: "Comedy Night",
-        description: "Stand-up comedy with top comedians",
-        category: "other",
-        rating: 8.6,
-        imageUrl: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e6",
-        title: "Book Fair 2024",
-        description: "Largest book fair with authors & publishers",
-        category: "other",
-        rating: 8.3,
-        imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e7",
-        title: "Fashion Week",
-        description: "International fashion week showcasing trends",
-        category: "other",
-        rating: 8.9,
-        imageUrl: "https://images.unsplash.com/photo-1558769132-cb1aea3c8565?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e8",
-        title: "Gaming Expo",
-        description: "Biggest gaming convention with new releases",
-        category: "other",
-        rating: 9.1,
-        imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e9",
-        title: "Wine Tasting Event",
-        description: "Premium wine tasting",
-        category: "other",
-        rating: 8.4,
-        imageUrl: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e10",
-        title: "Startup Summit",
-        description: "Connect with entrepreneurs & investors",
-        category: "other",
-        rating: 8.7,
-        imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e11",
-        title: "Yoga Retreat",
-        description: "Weekend wellness retreat",
-        category: "other",
-        rating: 8.5,
-        imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=400&fit=crop",
-      },
-      {
-        id: "e12",
-        title: "Car Show 2024",
-        description: "Luxury and vintage car show",
-        category: "other",
-        rating: 8.8,
-        imageUrl: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=300&h=400&fit=crop",
-      },
-    ];
-
-
-    setEvent(mockEvents.find((e) => e.id === eventId) || null);
-    setLoading(false);
+    fetchEvent();
   }, [eventId]);
 
   /* -------------------- SEATS -------------------- */

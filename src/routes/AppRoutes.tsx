@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import ResetPassword from "../pages/ResetPassword";
 import Movies from "../pages/Movies";
 import MovieDetail from "../pages/MovieDetail";
 import SeatSelection from "../pages/SeatSelection";
@@ -38,6 +39,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
+    <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="/movies" element={<Movies />} />
     <Route path="/movies/:movieId" element={<MovieDetail />} />
     <Route path="/seat-selection/:showId" element={<SeatSelection />} />
