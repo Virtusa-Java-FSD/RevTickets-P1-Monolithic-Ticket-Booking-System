@@ -2130,3 +2130,7 @@ body {
 .time-btn {
   color: black;
 }
+
+.seat.standard {
+  color: black;
+}
