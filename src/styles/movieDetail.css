@@ -378,6 +378,114 @@
   text-transform: uppercase;
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .movie-header {
+    height: 50vh;
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .movie-poster-large {
+    width: 150px;
+    height: 225px;
+  }
+
+  .movie-title-large {
+    font-size: 1.8rem;
+  }
+
+  .date-selector {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .date-btn {
+    min-width: 70px;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .theater-card {
+    padding: 1rem;
+  }
+
+  .theater-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .showtimes-grid {
+    gap: 0.5rem;
+  }
+
+  .showtime-btn {
+    min-width: 80px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .format-filter {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .format-filter-btn {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .movie-header {
+    height: 40vh;
+  }
+
+  .movie-poster-large {
+    width: 120px;
+    height: 180px;
+  }
+
+  .movie-title-large {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+  }
+
+  .date-btn {
+    min-width: 60px;
+    padding: 0.6rem 0.4rem;
+  }
+
+  .date-day,
+  .date-month {
+    font-size: 0.7rem;
+  }
+
+  .date-number {
+    font-size: 1rem;
+  }
+
+  .showtime-btn {
+    min-width: 70px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .theater-name {
+    font-size: 1rem;
+  }
+}
+
 /* Custom Booking Section */
 .custom-booking-section {
   display: flex;

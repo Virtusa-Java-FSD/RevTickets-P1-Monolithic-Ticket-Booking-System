@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { loginRequest, registerRequest } from "../utils/api";
+import { loginRequest, registerRequest, googleSignIn } from "../utils/api";
 
 type User = {
 	id?: string;
@@ -8,11 +8,16 @@ type User = {
 	role?: string;
 };
 
+export const isAdmin = (user: User | null): boolean => {
+	return user?.role === 'ADMIN';
+};
+
 type AuthState = {
 	user: User | null;
 	token: string | null;
 	login: (email: string, password: string) => Promise<void>;
 	register: (name: string, email: string, phone: string, password: string) => Promise<void>;
+	loginWithGoogle: (idToken: string) => Promise<void>;
 	logout: () => void;
 };
 
@@ -26,9 +31,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		// Clear storage on mount to ensure user is logged out when running the app
-		localStorage.removeItem(STORAGE_KEY);
-		localStorage.removeItem('token');
+		const storedAuth = localStorage.getItem(STORAGE_KEY);
+		if (storedAuth) {
+			try {
+				const authData = JSON.parse(storedAuth);
+				if (authData.token && authData.user) {
+					setToken(authData.token);
+					setUser(authData.user);
+					localStorage.setItem('token', authData.token);
+				}
+			} catch (error) {
+				console.error('Failed to parse stored auth data:', error);
+				localStorage.removeItem(STORAGE_KEY);
+				localStorage.removeItem('token');
+			}
+		}
 		setIsLoading(false);
 	}, []);
 
@@ -36,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		setToken(tok);
 		setUser(usr);
 		localStorage.setItem(STORAGE_KEY, JSON.stringify({ token: tok, user: usr }));
-		// Store token separately for API interceptor
 		if (tok) {
 			localStorage.setItem('token', tok);
 		} else {
@@ -66,8 +82,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		persist(null, null);
 		localStorage.removeItem(STORAGE_KEY);
 		localStorage.removeItem('token');
-		// Force page reload to ensure clean state
 		window.location.href = '/login';
+	};
+
+	const loginWithGoogle = async (idToken: string) => {
+		const response = await googleSignIn(idToken);
+		if (response.token && response.user) {
+			persist(response.token, response.user);
+		} else {
+			throw new Error('Google sign-in failed');
+		}
 	};
 
 	if (isLoading) {
@@ -75,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 	}
 
 	return (
-		<AuthContext.Provider value={{ user, token, login, register, logout }}>
+		<AuthContext.Provider value={{ user, token, login, register, loginWithGoogle, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);

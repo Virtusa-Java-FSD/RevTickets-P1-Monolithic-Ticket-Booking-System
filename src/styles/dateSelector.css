@@ -1,0 +1,175 @@
+.date-selector-container {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 0;
+}
+
+.date-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin-bottom: 16px;
+}
+
+.language-format {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.filter-options {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.filter-select:hover {
+  border-color: #9ca3af;
+}
+
+.date-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  margin-bottom: 16px;
+}
+
+.date-tab {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-right: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.date-tab:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.date-tab:last-child {
+  border-right: 1px solid #e5e7eb;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.date-tab.today {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.date-tab.active {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+.date-tab:hover:not(.active) {
+  background: #f9fafb;
+}
+
+.day-name {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-number {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.month-name {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.availability-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-dot.available {
+  background: #22c55e;
+}
+
+.legend-dot.fast-filling {
+  background: #f59e0b;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .date-selector-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .filter-options {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  
+  .filter-select {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .date-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 0 16px;
+  }
+  
+  .date-tab {
+    flex-shrink: 0;
+    min-width: 60px;
+    padding: 8px 12px;
+  }
+  
+  .availability-legend {
+    padding: 0 16px;
+    gap: 16px;
+  }
+}

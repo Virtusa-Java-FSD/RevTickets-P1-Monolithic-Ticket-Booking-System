@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { sendOTP, verifyOTP } from "../utils/api";
+import GoogleSignIn from "../components/GoogleSignIn";
 import "../styles/auth.css";
 
 const Register: React.FC = () => {
@@ -163,6 +164,14 @@ const Register: React.FC = () => {
                 {showOtp ? 'Verify OTP & Register' : 'Send OTP'}
               </button>
             </form>
+            <div className="divider-container mb-3">
+              <div className="divider-line"></div>
+              <span className="divider-text">OR</span>
+              <div className="divider-line"></div>
+            </div>
+            <div className="mb-3">
+              <GoogleSignIn mode="register" />
+            </div>
             <div className="text-center">
               <small>Already have account? <a href="/login" className="auth-link">Sign In</a></small>
             </div>

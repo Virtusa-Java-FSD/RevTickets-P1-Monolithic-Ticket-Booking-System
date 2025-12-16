@@ -24,9 +24,9 @@ import BusPassengerInfo from "../pages/BusPassengerInfo";
 import BusBookingSummary from "../pages/BusBookingSummary";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import TrainClassSelection from "../components/TrainClassSelection";
-import AdminLogin from "../pages/AdminLogin";
 import AdminDashboard from "../pages/AdminDashboard";
 import { useAuth } from "../context/AuthContext";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
@@ -77,9 +77,17 @@ const AppRoutes = () => (
       }
     />
 
-    {/* Admin Routes */}
-    <Route path="/admin/login" element={<AdminLogin />} />
-    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+    {/* Admin Routes - Protected */}
+    <Route
+      path="/admin/dashboard"
+      element={
+        <ProtectedRoute requireAdmin={true}>
+          <AdminDashboard />
+        </ProtectedRoute>
+      }
+    />
+    {/* Redirect old admin login to main login */}
+    <Route path="/admin/login" element={<Navigate to="/login" replace />} />
   </Routes>
 );
 

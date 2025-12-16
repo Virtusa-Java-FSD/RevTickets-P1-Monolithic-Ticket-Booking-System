@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { isAdmin } from "../context/AuthContext";
 import { HomeIcon, MovieIcon, EventIcon, ConcertIcon, TravelIcon } from "../assets/icons";
 
 const Sidebar: React.FC = () => {
@@ -145,6 +146,11 @@ const Sidebar: React.FC = () => {
                   <Link to="/dashboard" className="header-user-menu-item" onClick={() => setShowUserMenu(false)}>
                     Dashboard
                   </Link>
+                  {isAdmin(user) && (
+                    <Link to="/admin/dashboard" className="header-user-menu-item" onClick={() => setShowUserMenu(false)}>
+                      Admin Dashboard
+                    </Link>
+                  )}
                   <button onClick={() => { logout(); setShowUserMenu(false); }} className="header-user-menu-item header-logout-btn">
                     Logout
                   </button>

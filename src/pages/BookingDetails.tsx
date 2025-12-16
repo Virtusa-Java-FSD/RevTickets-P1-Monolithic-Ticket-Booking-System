@@ -155,10 +155,20 @@ const BookingDetails = () => {
       scrollToStep(currentStep + 1);
     } else {
       // Go to Payment Page immediately
+      // For flights/travel, use passenger count to generate seat identifiers if no seats were selected
+      const seatIdentifiers = selectedSeats.length > 0 
+        ? selectedSeats.map((s: any) => s.id || s) 
+        : passengers.map((_, i) => `P${i + 1}`); // Generate seats based on passenger count
+      
+      console.log('Navigating to payment from BookingDetails:');
+      console.log('Selected seats:', selectedSeats);
+      console.log('Passengers count:', passengers.length);
+      console.log('Generated seat identifiers:', seatIdentifiers);
+      
       navigate('/payment', {
         state: {
           total: calculateTotal(),
-          seats: selectedSeats.length > 0 ? selectedSeats.map((_, i) => `P${i + 1}`) : [], // Mock seats or use passenger count
+          seats: seatIdentifiers,
           bookingType: bookingData.type ? bookingData.type.toUpperCase() : 'TRAVEL',
           travelId: bookingData.id,
           bookingData: bookingData,
@@ -766,16 +776,23 @@ const BookingDetails = () => {
                   <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '20px', color: '#1f2937' }}>Payment Details</h3>
                   <p style={{ color: '#6b7280' }}>Redirecting to secure payment gateway...</p>
                   <button
-                    onClick={() => navigate('/payment', {
-                      state: {
-                        total: calculateTotal(),
-                        seats: selectedSeats.length > 0 ? selectedSeats.map((_, i) => `P${i + 1}`) : [],
-                        bookingType: bookingData.type ? bookingData.type.toUpperCase() : 'TRAVEL',
-                        travelId: bookingData.id,
-                        bookingData: bookingData,
-                        passengers: passengers
-                      }
-                    })}
+                    onClick={() => {
+                      // Generate seat identifiers based on passengers if no seats selected
+                      const seatIdentifiers = selectedSeats.length > 0 
+                        ? selectedSeats.map((s: any) => s.id || s) 
+                        : passengers.map((_, i) => `P${i + 1}`);
+                      
+                      navigate('/payment', {
+                        state: {
+                          total: calculateTotal(),
+                          seats: seatIdentifiers,
+                          bookingType: bookingData.type ? bookingData.type.toUpperCase() : 'TRAVEL',
+                          travelId: bookingData.id,
+                          bookingData: bookingData,
+                          passengers: passengers
+                        }
+                      });
+                    }}
                     className="btn btn-primary mt-3"
                   >
                     Click here if not redirected

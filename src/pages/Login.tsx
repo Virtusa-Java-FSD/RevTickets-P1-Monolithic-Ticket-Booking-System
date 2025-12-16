@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { authService } from "../services/authService";
+import GoogleSignIn from "../components/GoogleSignIn";
 import "../styles/auth.css";
 
 const Login: React.FC = () => {
@@ -34,7 +35,19 @@ const Login: React.FC = () => {
     
     try {
       await login(emailOrPhone, password);
-      navigate("/");
+      // Get user from context to check role
+      const authData = localStorage.getItem('rev_auth');
+      if (authData) {
+        const { user } = JSON.parse(authData);
+        // Redirect based on role
+        if (user?.role === 'ADMIN') {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+      } else {
+        navigate("/");
+      }
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
@@ -152,6 +165,14 @@ const Login: React.FC = () => {
                 Sign In
               </button>
             </form>
+            <div className="divider-container mb-3">
+              <div className="divider-line"></div>
+              <span className="divider-text">OR</span>
+              <div className="divider-line"></div>
+            </div>
+            <div className="mb-3">
+              <GoogleSignIn mode="login" />
+            </div>
             <div className="text-center">
               <small>
                 <a href="#" className="auth-link" onClick={() => setShowForgotPassword(true)}>Forgot Password?</a>

@@ -1,0 +1,156 @@
+.cinema-showtimes {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theater-row {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 20px;
+}
+
+.theater-row:last-child {
+  border-bottom: none;
+}
+
+.theater-info {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theater-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cinema-logo {
+  width: 40px;
+  height: 40px;
+  background: #1f2937;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.theater-details h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.theater-features {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.feature-icon {
+  font-size: 12px;
+}
+
+.theater-status {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.non-cancellable {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.showtimes-container {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.showtime-slot {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  text-align: center;
+}
+
+.showtime-slot:hover:not(.sold-out) {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.showtime-slot.sold-out {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.time-display {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 2px;
+}
+
+.format-info {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.availability-indicator {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .theater-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .theater-info {
+    flex: none;
+    width: 100%;
+  }
+  
+  .showtimes-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .showtime-slot {
+    min-width: 70px;
+    padding: 6px 8px;
+  }
+}

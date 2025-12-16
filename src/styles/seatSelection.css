@@ -397,4 +397,68 @@
     height: 24px !important;
     font-size: 0.8rem !important;
   }
+
+  .seat-selection-page .booking-bar {
+    padding: 0.75rem 0 !important;
+  }
+
+  .seat-selection-page .booking-info {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .seat-selection-page .seats-info p {
+    font-size: 0.85rem !important;
+  }
+
+  .seat-selection-page .price-info {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .seat-selection-page .seat-header .container {
+    padding: 0 1rem !important;
+  }
+
+  .seat-selection-page .seat-header .back-btn {
+    width: 35px !important;
+    height: 35px !important;
+  }
+
+  .seat-selection-page .seat {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .seat-selection-page .seat-icon {
+    font-size: 0.7rem !important;
+  }
+
+  .seat-selection-page .row-label {
+    font-size: 0.7rem !important;
+    width: 18px !important;
+  }
+
+  .seat-selection-page .category-name {
+    font-size: 0.9rem !important;
+  }
+
+  .seat-selection-page .category-available {
+    font-size: 0.8rem !important;
+  }
+
+  .seat-selection-page .seat-legend {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    align-items: center !important;
+  }
+
+  .seat-selection-page .booking-bar .container {
+    padding: 0 1rem !important;
+  }
 }

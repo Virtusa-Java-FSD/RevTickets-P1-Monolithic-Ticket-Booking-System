@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/payment.css";
 
@@ -17,6 +17,20 @@ const Payment = () => {
   const [processing, setProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
+  // Validate seats on mount
+  useEffect(() => {
+    console.log('Payment page loaded with state:', location.state);
+    console.log('Seats from state:', seats);
+    console.log('Seats type:', typeof seats);
+    console.log('Seats is array:', Array.isArray(seats));
+    
+    if (!seats || !Array.isArray(seats) || seats.length === 0) {
+      alert("No seats selected. Redirecting to seat selection.");
+      navigate(-1);
+      return;
+    }
+  }, [seats, navigate, location.state]);
+
   // Helper to load Razorpay script if not already loaded
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -29,6 +43,13 @@ const Payment = () => {
   };
 
   const handlePayment = async () => {
+    // Validate seats before payment
+    if (!seats || !Array.isArray(seats) || seats.length === 0) {
+      alert("No seats selected. Please go back and select seats.");
+      navigate(-1);
+      return;
+    }
+
     setProcessing(true);
 
     const res = await loadRazorpay();
@@ -83,6 +104,8 @@ const Payment = () => {
         try {
           const auth = JSON.parse(authData);
           userId = auth.user?.id;
+          console.log('User ID from auth:', userId);
+          console.log('User ID type:', typeof userId);
         } catch (e) {
           console.error('Failed to parse auth data:', e);
         }
@@ -94,9 +117,26 @@ const Payment = () => {
         return;
       }
 
+      // Ensure userId is a number if backend expects it
+      if (typeof userId === 'string' && !isNaN(Number(userId))) {
+        userId = Number(userId);
+      }
+
+      // Validate seats before creating booking
+      if (!seats || !Array.isArray(seats) || seats.length === 0) {
+        throw new Error("No seats selected. Please select at least one seat.");
+      }
+
+      // Ensure seats is an array of strings
+      const seatsArray = Array.isArray(seats) ? seats.filter(s => s && s.trim()) : [];
+      
+      if (seatsArray.length === 0) {
+        throw new Error("Invalid seat selection. Please try again.");
+      }
+
       const bookingPayload: any = {
         user: { id: userId },
-        seats: seats,
+        seats: seatsArray,
         totalPrice: total,
         status: 'CONFIRMED',
         bookingDate: new Date().toISOString(),
@@ -114,6 +154,9 @@ const Payment = () => {
       }
 
       console.log('Creating booking with payload:', bookingPayload);
+      console.log('Seats array:', seatsArray);
+      console.log('Seats array length:', seatsArray.length);
+      console.log('Seats array type:', Array.isArray(seatsArray));
 
       // Import locally to avoid circular dependencies or top-level failures
       const { createBooking } = await import("../utils/api");
@@ -148,6 +191,23 @@ const Payment = () => {
   if (paymentSuccess) return null; // Or a loading spinner while redirecting replaces this
 
 
+  // Early return if no seats
+  if (!seats || !Array.isArray(seats) || seats.length === 0) {
+    return (
+      <div className="payment-page">
+        <div className="container py-5 text-center">
+          <div className="alert alert-warning">
+            <h4>No Seats Selected</h4>
+            <p>Please select seats before proceeding to payment.</p>
+            <button className="btn btn-primary mt-3" onClick={() => navigate(-1)}>
+              Go Back to Seat Selection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="payment-page">
       <div className="payment-header">
@@ -167,11 +227,11 @@ const Payment = () => {
           <div className="booking-summary-card mx-auto" style={{ maxWidth: '450px' }}>
             <div className="summary-item">
               <span>Selected Seats</span>
-              <span className="fw-bold">{seats.join(", ")}</span>
+              <span className="fw-bold">{Array.isArray(seats) ? seats.join(", ") : "No seats"}</span>
             </div>
             <div className="summary-item">
               <span>Number of Seats</span>
-              <span className="fw-bold">{seats.length}</span>
+              <span className="fw-bold">{Array.isArray(seats) ? seats.length : 0}</span>
             </div>
             <hr />
             <div className="summary-item total">

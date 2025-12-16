@@ -1,6 +1,7 @@
 import { BrowserRouter, useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Sidebar from "./components/Sidebar";
+import ConnectionStatus from "./components/ConnectionStatus";
 import { AuthProvider } from "./context/AuthContext";
 
 function AppContent() {
@@ -21,6 +22,7 @@ function App() {
   return (
     <AuthProvider>
       <div className="app-root">
+        <ConnectionStatus />
         <BrowserRouter>
           <AppContent />
         </BrowserRouter>

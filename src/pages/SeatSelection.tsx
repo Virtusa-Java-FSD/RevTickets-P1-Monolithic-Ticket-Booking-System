@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import type { Event } from "../types/Event";
 import "../styles/seatSelection.css";
 
 interface Seat {
@@ -17,25 +18,41 @@ const SeatSelection = () => {
 
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState<any>(null);
+  const [movie, setMovie] = useState<Event | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
 
   useEffect(() => {
     const loadShow = async () => {
       try {
         if (!showId) return;
-        const { getShow } = await import("../utils/api");
+        setLoading(true);
+        const { getShow, getEvent, getBookedSeats } = await import("../utils/api");
         const showData = await getShow(showId);
         setShow(showData);
 
+        // Load movie/event details if eventId is available
+        if (showData.eventId) {
+          try {
+            const eventData = await getEvent(showData.eventId);
+            setMovie(eventData);
+          } catch (err) {
+            console.error("Failed to load event:", err);
+          }
+        }
+
+        // Fetch booked seats from backend
+        let bookedSeatIds: string[] = [];
+        try {
+          bookedSeatIds = await getBookedSeats(showId);
+        } catch (err) {
+          console.error("Failed to load booked seats, using show data:", err);
+          bookedSeatIds = showData.bookedSeats || [];
+        }
+
         // Generate seats based on show capacity or fixed layout
-        // For simplicity, we keep the fixed layout but ideally this should come from backend
-        // We will mark random seats as booked if backend doesn't provide seat map
         const allSeats: Seat[] = [];
         const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
         const seatsPerRow = 10;
-
-        // Use bookedSeats from showData if available
-        const bookedSeatIds = showData.bookedSeats || [];
 
         rows.forEach((row, rowIndex) => {
           for (let i = 1; i <= seatsPerRow; i++) {
@@ -99,13 +116,29 @@ const SeatSelection = () => {
       return;
     }
 
+    if (selectedSeats.length === 0) {
+      alert("Please select at least one seat");
+      return;
+    }
+
     if (selectedSeats.length > 0) {
+      const seatIds = selectedSeats.map((s) => s.id).filter(id => id && id.trim());
+      console.log('Navigating to payment with seats:', seatIds);
+      console.log('Selected seats count:', seatIds.length);
+      
+      if (seatIds.length === 0) {
+        alert("Invalid seat selection. Please try again.");
+        return;
+      }
+
       navigate("/payment", {
         state: {
-          seats: selectedSeats.map((s) => s.id),
+          seats: seatIds,
           total: totalPrice,
           showId: showId,
-          bookingType: "MOVIE"
+          bookingType: "MOVIE",
+          eventId: show?.eventId || movie?.id,
+          event: movie
         },
       });
     }
@@ -115,18 +148,60 @@ const SeatSelection = () => {
     return seats.filter((s) => s.category === category);
   };
 
+  // Format show date and time
+  const formatShowDateTime = () => {
+    if (!show) return "Loading...";
+    
+    // Handle different date formats from backend
+    let showDate: Date;
+    if (show.showDateTime) {
+      showDate = new Date(show.showDateTime);
+    } else if (show.showDate && show.showTime) {
+      showDate = new Date(`${show.showDate}T${show.showTime}`);
+    } else {
+      return "Date TBD";
+    }
+
+    const dateStr = showDate.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    const timeStr = show.showTime || showDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+    
+    const theaterName = show.theater || "Theater TBD";
+    return `${theaterName} | ${dateStr}, ${timeStr}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="seat-selection-page">
+        <div className="container py-5 text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3">Loading seat selection...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="seat-selection-page">
       <div className="seat-header">
         <div className="container">
-          <button className="back-btn" onClick={() => navigate('/movies')}>
+          <button className="back-btn" onClick={() => navigate(-1)}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M5 12L12 19M5 12L12 5" />
             </svg>
           </button>
           <div>
-            <h5 className="mb-0">Movie Name</h5>
-            <p className="small text-muted mb-0">PVR Cinemas | Today, 7:00 PM</p>
+            <h5 className="mb-0">{movie?.title || "Movie"}</h5>
+            <p className="small text-muted mb-0">{formatShowDateTime()}</p>
           </div>
         </div>
       </div>
