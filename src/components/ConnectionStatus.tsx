@@ -11,7 +11,7 @@ const ConnectionStatus = ({ onConnectionChange }: ConnectionStatusProps) => {
   const checkConnection = async () => {
     setIsChecking(true);
     try {
-      const response = await fetch('http://localhost:8081/api/events', {
+      const response = await fetch('http://localhost:8080/api/events', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         signal: AbortSignal.timeout(5000) // 5 second timeout
