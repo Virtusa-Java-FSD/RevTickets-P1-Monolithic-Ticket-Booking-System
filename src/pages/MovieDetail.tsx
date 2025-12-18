@@ -243,23 +243,6 @@ const MovieDetail = () => {
                 </button>
               ))}
             </div>
-<<<<<<< HEAD
-
-            {!showCustomBooking && (
-              <div className="format-filter">
-                {getAvailableFormats().map((format) => (
-                  <button
-                    key={format}
-                    className={`format-filter-btn ${selectedFormat === format ? 'active' : ''}`}
-                    onClick={() => setSelectedFormat(format || '')}
-                  >
-                    {format}
-                  </button>
-                ))}
-              </div>
-            )}
-=======
->>>>>>> Develop
           </div>
 
           <div className="date-selector">
