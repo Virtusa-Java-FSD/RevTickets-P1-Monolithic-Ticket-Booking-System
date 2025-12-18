@@ -199,7 +199,7 @@ const SeatSelection = () => {
               <path d="M19 12H5M5 12L12 19M5 12L12 5" />
             </svg>
           </button>
-          <div>
+          <div className="backbutton-content">
             <h5 className="mb-0">{movie?.title || "Movie"}</h5>
             <p className="small text-muted mb-0">{formatShowDateTime()}</p>
           </div>
