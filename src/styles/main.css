@@ -2113,3 +2113,39 @@ body {
     text-align: center;
   }
 }
+
+.cat-btn {
+  color: black;
+}
+
+.cat-btn.active {
+    color: black;
+}
+
+.trending-tab {
+  background: grey;
+  color: black;
+}
+
+.time-btn {
+  color: black;
+}
+
+.seat.standard,
+.seat.premium,
+.seat.vip {
+  color: black;
+}
+
+:root {
+  scrollbar-width: none;
+}
+
+.slider-dots{
+  display: none;
+}
+
+.trending-scroll,
+.upcoming-scroll  {
+  justify-content: space-between;
+}

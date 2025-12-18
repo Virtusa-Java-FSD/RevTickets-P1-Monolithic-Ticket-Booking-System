@@ -1,80 +1,85 @@
 import axios from "axios";
 import { mockLogin, mockRegister } from './mockAuth';
 
-const baseURL = "http://localhost:8081/api";
+const baseURL = "http://localhost:8080/api";
 
 const client = axios.create({
 	baseURL,
 	headers: { "Content-Type": "application/json" },
 });
 
-// Add request interceptor for authentication
 client.interceptors.request.use(
 	(config) => {
+<<<<<<< HEAD
 		console.log('Making request to:', (config.baseURL || '') + (config.url || ''));
 		console.log('Request headers:', config.headers);
 		console.log('Request data:', config.data);
 
 		const token = localStorage.getItem('token');
+=======
+		const token = localStorage.getItem('token') || localStorage.getItem('rev_auth_token');
+		const revAuth = localStorage.getItem('rev_auth');
+		
+>>>>>>> Develop
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
+		} else if (revAuth) {
+			try {
+				const auth = JSON.parse(revAuth);
+				if (auth.token) {
+					config.headers.Authorization = `Bearer ${auth.token}`;
+				}
+			} catch (e) {
+			}
 		}
 		return config;
 	},
 	(error) => Promise.reject(error)
 );
 
-// Add response interceptor for error handling
 client.interceptors.response.use(
 	(response) => response,
 	(error) => {
 		if (error.response?.status === 401) {
 			localStorage.removeItem('token');
-			window.location.href = '/login';
+			localStorage.removeItem('rev_auth');
+			if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+				window.location.href = '/login';
+			}
 		}
 		return Promise.reject(error);
 	}
 );
 
-// OTP endpoints
 export const sendOTP = async (payload: { email: string }) => {
 	try {
-		console.log('Sending OTP request to:', `${baseURL}/otp/send`);
-		console.log('Request payload:', payload);
-
 		const resp = await client.post("/otp/send", payload);
-		console.log('OTP response:', resp.data);
 		return resp.data;
 	} catch (error: any) {
-		console.error('OTP send error:', error);
-		console.error('Error response:', error.response?.data);
-		console.error('Error status:', error.response?.status);
 		throw new Error(error.response?.data?.message || error.message || 'Failed to send OTP');
 	}
 };
 
 export const verifyOTP = async (payload: { email: string; otp: string }) => {
 	try {
-		console.log('Verifying OTP request to:', `${baseURL}/otp/verify`);
-		console.log('Request payload:', payload);
-
 		const resp = await client.post("/otp/verify", payload);
-		console.log('OTP verify response:', resp.data);
 		return resp.data;
 	} catch (error: any) {
-		console.error('OTP verify error:', error);
-		console.error('Error response:', error.response?.data);
-		console.error('Error status:', error.response?.status);
 		throw new Error(error.response?.data?.message || error.message || 'OTP verification failed');
 	}
 };
 
-// Auth endpoints
 export const loginRequest = async (email: string, password: string) => {
 	try {
 		const resp = await client.post("/auth/login", { email, password });
 		return resp.data;
 	} catch (error: any) {
+<<<<<<< HEAD
+=======
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			return await mockLogin(email, password);
+		}
+>>>>>>> Develop
 		throw new Error(error.response?.data?.message || 'Login failed');
 	}
 };
@@ -84,11 +89,24 @@ export const registerRequest = async (name: string, email: string, phone: string
 		const resp = await client.post("/auth/register", { name, email, phone, password });
 		return resp.data;
 	} catch (error: any) {
+<<<<<<< HEAD
+=======
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			return await mockRegister(name, email, phone, password);
+		}
+>>>>>>> Develop
 		throw new Error(error.response?.data?.error || error.response?.data?.message || 'Registration failed');
 	}
 };
 
-// Events endpoints
+export const googleSignIn = async (idToken: string) => {
+	try {
+		const resp = await client.post("/auth/google", { idToken });
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.error || error.message || 'Google sign-in failed');
+	}
+};
 export const getEvents = async () => {
 	try {
 		const resp = await client.get("/events");
@@ -116,11 +134,65 @@ export const createEvent = async (eventData: any) => {
 	}
 };
 
+const convertTo24Hour = (time12h: string): string => {
+	if (!time12h) return '';
+	
+	const time = time12h.trim().toUpperCase();
+	const [timePart, period] = time.split(/\s*(AM|PM)/);
+	if (!timePart) return '';
+	
+	const [hours, minutes = '00'] = timePart.split(':');
+	let hour24 = parseInt(hours, 10);
+	
+	if (period === 'PM' && hour24 !== 12) {
+		hour24 += 12;
+	} else if (period === 'AM' && hour24 === 12) {
+		hour24 = 0;
+	}
+	
+	return `${hour24.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
+};
+
+const transformShow = (show: any): any => {
+	if (!show) return null;
+	
+	let showDateTime = show.showDateTime;
+	if (!showDateTime && show.showDate && show.showTime) {
+		const time24h = convertTo24Hour(show.showTime);
+		if (time24h) {
+			showDateTime = `${show.showDate}T${time24h}`;
+		} else {
+			showDateTime = `${show.showDate}T${show.showTime}`;
+		}
+	} else if (!showDateTime && show.showDate) {
+		showDateTime = `${show.showDate}T12:00:00`;
+	}
+	
+	return {
+		...show,
+		id: String(show.id || show._id || ''),
+		eventId: String(show.eventId || show.movieId || ''),
+		showDateTime: showDateTime || new Date().toISOString(),
+		showDate: show.showDate,
+		showTime: show.showTime,
+		price: show.price || 0,
+		availableSeats: show.availableSeats || 0,
+		totalSeats: show.totalSeats || 100,
+		bookedSeats: show.bookedSeats || [],
+		theater: show.theater || 'Theater TBD',
+		format: show.format || '2D'
+	};
+};
+
 export const getShowsByEventId = async (eventId: string) => {
 	try {
 		const resp = await client.get(`/shows/event/${eventId}`);
-		return resp.data;
+		const data = Array.isArray(resp.data) ? resp.data : [resp.data];
+		return data.map(transformShow);
 	} catch (error: any) {
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			throw new Error('Cannot connect to server. Please check if backend is running.');
+		}
 		throw new Error(error.response?.data?.message || 'Failed to fetch shows');
 	}
 };
@@ -128,41 +200,60 @@ export const getShowsByEventId = async (eventId: string) => {
 export const getShow = async (id: string) => {
 	try {
 		const resp = await client.get(`/shows/${id}`);
-		return resp.data;
+		return transformShow(resp.data);
 	} catch (error: any) {
+		if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+			throw new Error('Cannot connect to server. Please check if backend is running.');
+		}
 		throw new Error(error.response?.data?.message || 'Failed to fetch show');
 	}
 };
 
-// Booking endpoints
+export const getBookedSeats = async (showId: string) => {
+	try {
+		const resp = await client.get(`/shows/${showId}/booked-seats`);
+		return resp.data || [];
+	} catch (error: any) {
+		return [];
+	}
+};
+
+export const getSeatStatus = async (showId: string) => {
+	try {
+		const resp = await client.get(`/shows/${showId}/seat-status`);
+		return resp.data;
+	} catch (error: any) {
+		return { totalSeats: 100, availableSeats: 100, bookedSeats: [] };
+	}
+};
+
+export const checkSeatAvailability = async (showId: string, seats: string[]) => {
+	try {
+		const resp = await client.post(`/shows/${showId}/check-seats`, seats);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to check seat availability');
+	}
+};
+
 export const createBooking = async (bookingData: any) => {
 	try {
-		// Automatically attach user ID if not present and available in auth
 		if (!bookingData.user && localStorage.getItem('rev_auth')) {
 			try {
 				const auth = JSON.parse(localStorage.getItem('rev_auth') || '{}');
 				if (auth.user && auth.user.id) {
 					bookingData.user = auth.user;
-					// Note: Backend might expect 'user' object or 'userId'. 
-					// Looking at Booking.java: @DBRef private User user; 
-					// Spring Data REST often handles object refs, but custom controllers might expect ID.
-					// Let's assume the controller can handle the object or ID if logic is standard.
-					// But wait, Controller says: bookingService.createBooking(booking).
-					// Ideally we pass the ID or the object. Let's pass the object as standard JSON.
 				}
-			} catch (e) { /* ignore */ }
+			} catch (e) {}
 		}
 
 		const resp = await client.post("/bookings", bookingData);
 		return resp.data;
 	} catch (error: any) {
-		console.error('Booking creation error:', error);
-		console.error('Error response:', error.response?.data);
 		throw new Error(error.response?.data?.error || error.response?.data?.message || 'Failed to create booking');
 	}
 };
 
-// Get all travels (for user booking page)
 export const getTravels = async () => {
 	try {
 		const resp = await client.get('/travel');
@@ -172,7 +263,47 @@ export const getTravels = async () => {
 	}
 };
 
-// Get user bookings
+export const searchTravels = async (type?: string, from?: string, to?: string) => {
+	try {
+		const params = new URLSearchParams();
+		if (type) params.append('type', type);
+		if (from) params.append('from', from);
+		if (to) params.append('to', to);
+		
+		const resp = await client.get(`/travel/search?${params.toString()}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to search travels');
+	}
+};
+
+export const getFlights = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/flights?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch flights');
+	}
+};
+
+export const getBuses = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/buses?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch buses');
+	}
+};
+
+export const getTrains = async (from: string, to: string) => {
+	try {
+		const resp = await client.get(`/travel/trains?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+		return resp.data;
+	} catch (error: any) {
+		throw new Error(error.response?.data?.message || 'Failed to fetch trains');
+	}
+};
+
 export const getUserBookings = async (userId: number) => {
 	try {
 		const resp = await client.get(`/bookings/user/${userId}`);
@@ -182,9 +313,7 @@ export const getUserBookings = async (userId: number) => {
 	}
 };
 
-// Admin API functions
 export const adminAPI = {
-	// Get dashboard stats
 	getStats: async () => {
 		const resp = await client.get('/admin/stats');
 		return resp.data;
@@ -205,13 +334,11 @@ export const adminAPI = {
 		await client.delete(`/admin/events/${id}`);
 	},
 
-	// Get all bookings
 	getAllBookings: async () => {
 		const resp = await client.get('/admin/bookings');
 		return resp.data;
 	},
 
-	// Travel management
 	getAllTravels: async () => {
 		const resp = await client.get('/admin/travels');
 		return resp.data;
@@ -229,6 +356,81 @@ export const adminAPI = {
 
 	deleteTravel: async (id: number) => {
 		await client.delete(`/admin/travels/${id}`);
+	},
+
+	getAllMovies: async () => {
+		const resp = await client.get('/events?category=movie');
+		return resp.data;
+	},
+
+	createMovie: async (movie: any) => {
+		const movieData = {
+			...movie,
+			category: 'movie',
+			rating: movie.rating || 0,
+			price: movie.price || 0,
+			duration: movie.duration || 0
+		};
+		const resp = await client.post('/admin/events', movieData);
+		return resp.data;
+	},
+
+	updateMovie: async (id: number, movie: any) => {
+		const movieData = { ...movie, category: 'movie' };
+		const resp = await client.put(`/admin/events/${id}`, movieData);
+		return resp.data;
+	},
+
+	deleteMovie: async (id: number) => {
+		await client.delete(`/admin/events/${id}`);
+	},
+
+	getAllUsers: async () => {
+		const resp = await client.get('/admin/users');
+		return resp.data;
+	},
+
+	updateUser: async (id: number, user: any) => {
+		const resp = await client.put(`/admin/users/${id}`, user);
+		return resp.data;
+	},
+
+	deleteUser: async (id: number) => {
+		await client.delete(`/admin/users/${id}`);
+	},
+
+	changeUserRole: async (id: number, role: string) => {
+		const resp = await client.post(`/admin/users/${id}/role`, { role });
+		return resp.data;
+	},
+
+	getAllTheaters: async () => {
+		const resp = await client.get('/theaters');
+		return resp.data;
+	},
+
+	createTheater: async (theater: any) => {
+		const resp = await client.post('/theaters', theater);
+		return resp.data;
+	},
+
+	updateTheater: async (id: number, theater: any) => {
+		const resp = await client.put(`/theaters/${id}`, theater);
+		return resp.data;
+	},
+
+	deleteTheater: async (id: number) => {
+		await client.delete(`/theaters/${id}`);
+	},
+
+	createShowsForEvent: async (eventId: number) => {
+		const resp = await client.post(`/admin/events/${eventId}/create-shows`);
+		return resp.data;
+	},
+
+	getShowsInfo: async (eventId: number) => {
+		const resp = await client.get(`/admin/events/${eventId}/shows-info`);
+		return resp.data;
 	}
 };
 

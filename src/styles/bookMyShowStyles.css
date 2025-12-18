@@ -1,0 +1,293 @@
+/* BookMyShow Style CSS */
+.bookMyShow-container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.date-tabs-header {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 20px;
+}
+
+.date-tabs-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.date-tab-btn {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-right: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 80px;
+  transition: all 0.2s;
+}
+
+.date-tab-btn:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.date-tab-btn:last-child {
+  border-right: 1px solid #e0e0e0;
+  border-radius: 0 6px 6px 0;
+}
+
+.date-tab-btn.today {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.date-tab-btn.selected {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: white;
+}
+
+.day-name {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.date-num {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.month-name {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.language-format {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-options {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-dropdown {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.subtitle-info {
+  background: #f8f9fa;
+  padding: 8px 20px;
+  font-size: 12px;
+  color: #666;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle-badge {
+  background: #6c757d;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  margin-right: 8px;
+}
+
+.got-it {
+  color: #dc2626;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.availability-legend {
+  background: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legend-dot.available {
+  background: #22c55e;
+}
+
+.legend-dot.fast-filling {
+  background: #f59e0b;
+}
+
+.theaters-container {
+  background: white;
+  padding: 0;
+}
+
+.theater-row-bms {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 20px;
+}
+
+.theater-info-bms {
+  flex: 0 0 300px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theater-logo {
+  width: 40px;
+  height: 40px;
+  background: #333;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.theater-details h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.theater-icons {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.theater-icons span {
+  font-size: 12px;
+}
+
+.heart-icon {
+  font-size: 18px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.showtimes-bms {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.showtime-slot-bms {
+  background: white;
+  border: 2px solid #22c55e;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 80px;
+  transition: all 0.2s;
+}
+
+.showtime-slot-bms.available {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.showtime-slot-bms.sold-out {
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.showtime-slot-bms:hover:not(.sold-out) {
+  background: #f0fdf4;
+}
+
+.time-bms {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.format-bms {
+  font-size: 9px;
+  color: #666;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.non-cancellable {
+  font-size: 12px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.no-shows {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .theater-row-bms {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .theater-info-bms {
+    flex: none;
+    width: 100%;
+  }
+  
+  .showtimes-bms {
+    width: 100%;
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .date-tabs-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}

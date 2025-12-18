@@ -4,6 +4,7 @@ import type { Event } from "../types/Event";
 import { getEvents } from "../utils/api";
 import AuthModal from "../components/AuthModal";
 import "../styles/travel.css";
+import Footer from "../components/Footer";
 
 const Concerts = () => {
   const navigate = useNavigate();
@@ -378,6 +379,7 @@ const Concerts = () => {
         onClose={() => setShowAuthModal(false)}
         onLogin={handleAuthModalLogin}
       />
+      <Footer />
     </div>
   );
 };

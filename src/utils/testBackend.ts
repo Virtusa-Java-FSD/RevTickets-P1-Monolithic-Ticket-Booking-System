@@ -1,7 +1,7 @@
 // Test if backend is accessible
 export const testBackendConnection = async () => {
   try {
-    const response = await fetch('http://localhost:8081/api/auth/test', {
+    const response = await fetch('http://localhost:8080/api/auth/test', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +19,11 @@ export const testBackendConnection = async () => {
 // Test with a simple ping
 export const pingBackend = async () => {
   try {
+<<<<<<< HEAD
     await fetch('http://localhost:8081', {
+=======
+    const response = await fetch('http://localhost:8080', {
+>>>>>>> Develop
       method: 'GET',
       mode: 'no-cors'
     });

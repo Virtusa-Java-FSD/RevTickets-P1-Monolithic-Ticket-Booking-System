@@ -31,11 +31,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
       return;
     }
 
-    if (onBookClick) {
-      onBookClick(movie);
-    } else {
-      navigate(`/movies/${movie.id}`);
-    }
+    // Navigate directly to movie detail page with showtimes
+    navigate(`/movies/${movie.id}`);
   };
 
   const handleCardClick = () => {
