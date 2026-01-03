@@ -23,7 +23,7 @@ const Payment = () => {
     console.log('Seats from state:', seats);
     console.log('Seats type:', typeof seats);
     console.log('Seats is array:', Array.isArray(seats));
-    
+
     if (!seats || !Array.isArray(seats) || seats.length === 0) {
       alert("No seats selected. Redirecting to seat selection.");
       navigate(-1);
@@ -72,6 +72,19 @@ const Payment = () => {
       handler: async function (response: any) {
         // Payment Success Handler
         console.log("Payment Successful", response);
+
+        // Call backend to save payment details to Mongo
+        try {
+          const { savePaymentSuccess } = await import("../utils/api");
+          await savePaymentSuccess(
+            response.razorpay_payment_id,
+            response.razorpay_order_id || "test_order_" + Date.now(),
+            total
+          );
+        } catch (e) {
+          console.error("Error saving payment stats", e);
+        }
+
         // Call backend to save booking
         await completeBooking(response.razorpay_payment_id);
       },
@@ -100,11 +113,14 @@ const Payment = () => {
       // Get user from localStorage
       const authData = localStorage.getItem('rev_auth');
       let userId = null;
+      let userEmail = null;
       if (authData) {
         try {
           const auth = JSON.parse(authData);
           userId = auth.user?.id;
+          userEmail = auth.user?.email;
           console.log('User ID from auth:', userId);
+          console.log('User Email from auth:', userEmail);
           console.log('User ID type:', typeof userId);
         } catch (e) {
           console.error('Failed to parse auth data:', e);
@@ -129,13 +145,14 @@ const Payment = () => {
 
       // Ensure seats is an array of strings
       const seatsArray = Array.isArray(seats) ? seats.filter(s => s && s.trim()) : [];
-      
+
       if (seatsArray.length === 0) {
         throw new Error("Invalid seat selection. Please try again.");
       }
 
       const bookingPayload: any = {
-        user: { id: userId },
+        userId: userId,
+        userEmail: userEmail,
         seats: seatsArray,
         totalPrice: total,
         status: 'CONFIRMED',
@@ -146,11 +163,11 @@ const Payment = () => {
       // Only attach relations if ID is numeric (real backend ID)
       // Mock IDs (strings like "show-1") will cause backend 500 error due to type mismatch
       if (showId && !isNaN(Number(showId))) {
-        bookingPayload.show = { id: Number(showId) };
+        bookingPayload.showId = Number(showId);
       } else if (travelId && !isNaN(Number(travelId))) {
-        bookingPayload.travel = { id: Number(travelId) };
+        bookingPayload.travelId = Number(travelId);
       } else if (eventId && !isNaN(Number(eventId))) {
-        bookingPayload.event = { id: Number(eventId) };
+        bookingPayload.eventId = Number(eventId);
       }
 
       console.log('Creating booking with payload:', bookingPayload);

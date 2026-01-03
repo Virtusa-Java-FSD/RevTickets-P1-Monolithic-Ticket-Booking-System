@@ -1,0 +1,13 @@
+{
+  "name": "revtickets-backend-mock",
+  "version": "1.0.0",
+  "description": "Mock backend for RevTickets",
+  "main": "backend-mock-server.js",
+  "scripts": {
+    "start": "node backend-mock-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

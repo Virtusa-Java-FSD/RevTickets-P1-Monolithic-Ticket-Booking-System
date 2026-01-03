@@ -77,7 +77,7 @@ const Concerts = () => {
       // If backend seed data uses "other" or "movie", they might not show up if we filter strictly.
       // Let's show all for now and user can filter.
 
-      const realConcerts = allEvents.filter((e: any) => e.category === 'concert' || e.category === 'other' || !e.category);
+      const realConcerts = allEvents.filter((e: any) => e.category?.toLowerCase() === 'concert');
 
       if (realConcerts.length > 0) {
         setConcerts(realConcerts);

@@ -80,15 +80,21 @@ const Travels = () => {
   }, [bannerImages.length]);
 
   useEffect(() => {
+    console.log('Filtering by activeTab:', activeTab);
+    console.log('All travels count:', allTravels.length);
+    console.log('All travels types:', allTravels.map(t => t.type));
+    
     const filtered = allTravels.filter(option => {
       if (activeTab === 'Flights') return option.type === 'flight';
       if (activeTab === 'Buses') return option.type === 'bus';
       if (activeTab === 'Trains') return option.type === 'train';
       return false;
     });
+    
+    console.log('Filtered count:', filtered.length);
     setTravelOptions(filtered);
     applyFilters(filtered);
-  }, [activeTab]);
+  }, [activeTab, allTravels]);
 
   const transformTravelData = (data: any[]): TravelOption[] => {
     return data.map((travel: any) => ({
@@ -118,17 +124,32 @@ const Travels = () => {
     try {
       const { getTravels } = await import('../utils/api');
       const data = await getTravels();
+      console.log('Travel data from API:', data);
+      console.log('Data length:', data?.length || 0);
+      
+      if (!data || data.length === 0) {
+        console.warn('No travel data received from API');
+        setTravelOptions([]);
+        setFilteredOptions([]);
+        setAllTravels([]);
+        return;
+      }
+      
       const transformedData = transformTravelData(data);
+      console.log('Transformed data:', transformedData);
+      console.log('Transformed data length:', transformedData.length);
+      
       setAllTravels(transformedData);
       setTravelOptions(transformedData);
       applyFilters(transformedData);
     } catch (error) {
       console.error('Failed to load travel options:', error);
+      console.error('Error details:', error);
       setTravelOptions([]);
       setFilteredOptions([]);
+      setAllTravels([]);
     } finally {
       setLoading(false);
-      setAllTravels([]);
     }
   };
 

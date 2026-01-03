@@ -11,7 +11,7 @@ const ConnectionStatus = ({ onConnectionChange }: ConnectionStatusProps) => {
   const checkConnection = async () => {
     setIsChecking(true);
     try {
-      const response = await fetch('http://localhost:8080/api/events', {
+      const response = await fetch('http://localhost:8080/health', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         signal: AbortSignal.timeout(5000) // 5 second timeout
@@ -57,8 +57,8 @@ const ConnectionStatus = ({ onConnectionChange }: ConnectionStatusProps) => {
         fontSize: '0.9rem',
         fontWeight: 500
       }}>
-        ⚠️ Backend server is not connected. Some features may not work. 
-        <button 
+        ⚠️ Backend server is not connected. Some features may not work.
+        <button
           onClick={checkConnection}
           style={{
             marginLeft: '1rem',

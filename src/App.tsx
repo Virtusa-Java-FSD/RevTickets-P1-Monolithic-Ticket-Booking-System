@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import Sidebar from "./components/Sidebar";
 import ConnectionStatus from "./components/ConnectionStatus";
 import { AuthProvider } from "./context/AuthContext";
+import RevHelp from "./components/RevHelp";
 
 function AppContent() {
   const location = useLocation();
@@ -23,6 +24,7 @@ function App() {
     <AuthProvider>
       <div className="app-root">
         <ConnectionStatus />
+        <RevHelp />
         <BrowserRouter>
           <AppContent />
         </BrowserRouter>

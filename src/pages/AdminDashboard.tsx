@@ -62,7 +62,7 @@ const AdminDashboard = () => {
             navigate('/login');
             return;
         }
-        
+
         try {
             const { user } = JSON.parse(authData);
             if (!user || user.role !== 'ADMIN') {
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
     const loadEvents = async () => {
         try {
             const data = await getEvents();
-            const eventsList = Array.isArray(data) ? data.filter((e: any) => 
+            const eventsList = Array.isArray(data) ? data.filter((e: any) =>
                 e.category !== 'movie' && e.category !== 'travel'
             ) : [];
             setEvents(eventsList);
@@ -240,10 +240,13 @@ const AdminDashboard = () => {
         setLoading(true);
         try {
             const info = await adminAPI.getShowsInfo(movieId);
-            const message = `Shows Info for "${info.eventTitle}":\n\n` +
-                `Total Shows: ${info.totalShows}\n\n` +
-                `Theaters in Shows:\n${info.theatersInShows.join('\n')}\n\n` +
-                `All Active Theaters:\n${info.allActiveTheaters.join('\n')}`;
+            const theatersInShows = info.theatersInShows || [];
+            const allActiveTheaters = info.allActiveTheaters || [];
+
+            const message = `Shows Info for "${info.eventTitle || 'Unknown'}":\n\n` +
+                `Total Shows: ${info.totalShows || 0}\n\n` +
+                `Theaters in Shows:\n${theatersInShows.length ? theatersInShows.join('\n') : 'None'}\n\n` +
+                `All Active Theaters:\n${allActiveTheaters.length ? allActiveTheaters.join('\n') : 'None'}`;
             alert(message);
         } catch (error: any) {
             alert('Failed to get shows info: ' + (error.response?.data?.error || error.message));
@@ -615,6 +618,26 @@ const AdminDashboard = () => {
                                                                 >
                                                                     ✏️ Edit
                                                                 </button>
+                                                                {(event.category || '').toLowerCase() === 'concert' && (
+                                                                    <>
+                                                                        <button
+                                                                            className="btn-edit"
+                                                                            onClick={() => handleRegenerateShows(event.id!)}
+                                                                            disabled={loading}
+                                                                            title="Regenerate shows for all theaters"
+                                                                        >
+                                                                            🎭 Regenerate Shows
+                                                                        </button>
+                                                                        <button
+                                                                            className="btn-edit"
+                                                                            onClick={() => handleCheckShows(event.id!)}
+                                                                            disabled={loading}
+                                                                            title="Check which theaters are in shows"
+                                                                        >
+                                                                            🔍 Check Shows
+                                                                        </button>
+                                                                    </>
+                                                                )}
                                                                 <button
                                                                     className="btn-delete"
                                                                     onClick={() => handleDeleteEvent(event.id!)}
