@@ -134,3 +134,8 @@ const TheaterForm = ({ theater, onSave, onCancel }: TheaterFormProps) => {
 export default TheaterForm;
 
 
+
+
+
+
+

@@ -46,7 +46,10 @@ const Events = () => {
         // Based on Event.java, there is 'category'.
 
         // Ensure data is array
-        const eventsList = Array.isArray(data) ? data : [];
+        const eventsList = Array.isArray(data) ? data.filter((e: any) => {
+          const cat = e.category?.toLowerCase();
+          return cat !== 'movie' && cat !== 'concert' && cat !== 'travel';
+        }) : [];
         setEvents(eventsList);
         setFilteredEvents(eventsList);
       } catch (error) {

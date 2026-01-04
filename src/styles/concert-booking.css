@@ -6,7 +6,7 @@
 .booking-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 2rem 0;
+  padding: 1rem 0;
 }
 
 .booking-header h1 {
@@ -40,7 +40,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 2rem 0;
+  padding: 1rem 0;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -701,7 +701,7 @@
   .checkout-container {
     gap: 1rem;
   }
-  
+
   .checkout-right {
     min-width: 280px;
   }
@@ -711,16 +711,16 @@
   .checkout-container {
     flex-direction: column;
   }
-  
+
   .checkout-right {
     order: -1;
     min-width: unset;
   }
-  
+
   .booking-steps {
     padding: 1.5rem 1rem;
   }
-  
+
   .step-line {
     width: 60px;
   }
@@ -761,34 +761,37 @@
   .action-buttons {
     flex-direction: column;
   }
-  
+
   .row {
     margin: 0;
   }
-  
-  .col-lg-8, .col-lg-4 {
+
+  .col-lg-8,
+  .col-lg-4 {
     padding: 0 0.5rem;
   }
-  
+
   .booking-card {
     padding: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .category-filter {
     gap: 0.5rem;
   }
-  
+
   .cat-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
-  
-  .date-options, .time-options {
+
+  .date-options,
+  .time-options {
     gap: 0.5rem;
   }
-  
-  .date-btn, .time-btn {
+
+  .date-btn,
+  .time-btn {
     padding: 0.6rem 1rem;
     font-size: 0.85rem;
   }
@@ -799,46 +802,46 @@
     padding: 0.75rem;
     gap: 0.5rem;
   }
-  
+
   .step {
     flex: 1;
     min-width: 80px;
   }
-  
+
   .step-number {
     width: 32px;
     height: 32px;
     font-size: 0.875rem;
   }
-  
+
   .step-label {
     font-size: 0.7rem;
     text-align: center;
   }
-  
+
   .step-line {
     width: 20px;
   }
-  
+
   .booking-card {
     padding: 0.75rem;
   }
-  
+
   .booking-card h3 {
     font-size: 1rem;
   }
-  
+
   .seat-map {
     padding: 0.5rem;
   }
-  
+
   .seat {
     width: 24px;
     height: 24px;
     font-size: 0.6rem;
     margin: 1px;
   }
-  
+
   .row-label {
     width: 100%;
     text-align: center;
@@ -846,45 +849,47 @@
     font-size: 0.8rem;
     order: -1;
   }
-  
+
   .seat-legend {
     padding: 0.75rem;
     gap: 1.5rem;
     justify-content: center;
     align-items: center;
   }
-  
+
   .legend-item {
     align-items: center;
     gap: 0.4rem;
   }
-  
+
   .legend-box {
     width: 16px;
     height: 16px;
   }
-  
+
   .legend-item {
     font-size: 0.8rem;
   }
-  
+
   .category-filter {
     flex-wrap: wrap;
   }
-  
-  .date-options, .time-options {
+
+  .date-options,
+  .time-options {
     flex-wrap: wrap;
   }
-  
+
   .summary-image {
     height: 150px;
   }
-  
+
   .price-breakdown {
     padding: 0.75rem;
   }
-  
-  .proceed-btn, .confirm-btn {
+
+  .proceed-btn,
+  .confirm-btn {
     padding: 0.875rem;
     font-size: 0.9rem;
   }

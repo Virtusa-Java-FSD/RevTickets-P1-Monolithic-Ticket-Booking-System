@@ -8,20 +8,20 @@ import "../styles/bookMyShowStyles.css";
 // Helper function to convert 12-hour time to 24-hour format
 const convertTimeTo24Hour = (time12h: string): string => {
   if (!time12h) return '';
-  
+
   const time = time12h.trim().toUpperCase();
   const [timePart, period] = time.split(/\s*(AM|PM)/);
   if (!timePart) return '';
-  
+
   const [hours, minutes = '00'] = timePart.split(':');
   let hour24 = parseInt(hours, 10);
-  
+
   if (period === 'PM' && hour24 !== 12) {
     hour24 += 12;
   } else if (period === 'AM' && hour24 === 12) {
     hour24 = 0;
   }
-  
+
   return `${hour24.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
 };
 
@@ -61,25 +61,28 @@ const MovieDetail = () => {
       const dates = new Set<string>();
       showsData.forEach((s: Show) => {
         let dateObj: Date | null = null;
-        
+
         if (s.showDateTime) {
           dateObj = new Date(s.showDateTime);
         } else if ((s as any).showDate) {
           dateObj = new Date((s as any).showDate + 'T00:00:00');
         }
-        
+
         if (dateObj && !isNaN(dateObj.getTime())) {
           dates.add(dateObj.toDateString());
         }
       });
-      
+
       if (dates.size > 0) {
         // Sort dates and select the first one
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const sortedDates = Array.from(dates)
           .map(d => new Date(d))
-          .filter(d => !isNaN(d.getTime()))
+          .filter(d => !isNaN(d.getTime()) && d >= today)
           .sort((a, b) => a.getTime() - b.getTime());
-        
+
         if (sortedDates.length > 0) {
           setSelectedDate(sortedDates[0].toDateString());
         }
@@ -101,42 +104,45 @@ const MovieDetail = () => {
     const dates = new Set<string>();
     shows.forEach(show => {
       let dateObj: Date | null = null;
-      
+
       if (show.showDateTime) {
         dateObj = new Date(show.showDateTime);
       } else if (show.showDate) {
         // Parse date string (YYYY-MM-DD format)
         dateObj = new Date(show.showDate + 'T00:00:00');
       }
-      
+
       if (dateObj && !isNaN(dateObj.getTime())) {
         dates.add(dateObj.toDateString());
       }
     });
-    
-    // Convert to Date objects and sort
+
+    // Convert to Date objects and sort, filtering out past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return Array.from(dates)
       .map(dateStr => new Date(dateStr))
-      .filter(date => !isNaN(date.getTime()))
+      .filter(date => !isNaN(date.getTime()) && date >= today)
       .sort((a, b) => a.getTime() - b.getTime());
   };
 
   const getShowsForDate = (dateStr: string) => {
     let filtered = shows.filter(show => {
       let showDateObj: Date | null = null;
-      
+
       if (show.showDateTime) {
         showDateObj = new Date(show.showDateTime);
       } else if (show.showDate) {
         showDateObj = new Date(show.showDate + 'T00:00:00');
       }
-      
+
       if (showDateObj && !isNaN(showDateObj.getTime())) {
         return showDateObj.toDateString() === dateStr;
       }
       return false;
     });
-    
+
     if (selectedFormat !== "All") {
       filtered = filtered.filter(show => show.format === selectedFormat);
     }
@@ -315,19 +321,19 @@ const MovieDetail = () => {
                         // Handle different date formats from backend
                         let dateA = 0;
                         let dateB = 0;
-                        
+
                         if (a.showDateTime) {
                           const d = new Date(a.showDateTime);
                           dateA = !isNaN(d.getTime()) ? d.getTime() : 0;
                         } else if (a.showDate && a.showTime) {
                           // Try to parse combined date and time
-                          const time24h = a.showTime.includes('AM') || a.showTime.includes('PM') 
-                            ? convertTimeTo24Hour(a.showTime) 
+                          const time24h = a.showTime.includes('AM') || a.showTime.includes('PM')
+                            ? convertTimeTo24Hour(a.showTime)
                             : a.showTime;
                           const d = new Date(`${a.showDate}T${time24h}`);
                           dateA = !isNaN(d.getTime()) ? d.getTime() : 0;
                         }
-                        
+
                         if (b.showDateTime) {
                           const d = new Date(b.showDateTime);
                           dateB = !isNaN(d.getTime()) ? d.getTime() : 0;
@@ -338,7 +344,7 @@ const MovieDetail = () => {
                           const d = new Date(`${b.showDate}T${time24h}`);
                           dateB = !isNaN(d.getTime()) ? d.getTime() : 0;
                         }
-                        
+
                         return dateA - dateB;
                       })
                       .map((show) => {

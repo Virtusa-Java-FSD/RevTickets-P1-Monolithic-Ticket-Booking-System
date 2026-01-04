@@ -20,8 +20,8 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ mode = 'login' }) => {
     const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
-        let checkInterval: NodeJS.Timeout;
+        let timeoutId: ReturnType<typeof setTimeout>;
+        let checkInterval: ReturnType<typeof setInterval>;
 
         const initializeGoogleSignIn = () => {
             if (window.google && buttonRef.current) {
